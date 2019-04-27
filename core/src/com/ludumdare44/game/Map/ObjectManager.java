@@ -7,7 +7,6 @@ import com.ludumdare44.game.Physics.Obstacle;
 import com.ludumdare44.game.Physics.PhysicsObject;
 import com.ludumdare44.game.Physics.VisualPhysObject;
 import com.sun.org.apache.regexp.internal.RE;
-import sun.awt.X11.Visual;
 
 import java.util.ArrayList;
 
