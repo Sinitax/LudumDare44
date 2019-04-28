@@ -1,9 +1,7 @@
 package com.ludumdare44.game.Characters;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.ludumdare44.game.GFX.GFXManager;
 import com.ludumdare44.game.Map.ObjectAdder;
@@ -11,20 +9,21 @@ import com.ludumdare44.game.Physics.Grapple;
 import com.ludumdare44.game.Physics.Obstacle;
 import com.ludumdare44.game.Physics.PhysicsObject;
 import com.ludumdare44.game.Physics.VisualPhysObject;
-import jdk.nashorn.internal.ir.GetSplitState;
 
 public abstract class Player extends VisualPhysObject {
-    private com.ludumdare44.game.Characters.Ability special;
-    public abstract com.ludumdare44.game.Characters.Ability getSpecial();
-    public com.ludumdare44.game.Characters.Ability attack;
-    public abstract com.ludumdare44.game.Characters.Ability getAttack();
+    private Ability special;
+    public abstract Ability getSpecial();
+    private Ability attack;
+    public abstract Ability getAttack();
 
     private ObjectAdder objectAdder;
 
-    protected Animation<TextureRegion> currentAnimation;
-    public Sprite sprite;
+    protected Sprite currentSprite;
+    private Sprite sprite; // temp sprite
 
-    private float swingAmount  = 0;
+    public void setSprite(Sprite s) {
+        sprite = s;
+    }
 
     private boolean facingRight;
 
@@ -35,7 +34,6 @@ public abstract class Player extends VisualPhysObject {
 
     private Grapple grapple;
 
-    public float animationTime;
     private boolean busy = false;
     public boolean isBusy() { return busy; }
     public void setBusy(boolean _busy) { busy = _busy;}
@@ -79,10 +77,10 @@ public abstract class Player extends VisualPhysObject {
     @Override
     public boolean visible() { return true; }
 
-    public abstract Animation<TextureRegion> getAirborneAnimation();
-    public abstract Animation<TextureRegion> getLeftSwingAnimation();
-    public abstract Animation<TextureRegion> getRightSwingAnimation();
-    public abstract Animation<TextureRegion> getGrappleAnimation();
+    public abstract Sprite getAirborneSprite();
+    public abstract Sprite getLeftSwingSprite();
+    public abstract Sprite getRightSwingSprite();
+    public abstract Sprite getGrappleSprite();
 
     @Override
     public Vector2 getOriginOffset() {
@@ -98,7 +96,6 @@ public abstract class Player extends VisualPhysObject {
     
     @Override
     public void update(float delta) {
-        animationTime += delta;
         updateSpeed(delta);
         if (grappling && grapple.isGrappled()) {
             Vector2 trpos = grapple.getPos().sub(getPos());
@@ -123,12 +120,12 @@ public abstract class Player extends VisualPhysObject {
 
         facingRight = (getSpeed().x > 0 && !grappling || grappling && grapple.getPos().sub(getPos()).x > 0);
     }
-    
+
     @Override
     public void render(GFXManager gfx) {
-        currentAnimation = getAirborneAnimation();
+        currentSprite = getAirborneSprite();
         if (!busy) { //determine animations as usual if not busy
-            sprite = new Sprite(currentAnimation.getKeyFrame(animationTime, true));
+            sprite = new Sprite(currentSprite);
         }
         if (!facingRight) {
             sprite.flip(true, false);
@@ -140,10 +137,6 @@ public abstract class Player extends VisualPhysObject {
     protected void initAnimations() {
         special = getSpecial();
         attack = getAttack();
-    }
-
-    public void setSwing(float amount) {
-        swingAmount = amount;
     }
 
     public void doGrapple(Vector2 target) {

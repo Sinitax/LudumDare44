@@ -3,9 +3,10 @@ package com.ludumdare44.game.Controls;
 import com.badlogic.gdx.InputAdapter;
 
 public class ControlManager extends InputAdapter {
-    private boolean[] lkeyBuffer = new boolean[156];
-    private boolean[] keyBuffer = new boolean[156];
-    private boolean[] ckeyBuffer = new boolean[156];
+    private static int keysCount = 256;
+    private boolean[] lkeyBuffer = new boolean[keysCount];
+    private boolean[] keyBuffer = new boolean[keysCount];
+    private boolean[] ckeyBuffer = new boolean[keysCount];
 
     @Override
     public boolean keyUp(int keycode) {

@@ -1,7 +1,6 @@
 package com.ludumdare44.game.Characters;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public abstract class Ability {
@@ -35,7 +34,7 @@ public abstract class Ability {
                 elapsed = 0;
             }
             perform();
-            p.sprite = new Sprite(animation.getKeyFrame(elapsed, false));
+            p.setSprite(null);
         }
         if (inUse || elapsed < cooldown) {
             elapsed += delta;

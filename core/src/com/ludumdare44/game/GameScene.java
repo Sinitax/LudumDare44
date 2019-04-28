@@ -142,17 +142,17 @@ public class GameScene implements Screen {
 
 		Texture tempSheet = new Texture("assets/background2.png");
 		TextureRegion[] tempMap = TextureRegion.split(tempSheet, tempSheet.getWidth(), tempSheet.getHeight())[0];
-		background1 = new EndlessBackground(cameraManager, tempMap, true);
+		background1 = new EndlessBackground(cameraManager, tempMap, true, 0.5f);
 
 		tempSheet = new Texture("assets/background3.png");
 		tempMap = TextureRegion.split(tempSheet, tempSheet.getWidth(), tempSheet.getHeight())[0];
-		background2 = new EndlessBackground(cameraManager, tempMap, true);
+		background2 = new EndlessBackground(cameraManager, tempMap, true, 0.8f);
 
 		debugTexture = new Texture("assets/debug.png");
 		debugAnimation = GifDecoder.loadGIFAnimation(Animation.PlayMode.LOOP, Gdx.files.internal("assets/debug.gif").read());
 		debugSprite = new Sprite(new Texture("assets/debug.png"), 20, 20);
 
-		Gdx.gl.glClearColor(0.17f, 0.17f, 0.17f, 1.f);
+		Gdx.gl.glClearColor(0.4f, 0.4f, 0.4f, 1.f);
 	}
 
 	@Override

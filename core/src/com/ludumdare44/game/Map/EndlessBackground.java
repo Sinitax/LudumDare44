@@ -12,6 +12,7 @@ public class EndlessBackground implements IRenderable {
     private CameraManager cameraManager;
     private int tileWidth, tileHeight;
     private int tileCols, tileRows;
+    private float speedScale;
     Vector2 msize;
     float[] probabilities = new float[] {0.5f, 0.2f};
     TextureRegion[] tileMap;
@@ -19,17 +20,13 @@ public class EndlessBackground implements IRenderable {
 
     Vector2 lastCameraPos, offset;
 
-    public void update() {
-
-    }
-
     public void render(GFXManager gfx) {
         Vector2 cameraPos = new Vector2(cameraManager.getPos());
         if (lastCameraPos == null) {
             lastCameraPos = cameraPos;
         }
         cameraPos.sub(lastCameraPos);
-        offset.add(cameraPos.scl(0.4f));
+        offset.add(cameraPos.scl(speedScale));
         Vector2 stile = new Vector2((int) offset.x / tileWidth, (int) offset.y / tileHeight);
 
         if (stile.x == 1) {
@@ -47,24 +44,9 @@ public class EndlessBackground implements IRenderable {
             }
             offset.x += tileWidth;
         }
-        /*
-        if (stile.y == 1) {
-            for (int i = 0; i < msize.x; i++) {
-                indMap.get(i).remove(0);
-                indMap.get(i).add(randomRegion());
-            }
-            offset.y += tileHeight;
-        } else if (stile.y == -1) {
-            for (int i = 0; i < msize.x; i++) {
-                indMap.get(i).remove(indMap.get(i).size()-1);
-                indMap.get(i).add(0, randomRegion());
-            }
-            offset.y -= tileHeight;
-        }
-         */
 
         float startX = cameraManager.getPos().x - cameraManager.getScreenSize().x / 2 - tileWidth;
-        float startY = cameraManager.getPos().y - cameraManager.getScreenSize().y / 2 - tileWidth;
+        float startY = cameraManager.getPos().y - cameraManager.getScreenSize().y / 2 - tileHeight;
 
         for (int i = 0; i < tileCols; i++) {
             for (int j = 0; j < tileRows; j++) {
@@ -94,7 +76,8 @@ public class EndlessBackground implements IRenderable {
         }
     }
 
-    public EndlessBackground(CameraManager _cameraManager, TextureRegion[] _tiles, boolean _fullscreen) {
+    public EndlessBackground(CameraManager _cameraManager, TextureRegion[] _tiles, boolean _fullscreen, float _speedScale) {
+        speedScale = _speedScale;
         cameraManager = _cameraManager;
         tileMap = _tiles;
         if (!_fullscreen) {
