@@ -122,7 +122,7 @@ public class LudumDare extends ApplicationAdapter {
 		// objectManager.setObstacles(spriteManager.getObstacles()); // no map
 		addObject(player);
 
-		Texture spriteSheet = new Texture("assets/textures/textureMap.png");
+		Texture spriteSheet = new Texture("assets/textures/tiles.png");
 		int tileWidth = 16;
 		int tileHeight = 16;
 
@@ -133,11 +133,11 @@ public class LudumDare extends ApplicationAdapter {
 		hud = new HUD(player);
 		objectManager.addObject(player);
 
-		Texture tempSheet = new Texture("assets/background1.png");
+		Texture tempSheet = new Texture("assets/background2.png");
 		TextureRegion[] tempMap = TextureRegion.split(tempSheet, tempSheet.getWidth(), tempSheet.getHeight())[0];
 		background1 = new EndlessBackground(cameraManager, tempMap, true);
 
-		tempSheet = new Texture("assets/background2.png");
+		tempSheet = new Texture("assets/background3.png");
 		tempMap = TextureRegion.split(tempSheet, tempSheet.getWidth(), tempSheet.getHeight())[0];
 		background2 = new EndlessBackground(cameraManager, tempMap, true);
 
