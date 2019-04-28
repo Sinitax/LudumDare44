@@ -41,8 +41,14 @@ public abstract class Player extends VisualPhysObject {
 
     private boolean dying = false;
     public boolean isDying() { return dying; }
+    public void kill() { dying = true; }
 
     private boolean destroyed = false;
+    public void destroy() {
+        destroyed = true;
+    }
+    @Override
+    public boolean destroyed() { return destroyed; }
 
     private float energyMax = 50;
 
@@ -71,17 +77,6 @@ public abstract class Player extends VisualPhysObject {
     @Override
     public int getFspeedMax() { return 300; }
 
-    public void kill() {
-        dying = true;
-    }
-
-    public void destroy() {
-        destroyed = true;
-    }
-
-    @Override
-    public boolean alive() { return !destroyed; }
-
     @Override
     public boolean stagnant() { return false; }
 
@@ -108,15 +103,15 @@ public abstract class Player extends VisualPhysObject {
     
     @Override
     public void update(float delta) {
-        if (!dying || getPos().y - getHitbox().y * 0.5 > 0) {
+        if (getPos().y - getHitbox().y * 0.5 > 0) {
             updateSpeed(delta);
             if (grappling && grapple.isGrappled()) {
                 Vector2 trpos = grapple.getPos().sub(getPos());
                 Vector2 rpos = new Vector2(trpos).rotate90(-1);
-                Vector2 nspeed = rpos.scl(getSpeed().dot(new Vector2(rpos.nor())));
+                Vector2 nspeed = rpos.scl(getSpeed().dot(rpos.nor()));
 
                 if (reel) {
-                    nspeed.add(trpos.nor().scl(6000.f * delta));
+                    nspeed.add(trpos.nor().scl(12000.f * delta));
                 } else {
                     Vector2 nspeed2 = trpos.scl(getSpeed().dot(new Vector2(trpos.nor())));
                     if (nspeed2.x > 0 && nspeed2.y > 0) {
@@ -142,8 +137,8 @@ public abstract class Player extends VisualPhysObject {
 
     @Override
     public void render(GFXManager gfx) {
-        facingRight = (getSpeed().x > 0 && !grappling || grappling && grapple.getPos().sub(getPos()).x > 0);
         sprite = new Sprite(currentSprite);
+        if (!dying) facingRight = (getSpeed().x >= 0 && !grappling || grappling && grapple.getPos().sub(getPos()).x > 0);
         if (!facingRight) {
             sprite.flip(true, false);
         }
@@ -204,6 +199,6 @@ public abstract class Player extends VisualPhysObject {
     public Player(Vector2 _pos, ObjectAdder _objectAdder) {
         super(_pos);
         objectAdder = _objectAdder;
-        this.weight = 10;
+        this.weight = 30;
     }
 }

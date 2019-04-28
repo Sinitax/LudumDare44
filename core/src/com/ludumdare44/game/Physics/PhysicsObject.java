@@ -12,6 +12,9 @@ public abstract class PhysicsObject {
     }
 
     private PhysicsObject followObject;
+    public PhysicsObject getFollowObject() {
+        return followObject;
+    }
     private boolean following = false;
     private Vector2 speed = new Vector2(0,0);
     public final Vector2 getSpeed() { return new Vector2(speed); }
@@ -19,7 +22,7 @@ public abstract class PhysicsObject {
         speed.x = _speed.x;
         speed.y = _speed.y;
     }
-    
+
     private Vector2 fspeed = new Vector2(0,0);
     public final Vector2 getFspeed() { return new Vector2(fspeed); }
     public final void setFspeed(Vector2 _dir) {
@@ -40,29 +43,29 @@ public abstract class PhysicsObject {
             fspeed.y = -getFspeedMax();
         }
     }
-    
+
     private Vector2 accel = new Vector2(0, 0);
     private Vector2 decel = new Vector2(0, 0);
-    
+
     public float speedscale = 1;
-    
+
     public abstract int getAccelMax();
     public abstract int getDecelMax();
     public abstract int getFspeedMax();
-    
+
     private Vector2 pos;
     public final void setPos(Vector2 _pos) {
         pos.x = _pos.x;
         pos.y = _pos.y;
     }
     public final Vector2 getPos() { return new Vector2(pos); }
-    
+
     public float approachSpeed = 1;
     public void follow(PhysicsObject obj) {
         following = true;
         followObject = obj;
     }
-    
+
     public void approach(Vector2 fpos, float approachSpeed) {
         if (approachSpeed < 0) {
             pos.x = fpos.x;
@@ -72,7 +75,7 @@ public abstract class PhysicsObject {
             fspeed.y = (fpos.y - getPos().y) * approachSpeed;
         }
     }
-    
+
     public void updateSpeed(float delta) {
         if (following) {
             Vector2 followPos = followObject.getPos().sub(getPos()).scl(followdir).add(getPos());
@@ -85,9 +88,9 @@ public abstract class PhysicsObject {
         accel.y = (float) Math.sin(Math.toRadians(fspeed.angle())) * getAccelMax() * scale;
         decel.x = (float) Math.cos(Math.toRadians(speed.angle())) * getDecelMax() * scale;
         decel.y = (float) Math.sin(Math.toRadians(speed.angle())) * getDecelMax() * scale;
-        
+
         Vector2 nspeed = new Vector2(fspeed).add(speed);
-        
+
         boolean accel_b;
         if  (speed.x != fspeed.x) {
             accel_b = (fspeed.x - speed.x > 0) == (nspeed.x > 0);
@@ -126,7 +129,7 @@ public abstract class PhysicsObject {
     public abstract Vector2 getHitbox();
     public Vector2 getHitboxOffset() {return new Vector2(0, 0);};
 
-    public abstract boolean alive(); // not alive -> destory object
+    public abstract boolean destroyed(); // not destroyed -> destory object
     public abstract boolean stagnant(); // out of range -> do not update
 
     public abstract void onCollision(PhysicsObject other);

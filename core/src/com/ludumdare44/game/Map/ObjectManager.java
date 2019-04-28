@@ -4,7 +4,6 @@ import com.badlogic.gdx.math.*;
 import com.ludumdare44.game.Physics.Obstacle;
 import com.ludumdare44.game.Physics.PhysicsObject;
 import com.ludumdare44.game.Physics.VisualPhysObject;
-import com.sun.org.apache.regexp.internal.RE;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -54,14 +53,6 @@ public class ObjectManager {
     }
 
     private void checkCollisions(float delta) {
-        /*
-        for (int j = 0; j < physobjects.size(); j++) {
-            for (int i = 0; i < obstacles.length; i++) {
-                rectangleCollision(physobjects.get(j), obstacles[i], delta);
-            }
-        }
-         */
-
         ArrayList<PhysicsObject[]> collisionPairs = new ArrayList<>();
         //With other objects
         for (int i = 0; i < physobjects.size(); i++) {
@@ -92,7 +83,7 @@ public class ObjectManager {
             if (obj instanceof VisualPhysObject) {
                 VisualPhysObject vobj = (VisualPhysObject) obj;
                 if (!vobj.stagnant()) vobj.update(delta);
-                if (!vobj.alive()) deleteList.add(obj);
+                if (vobj.destroyed()) deleteList.add(obj);
             }
         }
         for (PhysicsObject o: deleteList) {

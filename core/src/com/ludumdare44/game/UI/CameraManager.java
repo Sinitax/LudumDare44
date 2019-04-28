@@ -112,7 +112,7 @@ public class CameraManager extends PhysicsObject implements IRenderable {
     }
 
     @Override
-    public boolean alive() {
+    public boolean destroyed() {
         return true;
     }
 

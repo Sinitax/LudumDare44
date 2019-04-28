@@ -9,12 +9,19 @@ import com.ludumdare44.game.Physics.VisualPhysObject;
 import com.ludumdare44.game.UI.CameraManager;
 
 public class Demon extends VisualPhysObject {
-    private Sprite sprite = new Sprite(new Texture("assets/demon.png"));
-    private CameraManager cameraManager;
+    private Sprite sprite = new Sprite(new Texture("assets/devil.png"));
+
+    private float timePassed = 0;
+
+    private float bobAmount = 50;
+    private float bobSpeed = 3f;
+    private float bobHeight;
+
+    private float maxFollowDist = 700;
 
     @Override
     public Vector2 getHitbox() {
-        return new Vector2(80, 80);
+        return getModelSize().scl(0.5f);
     }
 
     @Override
@@ -24,9 +31,6 @@ public class Demon extends VisualPhysObject {
 
     @Override
     public void onCollision(PhysicsObject other) {
-        if (other instanceof Player) {
-            ((Player) other).kill();
-        }
     }
 
     @Override
@@ -41,17 +45,17 @@ public class Demon extends VisualPhysObject {
 
     @Override
     public int getFspeedMax() {
-        return 80;
+        return -1;
     }
 
     @Override
     public Vector2 getOriginOffset() {
-        return null;
+        return new Vector2(0, 0);
     }
 
     @Override
-    public boolean alive() {
-        return true;
+    public boolean destroyed() {
+        return false;
     }
 
     @Override
@@ -66,22 +70,34 @@ public class Demon extends VisualPhysObject {
 
     @Override
     public Vector2 getModelSize() {
-        return null;
+        return new Vector2(sprite.getWidth(), sprite.getHeight());
     }
 
     @Override
     public void update(float delta) {
+        timePassed += delta;
+
+        float followDist = getFollowObject().getPos().x - getPos().x;
+
+        approachSpeed = Math.min(1, Math.max(0.2f, followDist / (maxFollowDist / 2)));
+
         updateSpeed(delta);
+
+        setPos(new Vector2(getPos().x, (float) (bobHeight + Math.sin(timePassed * bobSpeed) * bobAmount)));
+        if (followDist > maxFollowDist) setPos(new Vector2(getFollowObject().getPos().x - maxFollowDist, getPos().y));
         updatePos(delta);
     }
 
     @Override
     public void render(GFXManager gfx) {
-        gfx.batch.draw(sprite, getPos().x, getPos().y);
+        gfx.batch.draw(sprite, getPos().x - sprite.getWidth()/2, getPos().y - sprite.getHeight()/2, sprite.getWidth(), sprite.getHeight());
     }
 
-    public Demon(CameraManager _cameraManager) {
-        super(new Vector2(-1800, 0));
-        cameraManager = _cameraManager;
+    public Demon(Vector2 spos, PhysicsObject followObject) {
+        super(spos);
+        bobHeight = spos.y;
+        approachSpeed = 1;
+        follow(followObject);
+        sprite.setSize(sprite.getWidth() * 2, sprite.getHeight() * 2);
     }
 }

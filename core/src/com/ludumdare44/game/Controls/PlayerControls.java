@@ -11,7 +11,7 @@ public class PlayerControls {
     private ControlManager controlManager;
     private CameraManager cameraManager;
 
-    private Vector2 jumpVec = new Vector2(200, 1000);
+    private Vector2 jumpVec = new Vector2(700, 2000);
 
     public void update(float delta) {
         if (!player.isBusy()) {

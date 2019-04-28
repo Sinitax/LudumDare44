@@ -2,7 +2,6 @@ package com.ludumdare44.game.Characters;
 
 import com.badlogic.gdx.math.Vector2;
 import com.ludumdare44.game.GFX.GFXManager;
-import com.ludumdare44.game.GFX.IRenderableObject;
 import com.ludumdare44.game.Physics.PhysicsObject;
 import com.ludumdare44.game.Physics.VisualPhysObject;
 
@@ -13,8 +12,8 @@ public class Shadow extends VisualPhysObject {
     private int zLevel;
 
     @Override
-    public boolean alive() {
-        return owner != null && owner.alive();
+    public boolean destroyed() {
+        return owner != null && owner.destroyed();
     }
 
     @Override

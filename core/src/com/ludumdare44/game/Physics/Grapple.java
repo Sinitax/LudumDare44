@@ -17,7 +17,7 @@ public class Grapple extends VisualPhysObject {
 
     private Vector2 grappleOffset = new Vector2(0, 0);
 
-    boolean delete = false;
+    private boolean destroyed = false;
 
     private Player player;
 
@@ -32,8 +32,8 @@ public class Grapple extends VisualPhysObject {
     }
 
     @Override
-    public boolean alive() {
-        return !delete && player.alive();
+    public boolean destroyed() {
+        return destroyed;
     }
 
     @Override
@@ -43,7 +43,7 @@ public class Grapple extends VisualPhysObject {
 
     @Override
     public boolean visible() {
-        return this.alive();
+        return !this.destroyed();
     }
 
     @Override
@@ -98,12 +98,12 @@ public class Grapple extends VisualPhysObject {
         updateSpeed(delta);
         updatePos(delta);
         if (getPos().sub(initialPos).len() > maxDist) {
-            delete = true;
+            destroyed = true;
         }
     }
 
     public void kill() {
-        delete = true;
+        destroyed = true;
     }
     
     @Override

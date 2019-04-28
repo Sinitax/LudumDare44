@@ -13,5 +13,5 @@ public interface IRenderableObject extends IRenderable {
     void update(float delta);
 
     boolean visible(); // not visible -> do not render
-    boolean alive(); // delete
+    boolean destroyed(); // delete
 }

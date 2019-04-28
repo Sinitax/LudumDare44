@@ -46,7 +46,7 @@ public class Obstacle extends PhysicsObject {
     }
 
     @Override
-    public boolean alive() {
+    public boolean destroyed() {
         return true;
     }
 

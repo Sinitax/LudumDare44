@@ -1,6 +1,5 @@
 package com.ludumdare44.game;
 
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
@@ -11,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.ludumdare44.game.Characters.Demon;
 import com.ludumdare44.game.Characters.Player;
 import com.ludumdare44.game.Characters.DefaultPlayer;
 import com.ludumdare44.game.Controls.ControlManager;
@@ -27,16 +27,20 @@ import com.ludumdare44.game.UI.CameraManager;
 import com.ludumdare44.game.UI.HUD;
 import com.ludumdare44.game.UI.Menu.MenuManager;
 
+import java.util.ArrayList;
+
 public class GameScene implements Screen {
 
 	// custom controller classes
 	private ObjectManager objectManager;
 	private CameraManager cameraManager;
 	private GFXManager gfxManager;
-	private Player player;
 	private HUD hud;
 	private SpriteManager spriteManager;
 	private ScreenFader fader;
+
+	private Player player;
+	private Demon demon;
 
 	private ObjectAdder objectAdder;
 
@@ -61,11 +65,6 @@ public class GameScene implements Screen {
 
     private float timeSpent = 0;
     private float cutsceneTime = 2.5f;
-
-    private void addObject(VisualPhysObject obj) {
-		spriteManager.addObject(obj);
-    	objectManager.addObject(obj);
-	}
 
 	//Main
 	@Override
@@ -101,6 +100,7 @@ public class GameScene implements Screen {
 		};
 
 		player = new DefaultPlayer(startPos, objectAdder);
+		demon = new Demon(new Vector2(-1700, screenSize.y/2), player);
 
 		cameraManager = new CameraManager(screenSize, new Vector2(-2000, screenSize.y/2), player, new Vector2(1, 0));
 		cameraManager.setShakeDuration(cutsceneTime);
@@ -117,7 +117,9 @@ public class GameScene implements Screen {
 		spriteManager.createLayers(3);
 		// spriteManager.loadMap("assets/maps/test_map.tmx"); // no map
 		// objectManager.setObstacles(spriteManager.getObstacles()); // no map
-		addObject(player);
+
+		objectAdder.addVisObject(demon);
+		objectAdder.addVisObject(player);
 
 		fader = new ScreenFader();
 		fader.setFadeTime(1).fadeIn();
@@ -131,7 +133,6 @@ public class GameScene implements Screen {
 		caveCeiling = new CaveCeiling(cameraManager, objectManager, tileMap[0]);
 
 		hud = new HUD(player);
-		objectManager.addObject(player);
 
 		lavaFloor = new LavaFloor(cameraManager);
 
@@ -189,14 +190,17 @@ public class GameScene implements Screen {
 			spriteManager.update(delta);
 			cameraManager.update(delta);
 
-			if (player.getPos().y - player.getHitbox().y * 0.5 < 0) {
-				player.kill(); // death by lava
-                player.setSprite(player.getDeathSprite());
-                player.setFspeedAbs(new Vector2(0, 0));
-                player.stopGrapple();
+			if (player.getPos().y - player.getHitbox().y * 0.5 < 0 || player.getPos().x < demon.getPos().x + demon.getHitbox().x/2 ) { // death by lava or demon
+				player.kill();
 			}
 
-			if (!player.alive()) {
+			if (player.isDying()) {
+				player.setSprite(player.getDeathSprite());
+				player.setFspeedAbs(new Vector2(0, 0));
+				player.stopGrapple();
+			}
+
+			if (!player.destroyed()) {
 				// TODO: switch to death cutscene
 			}
 
@@ -234,7 +238,7 @@ public class GameScene implements Screen {
         gfxManager.shapeRenderer.end();
         gfxManager.batch.begin();
         //hud.render(gfxManager);
-         */
+        */
 
         gfxManager.resetProjection();
 		gfxManager.batch.end();
