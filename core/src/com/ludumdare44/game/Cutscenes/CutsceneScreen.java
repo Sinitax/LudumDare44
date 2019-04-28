@@ -89,10 +89,6 @@ public class CutsceneScreen implements Screen {
     }
 
     public void addCharacter(CutsceneCharacter character) {
-        if(character.position == null) {
-            // TODO: Find free position for character
-            //character.position = ...
-        }
         cutsceneCharacters.add(character);
     }
 

@@ -30,12 +30,9 @@ public class LudumDareGame extends Game {
         CutsceneScreen cutscene = new CutsceneScreen(new Color(0.3f, 0.3f, 0.3f, 1f), true);
 
         cutscene.addCutsceneEvent(new FadeEvent(new ScreenFader(Color.BLACK, 2).fadeIn()))
-                .addCutsceneEvent(new CharacterEnterEvent(characterPlayer, CutsceneCharacterPosition.RIGHT))
-                //.addCutsceneEvent(new CharacterLerpEvent(characterPlayer, 1).setAlpha(0))
-                //.addCutsceneEvent(new CharacterLerpEvent(characterPlayer, 1).setAlpha(1))
-                //.addCutsceneEvent(new CharacterLerpEvent(characterPlayer, 1).setOffset(new Vector2(4,1)))
+                .addCutsceneEvent(new CharacterEnterEvent(characterPlayer, CutsceneCharacterPosition.RIGHT, 1))
                 .addCutsceneEvent(new WaitEvent(1))
-                .addCutsceneEvent(new CharacterEnterEvent(characterDevil, CutsceneCharacterPosition.LEFT))
+                .addCutsceneEvent(new CharacterEnterEvent(characterDevil, CutsceneCharacterPosition.LEFT, 1))
                 .addCutsceneEvent(new WaitEvent(2))
                 .addCutsceneEvent(new TextEvent("We meet again."))
                 .addCutsceneEvent(new TextEvent("Our pact is complete, now hand over your soul!"))
@@ -44,7 +41,7 @@ public class LudumDareGame extends Game {
                 .addCutsceneEvent(new TextEvent("I'll be watching your progress closely. There will a punishment if you're lacking."))
                 .addCutsceneEvent(new TextEvent("Now, go! Before I change my mind..."))
                 .addCutsceneEvent(new WaitEvent(0.5f))
-                .addCutsceneEvent(new CharacterExitEvent(characterPlayer))
+                .addCutsceneEvent(new CharacterExitEvent(characterPlayer, 1f))
                 .addCutsceneEvent(new WaitEvent(1.5f))
                 .addCutsceneEvent(new FadeEvent(new ScreenFader(Color.BLACK, 1.5f).fadeOut()));
 
