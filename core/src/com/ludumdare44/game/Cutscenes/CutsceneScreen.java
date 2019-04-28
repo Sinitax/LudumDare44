@@ -107,17 +107,17 @@ public class CutsceneScreen implements Screen {
             shapeRenderer.end();
         }
 
+        currentEvent.postRender(delta, this, gfxManager);
+
         // Render skip label
         if(skipLabelAlpha > 0) {
             BitmapFont font = new BitmapFont();
-            gfxManager.batch.setColor(1, 1, 1, MathUtils.clamp(skipLabelAlpha, 0, 1));
+            font.setColor(1, 1, 1, MathUtils.clamp(skipLabelAlpha, 0, 1));
             gfxManager.batch.begin();
-            font.draw(gfxManager.batch, "Press ESC to skip", gfxManager.screenSize.x*0.9f, gfxManager.screenSize.x*0.1f, 0, Align.right, false);
+            font.draw(gfxManager.batch, "Press ESC to skip", gfxManager.screenSize.x - gfxManager.screenSize.y*0.1f, gfxManager.screenSize.y*0.1f, 0, Align.right, false);
             gfxManager.batch.end();
             gfxManager.batch.setColor(1, 1, 1, 1);
         }
-
-        currentEvent.postRender(delta, this, gfxManager);
     }
 
     public void addCharacter(CutsceneCharacter character) {
