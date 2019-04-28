@@ -2,6 +2,7 @@ package com.ludumdare44.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
@@ -34,7 +35,8 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 
-public class LudumDare extends ApplicationAdapter {
+public class GameScene implements Screen {
+
 	// custom controller classes
 	private ObjectManager objectManager;
 	private CameraManager cameraManager;
@@ -74,7 +76,7 @@ public class LudumDare extends ApplicationAdapter {
 
 	//Main
 	@Override
-	public void create () {
+	public void show () {
 		// display settings
 		Vector2 screenSize = new Vector2(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		Vector2 startPos = new Vector2(screenSize.x/2, screenSize.y/2);
@@ -154,7 +156,7 @@ public class LudumDare extends ApplicationAdapter {
 	}
 
 	@Override
-	public void render () {
+	public void render (float delta) {
         // update
 
 		controlManager.update();
@@ -169,8 +171,6 @@ public class LudumDare extends ApplicationAdapter {
 		}
 
 		fpsLogger.log();
-
-		float delta = Gdx.graphics.getDeltaTime();
 
 		timeSpent += delta;
 
@@ -224,6 +224,18 @@ public class LudumDare extends ApplicationAdapter {
 
 		fader.render(gfxManager, delta);
 	}
+
+	@Override
+	public void resize(int width, int height) {}
+
+	@Override
+	public void pause() {}
+
+	@Override
+	public void resume() {}
+
+	@Override
+	public void hide() {}
 
 	@Override
 	public void dispose () {
