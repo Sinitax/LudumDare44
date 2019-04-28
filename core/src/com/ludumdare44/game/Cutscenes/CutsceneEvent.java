@@ -1,0 +1,37 @@
+package com.ludumdare44.game.Cutscenes;
+
+import com.ludumdare44.game.GFX.GFXManager;
+
+public abstract class CutsceneEvent {
+
+    /**
+     * Handles processing of the cutscene event.
+     * @param delta
+     * @param screen
+     * @return true if this event has been completed.
+     */
+    public abstract boolean processEvent(float delta, CutsceneScreen screen);
+
+    /**
+     * Called if the player attempts to skip this event. If this event is skippable, completes what remains of the event.
+     * @return true if this event has been skipped.
+     */
+    public abstract boolean skip();
+
+    /**
+     * Called before characters are rendered in cutscene.
+     * @param delta
+     * @param screen
+     * @param gfxManager
+     */
+    public void preRender(float delta, CutsceneScreen screen, GFXManager gfxManager) {}
+
+    /**
+     * Called after characters are rendered in cutscene.
+     * @param delta
+     * @param screen
+     * @param gfxManager
+     */
+    public void postRender(float delta, CutsceneScreen screen, GFXManager gfxManager) {}
+
+}
