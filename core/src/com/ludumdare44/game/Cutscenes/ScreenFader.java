@@ -5,7 +5,11 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.ludumdare44.game.Cutscenes.callbacks.IFadeCompleteListener;
 import com.ludumdare44.game.GFX.GFXManager;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ScreenFader {
 
@@ -16,6 +20,7 @@ public class ScreenFader {
     protected Color color;
     protected float fadeTime;
 
+    protected final List<IFadeCompleteListener> completeListeners = new ArrayList<>();
     protected final ShapeRenderer shapeRenderer = new ShapeRenderer();
     protected FadeType fadeType;
     protected float fadeProgress = 0;
@@ -40,24 +45,36 @@ public class ScreenFader {
         return this;
     }
 
-    public void fadeIn() {
+    public ScreenFader onComplete(IFadeCompleteListener completeListener) {
+        completeListeners.add(completeListener);
+        return this;
+    }
+
+    public ScreenFader fadeIn() {
         fadeType = FadeType.FADE_IN;
         fadeProgress = 0;
+        return this;
     }
 
-    public void fadeOut() {
+    public ScreenFader fadeOut() {
         fadeType = FadeType.FADE_OUT;
         fadeProgress = 0;
+        return this;
     }
 
-    public void flash() {
+    public ScreenFader flash() {
         fadeType = FadeType.FLASH;
         fadeProgress = 0;
+        return this;
     }
 
     public void render(GFXManager gfxManager, float delta) {
-        if(fadeProgress >= fadeTime)
+        if(fadeProgress >= fadeTime) {
+            for (IFadeCompleteListener listener : completeListeners)
+                listener.fadeCompleted();
+            completeListeners.clear();
             return;
+        }
 
         fadeProgress += delta;
 
