@@ -122,7 +122,7 @@ public class LudumDare extends ApplicationAdapter {
 		// objectManager.setObstacles(spriteManager.getObstacles()); // no map
 		addObject(player);
 
-		Texture spriteSheet = new Texture("assets/textures/tiles.png");
+		Texture spriteSheet = new Texture("assets/textures/textureMap.png");
 		int tileWidth = 16;
 		int tileHeight = 16;
 
