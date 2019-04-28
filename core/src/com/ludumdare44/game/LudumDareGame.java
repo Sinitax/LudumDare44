@@ -27,7 +27,7 @@ public class LudumDareGame extends Game {
                 new Sprite(new Texture("assets/models/enemies/devil/devil.png")),
                 "Devil");
 
-        CutsceneScreen cutscene = new CutsceneScreen(new Color(0.3f, 0.3f, 0.3f, 1f), true);
+        CutsceneScreen cutscene = new CutsceneScreen(new Color(0.26f, 0.26f, 0.31f, 1f), true);
 
         cutscene.addCutsceneEvent(new FadeEvent(new ScreenFader(Color.BLACK, 2).fadeIn()))
                 .addCutsceneEvent(new CharacterEnterEvent(characterPlayer, CutsceneCharacterPosition.RIGHT, 1))
