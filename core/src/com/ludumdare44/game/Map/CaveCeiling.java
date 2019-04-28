@@ -7,7 +7,6 @@ import com.ludumdare44.game.Physics.Obstacle;
 import com.ludumdare44.game.Physics.PhysicsObject;
 import com.ludumdare44.game.Physics.VisualPhysObject;
 import com.ludumdare44.game.UI.CameraManager;
-import sun.awt.X11.Visual;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
