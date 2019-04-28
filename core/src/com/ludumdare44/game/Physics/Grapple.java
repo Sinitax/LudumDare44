@@ -6,17 +6,16 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.ludumdare44.game.Characters.Player;
 import com.ludumdare44.game.GFX.GFXManager;
 
 public class Grapple extends VisualPhysObject {
-    Texture spriteSheet = new Texture("assets/models/characters/rogue/sprites.png");
-    TextureRegion[][] spriteSheetMap = TextureRegion.split(spriteSheet, spriteSheet.getWidth() / 10, spriteSheet.getHeight() / 10);
 
-    private Animation<TextureRegion> flyingAnimation = new Animation<>(0.04f, spriteSheetMap[0]);
-    private Animation<TextureRegion> collideAnimation = new Animation<>(0.04f, spriteSheetMap[5]);
-    private Animation<TextureRegion> currentAnimation;
+    Texture spriteHook = new Texture("assets/models/weapons/grapple/grapple_hook.png");
+    Texture spriteChain = new Texture("assets/models/weapons/grapple/grapple_chain.png");
 
     private static float grappleSpeed = 1400.f;
 
@@ -71,8 +70,7 @@ public class Grapple extends VisualPhysObject {
 
     @Override
     public Vector2 getModelSize() {
-        TextureRegion frame = currentAnimation.getKeyFrames()[0];
-        return new Vector2(frame.getRegionWidth(), frame.getRegionHeight());
+        return new Vector2(2, 2);
     }
 
     @Override
@@ -99,7 +97,6 @@ public class Grapple extends VisualPhysObject {
 
     @Override
     public void update(float delta) {
-        currentAnimation = flyingAnimation;
         animationTimer += delta;
         updateSpeed(delta);
         updatePos(delta);
@@ -114,16 +111,31 @@ public class Grapple extends VisualPhysObject {
     
     @Override
     public void render(GFXManager gfx) {
-        Sprite sprite = new Sprite(currentAnimation.getKeyFrame(animationTimer));
-        gfx.drawModel(sprite, getPos());
-        if (true) {//(grappled) {
-            gfx.batch.end();
-            gfx.shapeRenderer.setColor(Color.WHITE);
-            gfx.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-            gfx.shapeRenderer.line(player.getPos(), getPos());
-            gfx.shapeRenderer.end();
-            gfx.batch.begin();
-        }
+        final int pixelRatio = 3;
+
+        int chainWidth = spriteChain.getWidth();
+        int chainHeight = spriteChain.getHeight();
+        int hookWidth = spriteHook.getWidth();
+        int hookHeight = spriteHook.getHeight();
+        float chainLength = player.getPos().sub(getPos()).len();
+        float rotation = player.getPos().sub(getPos()).angle()+90;
+
+        spriteChain.setWrap(Texture.TextureWrap.ClampToEdge, Texture.TextureWrap.Repeat);
+        Matrix4 originalTransformMatrix = gfx.batch.getTransformMatrix().cpy();
+        gfx.batch.getTransformMatrix()
+                .translate(player.getPos().x, player.getPos().y, 0)
+                .rotate(0, 0, 1, rotation)
+                .translate(-player.getPos().x, -player.getPos().y, 0);
+        gfx.batch.end();
+        gfx.batch.begin();
+
+
+        gfx.batch.draw(spriteChain, player.getPos().x, player.getPos().y,
+                chainWidth*pixelRatio, chainLength, 0, 0, 1, chainLength/chainHeight/pixelRatio);
+
+        gfx.batch.setTransformMatrix(originalTransformMatrix);
+
+        gfx.batch.draw(new TextureRegion(spriteHook), getPos().x, getPos().y, 0, 0, hookWidth*pixelRatio, hookHeight*pixelRatio, 1, 1, rotation);
     }
     
     public Grapple(Player p, Vector2 rpos) {
