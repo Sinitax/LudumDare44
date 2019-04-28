@@ -8,11 +8,10 @@ import com.ludumdare44.game.Cutscenes.CutsceneScreen;
 public class CharacterEnterEvent extends CutsceneEvent {
 
     protected final CutsceneCharacter character;
-    protected final CutsceneCharacterPosition position;
 
     public CharacterEnterEvent(CutsceneCharacter character, CutsceneCharacterPosition position) {
         this.character = character;
-        this.position = position;
+        this.character.setPosition(position);
     }
 
     public CharacterEnterEvent(CutsceneCharacter character) {
@@ -21,6 +20,7 @@ public class CharacterEnterEvent extends CutsceneEvent {
 
     @Override
     public boolean processEvent(float delta, CutsceneScreen screen) {
+        screen.addCharacter(character);
         return true;
     }
 

@@ -3,11 +3,13 @@ package com.ludumdare44.game;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.ludumdare44.game.Cutscenes.CutsceneCharacter;
 import com.ludumdare44.game.Cutscenes.CutsceneCharacterPosition;
 import com.ludumdare44.game.Cutscenes.CutsceneScreen;
 import com.ludumdare44.game.Cutscenes.ScreenFader;
 import com.ludumdare44.game.Cutscenes.events.CharacterEnterEvent;
+import com.ludumdare44.game.Cutscenes.events.CharacterExitEvent;
 import com.ludumdare44.game.Cutscenes.events.FadeEvent;
 import com.ludumdare44.game.Cutscenes.events.WaitEvent;
 
@@ -21,17 +23,20 @@ public class LudumDareGame extends Game {
 
     protected CutsceneScreen createIntroCutscene() {
         CutsceneCharacter characterPlayer = new CutsceneCharacter(
-                new Texture("assets/models/characters/rogue/icon.png"),
+                new Sprite(new Texture("assets/models/characters/rogue/icon.png")),
                 "Player");
         CutsceneCharacter characterDevil = new CutsceneCharacter(
-                new Texture("assets/models/enemies/devil/devil.png"),
+                new Sprite(new Texture("assets/models/enemies/devil/devil.png")),
                 "Devil");
 
         CutsceneScreen cutscene = new CutsceneScreen(new Color(0.3f, 0.3f, 0.3f, 1f));
         cutscene.addCutsceneEvent(new FadeEvent(new ScreenFader(Color.BLACK, 2).fadeIn()))
                 .addCutsceneEvent(new CharacterEnterEvent(characterPlayer, CutsceneCharacterPosition.RIGHT))
-                .addCutsceneEvent(new WaitEvent(1))
-                //.addCutsceneEvent(new CharacterExitEvent(characterDevil, CutsceneCharacterPosition.LEFT))
+                .addCutsceneEvent(new WaitEvent(2))
+                .addCutsceneEvent(new CharacterEnterEvent(characterDevil, CutsceneCharacterPosition.LEFT))
+                .addCutsceneEvent(new WaitEvent(4))
+                .addCutsceneEvent(new CharacterExitEvent(characterPlayer))
+                .addCutsceneEvent(new WaitEvent(4))
                 .addCutsceneEvent(new FadeEvent(new ScreenFader(Color.BLACK, 2).fadeOut()));
 
         return cutscene;

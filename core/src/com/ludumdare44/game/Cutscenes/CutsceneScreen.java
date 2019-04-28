@@ -58,13 +58,29 @@ public class CutsceneScreen implements Screen {
             cutsceneEvents.remove();
             return;
         }
-        System.out.println(currentEvent.getClass());
 
+        gfxManager.batch.begin();
         currentEvent.preRender(delta, this, gfxManager);
 
-        // Render cutscene
+        // Render characters
+        for(CutsceneCharacter character : cutsceneCharacters) {
+            character.render(delta, gfxManager);
+        }
 
         currentEvent.postRender(delta, this, gfxManager);
+        gfxManager.batch.end();
+    }
+
+    public void addCharacter(CutsceneCharacter character) {
+        if(character.position == null) {
+            // TODO: Find free position
+            //character.position = ...
+        }
+        cutsceneCharacters.add(character);
+    }
+
+    public void removeCharacter(CutsceneCharacter character) {
+        cutsceneCharacters.remove(character);
     }
 
     @Override
