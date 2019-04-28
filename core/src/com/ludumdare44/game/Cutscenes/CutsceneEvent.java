@@ -18,8 +18,20 @@ public abstract class CutsceneEvent {
      */
     public abstract boolean skip();
 
+    /**
+     * Called before characters are rendered in cutscene.
+     * @param delta
+     * @param screen
+     * @param gfxManager
+     */
     public void preRender(float delta, CutsceneScreen screen, GFXManager gfxManager) {}
 
+    /**
+     * Called after characters are rendered in cutscene.
+     * @param delta
+     * @param screen
+     * @param gfxManager
+     */
     public void postRender(float delta, CutsceneScreen screen, GFXManager gfxManager) {}
 
 }
