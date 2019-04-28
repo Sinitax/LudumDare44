@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.ludumdare44.game.LudumDare;
 import com.ludumdare44.game.Map.ObjectAdder;
 import com.ludumdare44.game.MiscUtils;
 
