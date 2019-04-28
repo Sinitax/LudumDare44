@@ -15,6 +15,7 @@ import com.ludumdare44.game.Characters.DefaultPlayer;
 import com.ludumdare44.game.Controls.ControlManager;
 import com.ludumdare44.game.Controls.MenuControls;
 import com.ludumdare44.game.Controls.PlayerControls;
+import com.ludumdare44.game.Cutscenes.ScreenFader;
 import com.ludumdare44.game.GFX.GFXManager;
 import com.ludumdare44.game.GFX.GifDecoder;
 import com.ludumdare44.game.GFX.IRenderable;
@@ -41,6 +42,7 @@ public class LudumDare extends ApplicationAdapter {
 	private Player player;
 	private HUD hud;
 	private SpriteManager spriteManager;
+	private ScreenFader fader;
 
 	private ObjectAdder objectAdder;
 
@@ -121,6 +123,9 @@ public class LudumDare extends ApplicationAdapter {
 		// spriteManager.loadMap("assets/maps/test_map.tmx"); // no map
 		// objectManager.setObstacles(spriteManager.getObstacles()); // no map
 		addObject(player);
+
+		fader = new ScreenFader();
+		fader.setFadeTime(1).fadeIn();
 
 		Texture spriteSheet = new Texture("assets/textures/tiles.png");
 		int tileWidth = 16;
@@ -216,6 +221,8 @@ public class LudumDare extends ApplicationAdapter {
 
         gfxManager.resetProjection();
 		gfxManager.batch.end();
+
+		fader.render(gfxManager, delta);
 	}
 
 	@Override
