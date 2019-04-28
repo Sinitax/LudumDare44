@@ -3,6 +3,8 @@ package com.ludumdare44.game.Map;
 import com.badlogic.gdx.math.*;
 import com.ludumdare44.game.Characters.Player;
 import com.ludumdare44.game.Physics.Grapple;
+import com.ludumdare44.game.Physics.Obstacle;
+import com.ludumdare44.game.Physics.PhysicsObject;
 import com.ludumdare44.game.Physics.VisualPhysObject;
 import com.sun.org.apache.regexp.internal.RE;
 import sun.awt.X11.Visual;
@@ -10,18 +12,21 @@ import sun.awt.X11.Visual;
 import java.util.ArrayList;
 
 public class ObjectManager {
-    private ArrayList<VisualPhysObject> physobjects;
-    private Rectangle[] obstacles;
+    private ArrayList<PhysicsObject> physobjects;
 
-    public void setObstacles(Rectangle[] obstacles) {
-        this.obstacles = obstacles;
+    public ArrayList<PhysicsObject> getObjects() { return physobjects; }
+
+    public void setObstacles(Obstacle[] obstacles) {
+        for (Obstacle o : obstacles) {
+            physobjects.add(o);
+        }
     }
 
-    public static Rectangle toRectangle(VisualPhysObject vpo) {
+    public static Rectangle toRectangle(PhysicsObject vpo) {
         return new Rectangle(vpo.getPos().x + vpo.getHitboxOffset().x - vpo.getHitbox().x/2, vpo.getPos().y + vpo.getHitboxOffset().y - vpo.getHitbox().y/2, vpo.getHitbox().x, vpo.getHitbox().y);
     }
 
-    public static void rectangleCollision(VisualPhysObject vpo, Rectangle ro, float delta) {
+    public static void rectangleCollision(PhysicsObject vpo, Rectangle ro, float delta) {
         Rectangle r = ObjectManager.toRectangle(vpo);
         Vector2 speed = vpo.getSpeed();
         Vector2 pos = new Vector2(vpo.getPos());
@@ -62,37 +67,57 @@ public class ObjectManager {
     }
 
     public void checkCollisions(float delta) {
+        /*
         for (int j = 0; j < physobjects.size(); j++) {
             for (int i = 0; i < obstacles.length; i++) {
                 rectangleCollision(physobjects.get(j), obstacles[i], delta);
             }
         }
+         */
 
+        ArrayList<PhysicsObject[]> collisionPairs = new ArrayList<>();
         //With other objects
         for (int i = 0; i < physobjects.size(); i++) {
             for (int j = i; j < physobjects.size(); j++) {
                 if (i == j) continue;
-                VisualPhysObject p1 = physobjects.get(i);
-                VisualPhysObject p2 = physobjects.get(j);
+                PhysicsObject p1 = physobjects.get(i);
+                PhysicsObject p2 = physobjects.get(j);
                 if (Intersector.overlaps(toRectangle(p1), toRectangle(p2))) {
+                    if (p1 instanceof Obstacle && collisionPairs.indexOf(new PhysicsObject[] {p2, p1}) == -1) {
+                        collisionPairs.add(new PhysicsObject[] {p1, p2});
+                    }
                     p1.onCollision(p2);
-                    p2.onCollision(p1);
                 }
             }
+        }
+
+        for (PhysicsObject[] pair : collisionPairs) {
+            rectangleCollision(pair[1], toRectangle(pair[0]), delta);
         }
     }
 
     public void update(float delta) {
         //check physics collisions
+        ArrayList<PhysicsObject> deleteList = new ArrayList<>();
+        for (int i = 0; i < physobjects.size(); i++) {
+            PhysicsObject obj = physobjects.get(i);
+            if (obj instanceof VisualPhysObject) {
+                VisualPhysObject vobj = (VisualPhysObject) obj;
+                if (!vobj.stagnant()) vobj.update(delta);
+                if (!vobj.alive()) deleteList.add(obj);
+            }
+        }
+        for (PhysicsObject o: deleteList) {
+            physobjects.remove(o);
+        }
         checkCollisions(delta);
     }
 
-    public void addObject(VisualPhysObject obj) {
+    public void addObject(PhysicsObject obj) {
         physobjects.add(obj);
     }
 
     public ObjectManager() {
         physobjects = new ArrayList<>();
-        obstacles = new Rectangle[] {};
     }
 }

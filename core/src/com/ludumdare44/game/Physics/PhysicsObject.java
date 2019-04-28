@@ -36,9 +36,6 @@ public abstract class PhysicsObject {
     private Vector2 accel = new Vector2(0, 0);
     private Vector2 decel = new Vector2(0, 0);
     
-    public int groundLevel = 0;
-    public boolean hitGround;
-    
     public float speedscale = 1;
     
     public abstract int getAccelMax();
@@ -50,7 +47,7 @@ public abstract class PhysicsObject {
         pos.x = _pos.x;
         pos.y = _pos.y;
     }
-    public final Vector2 getPos() { return pos; }
+    public final Vector2 getPos() { return new Vector2(pos); }
     
     public float approachSpeed = 1;
     public void follow(PhysicsObject obj) {
@@ -110,15 +107,13 @@ public abstract class PhysicsObject {
         
         pos.x += speed.x * delta;
         pos.y += speed.y * delta;
-        
-        if (groundLevel != 0) {
-            if(speed.y < 0 && pos.y < groundLevel && pos.y - speed.y * delta > groundLevel) {
-                hitGround = true;
-            }
-        }
-        
     }
-    
+
+    public abstract Vector2 getHitbox();
+    public abstract Vector2 getHitboxOffset();
+
+    public abstract void onCollision(PhysicsObject other);
+
     public PhysicsObject(Vector2 _pos) {
         pos = _pos;
     }

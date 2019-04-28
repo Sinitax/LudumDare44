@@ -6,7 +6,9 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.ludumdare44.game.GFX.GFXManager;
+import com.ludumdare44.game.LudumDare;
 import com.ludumdare44.game.Physics.Grapple;
+import com.ludumdare44.game.Physics.PhysicsObject;
 import com.ludumdare44.game.Physics.VisualPhysObject;
 
 public abstract class Player extends VisualPhysObject {
@@ -21,6 +23,10 @@ public abstract class Player extends VisualPhysObject {
     private float swingAmount  = 0;
 
     private boolean facingRight;
+
+    private Grapple grapple;
+    private boolean grappled;
+
     public float animationTime;
     private boolean busy = false;
     public boolean isBusy() { return busy; }
@@ -30,13 +36,13 @@ public abstract class Player extends VisualPhysObject {
 
     private float energyMax = 50;
 
-    private float energy = energyMax;
+    private float energy = 0;
     public final float getEnergyMax() { return energyMax; }
     public final float getEnergy() { return energy; }
     public final void setEnergy(float _energy) {
-        if (_energy < 0) _energy = 0;
-        if (_energy > energyMax) _energy = energyMax;
         energy = _energy;
+        if (energy < 0) energy = 0;
+        if (energy > energyMax) energy = energyMax;
     }
 
     public abstract Texture getIcon();
@@ -69,8 +75,10 @@ public abstract class Player extends VisualPhysObject {
     @Override
     public boolean visible() { return true; }
 
-    public abstract Animation<TextureRegion> getIdleAnimation();
-    public abstract Animation<TextureRegion> getWalkingAnimation();
+    public abstract Animation<TextureRegion> getAirborneAnimation();
+    public abstract Animation<TextureRegion> getLeftSwingAnimation();
+    public abstract Animation<TextureRegion> getRightSwingAnimation();
+    public abstract Animation<TextureRegion> getGrappleAnimation();
 
     /*
     public void faceDir(float x, boolean isRelative) {
@@ -92,7 +100,7 @@ public abstract class Player extends VisualPhysObject {
     }
 
     @Override
-    public void onCollision(VisualPhysObject other) {
+    public void onCollision(PhysicsObject other) {
         if (other instanceof Grapple) {
             busy = false;
         }
@@ -100,17 +108,22 @@ public abstract class Player extends VisualPhysObject {
     
     @Override
     public void update(float delta) {
+        currentAnimation = getAirborneAnimation();
         animationTime += delta;
-        Vector2 pspeed = new Vector2(getSpeed());
+        if (swingAmount == 1) {
+            setFspeed(new Vector2(50, 0));
+        } else if (swingAmount == -1) {
+            setFspeed(new Vector2(-50, 0));
+        } else {
+            setFspeed(new Vector2(0, 0));
+        }
         updatePos(delta);
-        if (getSpeed().isZero() && !pspeed.isZero()) animationTime = 0;
+        if (grapple != null) grapple.update(delta);
     }
     
     @Override
     public void render(GFXManager gfx) {
         if (!busy) { //determine animations as usual if not busy
-            if (!getSpeed().isZero()) currentAnimation = getWalkingAnimation();
-            else currentAnimation = getIdleAnimation();
             sprite = new Sprite(currentAnimation.getKeyFrame(animationTime, true));
         }
         if (!facingRight) {
@@ -118,19 +131,25 @@ public abstract class Player extends VisualPhysObject {
         }
 
         gfx.drawModel(sprite, getPos(), getModelScale());
+        if (grapple != null) grapple.render(gfx);
     }
 
     protected void initAnimations() {
         special = getSpecial();
         attack = getAttack();
-        currentAnimation = getIdleAnimation();
     }
 
     public void setSwing(float amount) {
-        this.swingAmount = amount;
+        swingAmount = amount;
     }
 
     public void doGrapple(Vector2 target) {
+        grapple = new Grapple(getPos(), target.sub(getPos()).scl(1, -1));
+        // busy = true;
+    }
+
+    public void stopGrapple() {
+        grapple = null;
     }
 
     public void doAbility() {

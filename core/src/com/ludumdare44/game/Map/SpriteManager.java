@@ -12,6 +12,8 @@ import com.badlogic.gdx.math.*;
 import com.ludumdare44.game.GFX.GFXManager;
 import com.ludumdare44.game.GFX.IRenderable;
 import com.ludumdare44.game.GFX.IRenderableObject;
+import com.ludumdare44.game.Physics.Obstacle;
+import com.ludumdare44.game.Physics.PhysicsObject;
 import com.ludumdare44.game.Physics.VisualPhysObject;
 import com.ludumdare44.game.UI.CameraManager;
 
@@ -134,6 +136,7 @@ public class SpriteManager {
     }
 
     private ArrayList<VisualPhysObject> physobjects;
+    private ArrayList<PhysicsObject> obstacles;
     private List<List<IRenderableObject>> layers;
 
     private TiledMap map;
@@ -147,10 +150,9 @@ public class SpriteManager {
     private Vector2 msize = new Vector2();
 
     private TiledMapTileLayer[] tileLayers;
-    private Rectangle[] obstacles;
 
     public static Rectangle toRectangle(VisualPhysObject vpo) {
-        return new Rectangle(vpo.getPos().x + vpo.getHitboxOffset().x - vpo.getHitbox().x/2, vpo.getPos().y + vpo.getHitboxOffset().y - vpo.getHitbox().y/2, vpo.getHitbox().x, VisualPhysObject.objectDepth);
+        return new Rectangle(vpo.getPos().x + vpo.getHitboxOffset().x - vpo.getHitbox().x/2, vpo.getPos().y + vpo.getHitboxOffset().y - vpo.getHitbox().y/2, vpo.getHitbox().x, vpo.getHitbox().y);
     }
 
     public void loadMap(String name) {
@@ -190,7 +192,10 @@ public class SpriteManager {
                 }
             }
         }
-        obstacles = obstaclesTemp.toArray(new Rectangle[obstaclesTemp.size()]);
+        Rectangle[] rects = obstaclesTemp.toArray(new Rectangle[obstaclesTemp.size()]);
+        for (Rectangle r: rects) {
+            obstacles.add(new Obstacle((int) r.x, (int) r.y, (int) r.width, (int) r.height));
+        }
 
         layers = new ArrayList<>();
         for (int i = 0; i < max+1; i++) layers.add(new ArrayList<>());
@@ -256,15 +261,17 @@ public class SpriteManager {
                 obj.render(gfx);
             }
         }
+
         if (gfx.DEBUG) {
-            gfx.batch.end();
             gfx.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
             gfx.shapeRenderer.setProjectionMatrix(gfx.camera.combined);
             Color c = Color.WHITE;
 
-            for (int i = 0; i < obstacles.length; i++) {
+            for (int i = 0; i < obstacles.size(); i++) {
                 gfx.shapeRenderer.setColor(c);
-                gfx.shapeRenderer.rect(obstacles[i].x, obstacles[i].y, obstacles[i].width, obstacles[i].height);
+                Vector2 pos = obstacles.get(i).getPos();
+                Vector2 size = obstacles.get(i).getHitbox();
+                gfx.shapeRenderer.rect(pos.x, pos.y, size.x, size.y);
             }
 
             gfx.shapeRenderer.end();
@@ -320,8 +327,8 @@ public class SpriteManager {
         if (hasMap) updateMap();
     }
 
-    public Rectangle[] getObstacles() {
-        return obstacles;
+    public PhysicsObject[] getObstacles() { // TODO: turn into physObjects
+        return obstacles.toArray(new PhysicsObject[] {});
     }
 
     public void createLayers(int layerCount) {

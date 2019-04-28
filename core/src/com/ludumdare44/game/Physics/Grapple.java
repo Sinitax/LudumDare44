@@ -1,6 +1,6 @@
 package com.ludumdare44.game.Physics;
 
-import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -8,19 +8,25 @@ import com.badlogic.gdx.math.Vector2;
 import com.ludumdare44.game.GFX.GFXManager;
 
 public class Grapple extends VisualPhysObject {
-    private Animation<TextureRegion> flyingAnimation;
-    private Animation<TextureRegion> collideAnimation;
+    Texture spriteSheet = new Texture("assets/models/characters/rogue/sprites.png");
+    TextureRegion[][] spriteSheetMap = TextureRegion.split(spriteSheet, spriteSheet.getWidth() / 10, spriteSheet.getHeight() / 10);
+
+    private Animation<TextureRegion> flyingAnimation = new Animation<>(0.04f, spriteSheetMap[0]);
+    private Animation<TextureRegion> collideAnimation = new Animation<>(0.04f, spriteSheetMap[5]);
     private Animation<TextureRegion> currentAnimation;
 
-    private float stateTime = 0;
-    private Vector2 ipos;
-    private Vector2 rpos;
+    private static float grappleSpeed = 300.f;
 
-    protected boolean destroy = false;
+    boolean delete = false;
+
+    private float animationTimer = 0.f;
+    private float maxDist = 350;
+
+    private Vector2 initialPos;
 
     @Override
     public boolean alive() {
-        return !this.getSpeed().isZero();
+        return !delete;
     }
 
     @Override
@@ -44,8 +50,8 @@ public class Grapple extends VisualPhysObject {
     }
 
     @Override
-    public void onCollision(VisualPhysObject other) {
-
+    public void onCollision(PhysicsObject other) {
+        this.setFspeed(new Vector2(0, 0));
     }
 
     @Override
@@ -76,35 +82,29 @@ public class Grapple extends VisualPhysObject {
     
     @Override
     public int getAccelMax() {
-        return -1;
+        return -10;
     }
     
 
     @Override
     public void update(float delta) {
-        stateTime += delta;
-        if (!hitGround) {
-            updatePos(delta);
-            if (hitGround) currentAnimation = collideAnimation;
+        currentAnimation = flyingAnimation;
+        animationTimer += delta;
+        updatePos(delta);
+        if (getPos().sub(initialPos).len() > maxDist) {
+            delete = true;
         }
     }
     
     @Override
     public void render(GFXManager gfx) {
-        Sprite sprite = new Sprite(currentAnimation.getKeyFrame(stateTime));
+        Sprite sprite = new Sprite(currentAnimation.getKeyFrame(animationTimer));
         gfx.drawModel(sprite, getPos());
     }
     
-    public void launchToPointer() {
-        Vector2 mouseVec = new Vector2(Gdx.input.getX(), Gdx.input.getY());
-        launch(mouseVec);
-    }
-    public void launch(Vector2 _fpos) {
-        ipos = new Vector2(getPos());
-        setFspeed(new Vector2(rpos));
-    }
-
-    public Grapple(Vector2 pos) {
-        super(new Vector2(pos));
+    public Grapple(Vector2 ipos, Vector2 rpos) {
+        super(new Vector2(ipos));
+        initialPos = ipos;
+        setSpeed(rpos.nor().scl(grappleSpeed));
     }
 }

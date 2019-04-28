@@ -21,15 +21,25 @@ public class DefaultPlayer extends com.ludumdare44.game.Characters.Player {
     }
     
     @Override
-    public Animation<TextureRegion> getIdleAnimation() {
+    public Animation<TextureRegion> getGrappleAnimation() {
         return new Animation<>(0.2f, spriteSheetMap[0]);
     }
-    
+
     @Override
-    public Animation<TextureRegion> getWalkingAnimation() {
+    public Animation<TextureRegion> getRightSwingAnimation() {
         return new Animation<>(0.05f, spriteSheetMap[2]);
     }
-    
+
+    @Override
+    public Animation<TextureRegion> getLeftSwingAnimation() {
+        return new Animation<>(0.05f, spriteSheetMap[2]);
+    }
+
+    @Override
+    public Animation<TextureRegion> getAirborneAnimation() {
+        return new Animation<>(0.05f, spriteSheetMap[0]);
+    }
+
     @Override
     public com.ludumdare44.game.Characters.Ability getSpecial() { //cloak
         return new com.ludumdare44.game.Characters.Ability(new Animation<>(0.04f, (TextureRegion[]) MiscUtils.concatenate(spriteSheetMap[1], spriteSheetMap[5])), this, 80, 5000, 10000) {

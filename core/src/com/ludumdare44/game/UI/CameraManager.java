@@ -94,11 +94,26 @@ public class CameraManager extends PhysicsObject implements IRenderable {
         }
         return false;
     }
-    
-    public CameraManager(Vector2 _screenSize, Vector2 _pos) {
+
+    @Override
+    public Vector2 getHitbox() {
+        return new Vector2(0, 0);
+    }
+
+    @Override
+    public Vector2 getHitboxOffset() {
+        return new Vector2(0, 0);
+    }
+
+    @Override
+    public void onCollision(PhysicsObject other) {
+    }
+
+    public CameraManager(Vector2 _screenSize, Vector2 _pos, PhysicsObject obj) {
         super(new Vector2(_pos));
         random = new Random();
         screenSize = _screenSize;
         approachSpeed = 4;
+        follow(obj);
     }
 }

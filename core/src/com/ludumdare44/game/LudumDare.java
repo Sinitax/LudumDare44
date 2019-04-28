@@ -2,13 +2,17 @@ package com.ludumdare44.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.ludumdare44.game.Characters.Player;
 import com.ludumdare44.game.Characters.DefaultPlayer;
+import com.ludumdare44.game.Controls.ControlManager;
+import com.ludumdare44.game.Controls.MenuControls;
 import com.ludumdare44.game.Controls.PlayerControls;
 import com.ludumdare44.game.GFX.GFXManager;
 import com.ludumdare44.game.GFX.GifDecoder;
@@ -16,10 +20,16 @@ import com.ludumdare44.game.Map.CaveCeiling;
 import com.ludumdare44.game.Map.EndlessBackground;
 import com.ludumdare44.game.Map.ObjectManager;
 import com.ludumdare44.game.Map.SpriteManager;
+import com.ludumdare44.game.Physics.PhysicsObject;
 import com.ludumdare44.game.Physics.VisualPhysObject;
 import com.ludumdare44.game.UI.CameraManager;
 import com.ludumdare44.game.UI.HUD;
+import com.ludumdare44.game.UI.Menu.ControlsMenu;
+import com.ludumdare44.game.UI.Menu.Menu;
 import com.ludumdare44.game.UI.Menu.MenuManager;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 
 public class LudumDare extends ApplicationAdapter {
@@ -28,9 +38,12 @@ public class LudumDare extends ApplicationAdapter {
 	private CameraManager cameraManager;
 	private GFXManager gfxManager;
 	private Player player;
-	private PlayerControls playerControls;
 	private HUD hud;
 	private SpriteManager spriteManager;
+
+	private ControlManager controlManager;
+	private PlayerControls playerControls;
+	private MenuControls menuControls;
 
 	private EndlessBackground endlessBackground;
 	private CaveCeiling caveCeiling;
@@ -59,12 +72,17 @@ public class LudumDare extends ApplicationAdapter {
 		Vector2 startPos = new Vector2(screenSize.x/2, screenSize.y/2);
 
 		gfxManager = new GFXManager(screenSize);
-		cameraManager = new CameraManager(screenSize, new Vector2(0, 0));
 
 		fpsLogger = new FPSLogger();
 
 		player = new DefaultPlayer(startPos);
-		playerControls = new PlayerControls(player);
+
+		cameraManager = new CameraManager(screenSize, new Vector2(0, 0), player);
+
+		controlManager = new ControlManager();
+		Gdx.input.setInputProcessor(controlManager);
+		playerControls = new PlayerControls(controlManager, player);
+		menuControls = new MenuControls(controlManager, menuManager);
 
 		menuManager = new MenuManager();
 		spriteManager = new SpriteManager(cameraManager);
@@ -81,7 +99,7 @@ public class LudumDare extends ApplicationAdapter {
 		TextureRegion[][] tileMap = TextureRegion.split(spriteSheet, tileWidth, tileHeight);
 
 
-		caveCeiling = new CaveCeiling(cameraManager, tileMap[0]);
+		caveCeiling = new CaveCeiling(cameraManager, objectManager, tileMap[0]);
 
 		hud = new HUD(player);
 		objectManager.addObject(player);
@@ -100,6 +118,11 @@ public class LudumDare extends ApplicationAdapter {
 
 	@Override
 	public void render () {
+        // update
+
+		controlManager.update();
+		menuControls.update();
+
 		if (menuManager.enabled()) {
 			// menu controls
 			gfxManager.batch.begin();
@@ -112,9 +135,8 @@ public class LudumDare extends ApplicationAdapter {
 
 		float delta = Gdx.graphics.getDeltaTime();
 
-		// update
-
 		playerControls.update();
+
 		objectManager.update(delta);
 		spriteManager.update(delta);
 		cameraManager.update(delta);
@@ -130,7 +152,20 @@ public class LudumDare extends ApplicationAdapter {
 		endlessBackground.render(gfxManager);
 		caveCeiling.render(gfxManager);
         spriteManager.render(gfxManager);
-        hud.render(gfxManager);
+
+		/*
+        gfxManager.batch.end();
+        gfxManager.shapeRenderer.setColor(Color.RED);
+        gfxManager.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        ArrayList<PhysicsObject> objects = objectManager.getObjects();
+        for (int i = 0; i < objects.size(); i++) {
+            PhysicsObject pobj = objects.get(i);
+            gfxManager.shapeRenderer.rect(pobj.getPos().x, pobj.getPos().y, pobj.getHitbox().x, pobj.getHitbox().y);
+        }
+        gfxManager.shapeRenderer.end();
+        gfxManager.batch.begin();
+        //hud.render(gfxManager);
+        */
 
         gfxManager.resetProjection();
 		gfxManager.batch.end();

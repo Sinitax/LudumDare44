@@ -6,30 +6,34 @@ import com.badlogic.gdx.math.Vector2;
 import com.ludumdare44.game.Characters.Player;
 
 public class PlayerControls {
-    private Player p;
+    private Player player;
+    private ControlManager controlManager;
 
     public void update() {
-        Vector2 mouseVec = new Vector2(Gdx.input.getX(), Gdx.input.getY());
-        if (!p.isBusy()) {
-
-            if (Gdx.input.isButtonPressed(Input.Keys.SPACE)) {
-                p.doGrapple(mouseVec);
-            } else if (Gdx.input.isButtonPressed(Input.Keys.E)) {
-                p.doAbility();
-            }
-
-            if (Gdx.input.isButtonPressed(Input.Keys.D)) {
-                p.setSwing(1);
-            } else if (Gdx.input.isButtonPressed(Input.Keys.A)) {
-                p.setSwing(-1);
-            } else {
-                p.setSwing(0);
+        if (!player.isBusy()) {
+            if (controlManager.justPressed(Input.Keys.E)) {
+                System.out.println("grapple");
+                Vector2 mouseVec = new Vector2(Gdx.input.getX(), Gdx.input.getY());
+                player.doGrapple(mouseVec);
+            } else if (controlManager.justPressed(Input.Keys.R)) {
+                player.doAbility();
+            } else if (controlManager.justPressed(Input.Keys.SPACE)) {
+                player.stopGrapple();
             }
 
         }
+
+        if (controlManager.isPressed(Input.Keys.D)) {
+            player.setSwing(1);
+        } else if (controlManager.isPressed(Input.Keys.A)) {
+            player.setSwing(-1);
+        } else {
+            player.setSwing(0);
+        }
     }
 
-    public PlayerControls(Player _p) {
-        this.p = _p;
+    public PlayerControls(ControlManager _controlManager, Player _player) {
+        controlManager = _controlManager;
+        player = _player;
     }
 }

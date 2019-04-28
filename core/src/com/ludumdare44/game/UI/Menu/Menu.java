@@ -1,7 +1,6 @@
 package com.ludumdare44.game.UI.Menu;
 
 import com.ludumdare44.game.GFX.GFXManager;
-import com.ludumdare44.game.UI.INavigatable;
 
 public abstract class Menu implements INavigatable {
     private static Option[] options;
