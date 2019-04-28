@@ -67,15 +67,13 @@ public class CutsceneScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         currentEvent.preRender(delta, this, gfxManager);
-        gfxManager.batch.begin();
 
         // Render characters
+        gfxManager.batch.begin();
         for(CutsceneCharacter character : cutsceneCharacters) {
             character.render(delta, gfxManager);
         }
-
         gfxManager.batch.end();
-        currentEvent.postRender(delta, this, gfxManager);
 
         // Render cinematic bars
         if(cinematicBars) {
@@ -86,6 +84,8 @@ public class CutsceneScreen implements Screen {
             shapeRenderer.rect(0, (1-marginPercent)*gfxManager.screenSize.y, gfxManager.screenSize.x, gfxManager.screenSize.y*marginPercent);
             shapeRenderer.end();
         }
+
+        currentEvent.postRender(delta, this, gfxManager);
     }
 
     public void addCharacter(CutsceneCharacter character) {
