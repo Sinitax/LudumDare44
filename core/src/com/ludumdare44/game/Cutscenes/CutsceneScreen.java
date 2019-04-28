@@ -43,9 +43,7 @@ public class CutsceneScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
+        // Cutscene processing
         if(cutsceneEvents.isEmpty()) {
             for(ICutsceneCompleteListener listener : completeListeners)
                 listener.cutsceneCompleted();
@@ -56,24 +54,29 @@ public class CutsceneScreen implements Screen {
         CutsceneEvent currentEvent = cutsceneEvents.peek();
         if(currentEvent.processEvent(delta, this)) {
             cutsceneEvents.remove();
+            render(delta);
             return;
         }
 
-        gfxManager.batch.begin();
+        // Cutscene rendering
+        Gdx.gl.glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
         currentEvent.preRender(delta, this, gfxManager);
+        gfxManager.batch.begin();
 
         // Render characters
         for(CutsceneCharacter character : cutsceneCharacters) {
             character.render(delta, gfxManager);
         }
 
-        currentEvent.postRender(delta, this, gfxManager);
         gfxManager.batch.end();
+        currentEvent.postRender(delta, this, gfxManager);
     }
 
     public void addCharacter(CutsceneCharacter character) {
         if(character.position == null) {
-            // TODO: Find free position
+            // TODO: Find free position for character
             //character.position = ...
         }
         cutsceneCharacters.add(character);

@@ -34,10 +34,10 @@ public class LudumDareGame extends Game {
                 .addCutsceneEvent(new CharacterEnterEvent(characterPlayer, CutsceneCharacterPosition.RIGHT))
                 .addCutsceneEvent(new WaitEvent(2))
                 .addCutsceneEvent(new CharacterEnterEvent(characterDevil, CutsceneCharacterPosition.LEFT))
-                .addCutsceneEvent(new WaitEvent(4))
+                .addCutsceneEvent(new WaitEvent(2))
                 .addCutsceneEvent(new CharacterExitEvent(characterPlayer))
-                .addCutsceneEvent(new WaitEvent(4))
-                .addCutsceneEvent(new FadeEvent(new ScreenFader(Color.BLACK, 2).fadeOut()));
+                .addCutsceneEvent(new WaitEvent(1))
+                .addCutsceneEvent(new FadeEvent(new ScreenFader(Color.BLACK, 1.5f).fadeOut()));
 
         return cutscene;
     }
