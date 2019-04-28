@@ -2,6 +2,7 @@ package com.ludumdare44.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
@@ -15,6 +16,7 @@ import com.ludumdare44.game.Characters.DefaultPlayer;
 import com.ludumdare44.game.Controls.ControlManager;
 import com.ludumdare44.game.Controls.MenuControls;
 import com.ludumdare44.game.Controls.PlayerControls;
+import com.ludumdare44.game.Cutscenes.ScreenFader;
 import com.ludumdare44.game.GFX.GFXManager;
 import com.ludumdare44.game.GFX.GifDecoder;
 import com.ludumdare44.game.GFX.IRenderable;
@@ -33,7 +35,8 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 
-public class LudumDare extends ApplicationAdapter {
+public class GameScene implements Screen {
+
 	// custom controller classes
 	private ObjectManager objectManager;
 	private CameraManager cameraManager;
@@ -41,6 +44,7 @@ public class LudumDare extends ApplicationAdapter {
 	private Player player;
 	private HUD hud;
 	private SpriteManager spriteManager;
+	private ScreenFader fader;
 
 	private ObjectAdder objectAdder;
 
@@ -72,7 +76,7 @@ public class LudumDare extends ApplicationAdapter {
 
 	//Main
 	@Override
-	public void create () {
+	public void show () {
 		// display settings
 		Vector2 screenSize = new Vector2(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		Vector2 startPos = new Vector2(screenSize.x/2, screenSize.y/2);
@@ -122,7 +126,10 @@ public class LudumDare extends ApplicationAdapter {
 		// objectManager.setObstacles(spriteManager.getObstacles()); // no map
 		addObject(player);
 
-		Texture spriteSheet = new Texture("assets/textures/textureMap.png");
+		fader = new ScreenFader();
+		fader.setFadeTime(1).fadeIn();
+
+		Texture spriteSheet = new Texture("assets/textures/tiles.png");
 		int tileWidth = 16;
 		int tileHeight = 16;
 
@@ -149,7 +156,7 @@ public class LudumDare extends ApplicationAdapter {
 	}
 
 	@Override
-	public void render () {
+	public void render (float delta) {
         // update
 
 		controlManager.update();
@@ -164,8 +171,6 @@ public class LudumDare extends ApplicationAdapter {
 		}
 
 		fpsLogger.log();
-
-		float delta = Gdx.graphics.getDeltaTime();
 
 		timeSpent += delta;
 
@@ -216,7 +221,21 @@ public class LudumDare extends ApplicationAdapter {
 
         gfxManager.resetProjection();
 		gfxManager.batch.end();
+
+		fader.render(gfxManager, delta);
 	}
+
+	@Override
+	public void resize(int width, int height) {}
+
+	@Override
+	public void pause() {}
+
+	@Override
+	public void resume() {}
+
+	@Override
+	public void hide() {}
 
 	@Override
 	public void dispose () {
