@@ -20,13 +20,12 @@ public class LudumDareGame extends Game {
     }
 
     protected CutsceneScreen createIntroCutscene() {
-        CutsceneCharacter characterPlayer = new CutsceneCharacter(
-                new Sprite(new Texture("assets/models/characters/rogue/icon.png")),
-                "Player");
-        CutsceneCharacter characterDevil = new CutsceneCharacter(
-                new Sprite(new Texture("assets/models/enemies/devil/devil.png")),
-                "Devil");
+        Sprite playerSprite = new Sprite(new Texture("assets/models/characters/rogue/icon.png"));
+        Sprite devilSprite = new Sprite(new Texture("assets/models/enemies/devil/devil.png"));
+        playerSprite.flip(true, false);
 
+        CutsceneCharacter characterPlayer = new CutsceneCharacter(playerSprite, "Player");
+        CutsceneCharacter characterDevil = new CutsceneCharacter(devilSprite, "Devil");
         CutsceneScreen cutscene = new CutsceneScreen(new Color(0.26f, 0.26f, 0.31f, 1f), true);
 
         cutscene.addCutsceneEvent(new FadeEvent(new ScreenFader(Color.BLACK, 2).fadeIn()))
