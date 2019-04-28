@@ -19,21 +19,13 @@ import com.ludumdare44.game.Controls.PlayerControls;
 import com.ludumdare44.game.Cutscenes.ScreenFader;
 import com.ludumdare44.game.GFX.GFXManager;
 import com.ludumdare44.game.GFX.GifDecoder;
-import com.ludumdare44.game.GFX.IRenderable;
 import com.ludumdare44.game.GFX.IRenderableObject;
 import com.ludumdare44.game.Map.*;
 import com.ludumdare44.game.Physics.PhysicsObject;
 import com.ludumdare44.game.Physics.VisualPhysObject;
 import com.ludumdare44.game.UI.CameraManager;
 import com.ludumdare44.game.UI.HUD;
-import com.ludumdare44.game.UI.Menu.ControlsMenu;
-import com.ludumdare44.game.UI.Menu.Menu;
 import com.ludumdare44.game.UI.Menu.MenuManager;
-import org.w3c.dom.css.Rect;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-
 
 public class GameScene implements Screen {
 
@@ -53,6 +45,7 @@ public class GameScene implements Screen {
 	private MenuControls menuControls;
 
 	private EndlessBackground background1, background2;
+	private LavaFloor lavaFloor;
 	private CaveCeiling caveCeiling;
 
 	// game settings
@@ -140,6 +133,8 @@ public class GameScene implements Screen {
 		hud = new HUD(player);
 		objectManager.addObject(player);
 
+		lavaFloor = new LavaFloor(cameraManager);
+
 		Texture tempSheet = new Texture("assets/background2.png");
 		TextureRegion[] tempMap = TextureRegion.split(tempSheet, tempSheet.getWidth(), tempSheet.getHeight())[0];
 		background1 = new EndlessBackground(cameraManager, tempMap, true, 0.5f);
@@ -158,7 +153,6 @@ public class GameScene implements Screen {
 	@Override
 	public void render (float delta) {
         // update
-
 		controlManager.update();
 		menuControls.update();
 
@@ -203,6 +197,8 @@ public class GameScene implements Screen {
 
 		caveCeiling.render(gfxManager);
         spriteManager.render(gfxManager);
+
+        lavaFloor.render(gfxManager);
 
         /*
         gfxManager.batch.end();

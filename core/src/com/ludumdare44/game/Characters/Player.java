@@ -67,6 +67,9 @@ public abstract class Player extends VisualPhysObject {
     @Override
     public int getFspeedMax() { return 300; }
 
+    public void kill() {
+        dead = true;
+    }
 
     @Override
     public boolean alive() { return !dead; }
@@ -116,7 +119,7 @@ public abstract class Player extends VisualPhysObject {
         }
 
         updatePos(delta);
-        if (getPos().y + getModelSize().y * getModelScale().y * 0.5 < 0) dead = true;
+        if (getPos().y - getHitbox().y * 0.5 < 0) dead = true;
 
         facingRight = (getSpeed().x > 0 && !grappling || grappling && grapple.getPos().sub(getPos()).x > 0);
     }
