@@ -27,6 +27,7 @@ public class LudumDareGame extends Game {
                 "Devil");
 
         CutsceneScreen cutscene = new CutsceneScreen(new Color(0.3f, 0.3f, 0.3f, 1f), true);
+
         cutscene.addCutsceneEvent(new FadeEvent(new ScreenFader(Color.BLACK, 2).fadeIn()))
                 .addCutsceneEvent(new CharacterEnterEvent(characterPlayer, CutsceneCharacterPosition.RIGHT))
                 .addCutsceneEvent(new WaitEvent(1))
@@ -38,9 +39,9 @@ public class LudumDareGame extends Game {
                 .addCutsceneEvent(new TextEvent("There are some stray souls that need to be collected in the underground."))
                 .addCutsceneEvent(new TextEvent("I'll be watching your progress closely. There will a punishment if you're lacking."))
                 .addCutsceneEvent(new TextEvent("Now, go! Before I change my mind..."))
-                .addCutsceneEvent(new WaitEvent(1))
+                .addCutsceneEvent(new WaitEvent(0.5f))
                 .addCutsceneEvent(new CharacterExitEvent(characterPlayer))
-                .addCutsceneEvent(new WaitEvent(1))
+                .addCutsceneEvent(new WaitEvent(1.5f))
                 .addCutsceneEvent(new FadeEvent(new ScreenFader(Color.BLACK, 1.5f).fadeOut()));
 
         return cutscene;

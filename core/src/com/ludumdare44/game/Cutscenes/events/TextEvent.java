@@ -1,6 +1,7 @@
 package com.ludumdare44.game.Cutscenes.events;
 
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.utils.Align;
 import com.ludumdare44.game.Cutscenes.CutsceneEvent;
 import com.ludumdare44.game.Cutscenes.CutsceneScreen;
 import com.ludumdare44.game.GFX.GFXManager;
@@ -64,7 +65,7 @@ public class TextEvent extends CutsceneEvent {
 
         gfxManager.batch.begin();
 
-        font.draw(gfxManager.batch, printedText, 10, gfxManager.screenSize.y*0.15f);
+        font.draw(gfxManager.batch, printedText, gfxManager.screenSize.x/2f, gfxManager.screenSize.y*0.1f, 0, Align.center, false);
 
         gfxManager.batch.end();
     }
