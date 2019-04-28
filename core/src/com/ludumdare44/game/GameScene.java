@@ -154,6 +154,8 @@ public class GameScene implements Screen {
 	public void render (float delta) {
         // update
 		controlManager.update();
+
+		/* // TODO: move to another scene
 		menuControls.update();
 
 		if (menuManager.enabled()) {
@@ -164,9 +166,13 @@ public class GameScene implements Screen {
 			return;
 		}
 
+		 */
+
 		fpsLogger.log();
 
 		timeSpent += delta;
+
+		lavaFloor.update(delta);
 
 		if (timeSpent > cutsceneTime) {
 			if (timeSpent - delta < cutsceneTime) {
@@ -174,11 +180,26 @@ public class GameScene implements Screen {
 				cameraManager.setShakeDuration(-1);
 				cameraManager.screenShake();
 			}
-			playerControls.update(delta);
+
+			if (!player.isDying()) {
+				playerControls.update(delta);
+			}
 
 			objectManager.update(delta);
 			spriteManager.update(delta);
 			cameraManager.update(delta);
+
+			if (player.getPos().y - player.getHitbox().y * 0.5 < 0) {
+				player.kill(); // death by lava
+                player.setSprite(player.getDeathSprite());
+                player.setFspeedAbs(new Vector2(0, 0));
+                player.stopGrapple();
+			}
+
+			if (!player.alive()) {
+				// TODO: switch to death cutscene
+			}
+
 			// AnimatedTiledMapTile.updateAnimationBaseTime();
 		} else {
 			cameraManager.update(delta);

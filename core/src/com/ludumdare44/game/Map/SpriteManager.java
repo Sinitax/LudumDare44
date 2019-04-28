@@ -35,6 +35,11 @@ public class SpriteManager {
         public void update(float delta) {}
 
         @Override
+        public boolean alive() {
+            return true;
+        }
+
+        @Override
         public boolean visible() {
             return tileLayers[tileLayer].getCell((int)(stile.x + x), (int) (stile.y + y)) != null;
         } //renders only existing tiles
@@ -250,7 +255,7 @@ public class SpriteManager {
             for (int j = 0; j < layers.get(i).size(); j++){
                 IRenderableObject obj = layers.get(i).get(j);
                 if (obj.visible()) obj.render(gfx);
-                else deleteList.add(obj);
+                if (!obj.alive()) deleteList.add(obj);
             }
         }
 

@@ -22,7 +22,7 @@ public abstract class Player extends VisualPhysObject {
     private Sprite sprite; // temp sprite
 
     public void setSprite(Sprite s) {
-        sprite = s;
+        currentSprite = s;
     }
 
     private boolean facingRight;
@@ -38,7 +38,10 @@ public abstract class Player extends VisualPhysObject {
     public boolean isBusy() { return busy; }
     public void setBusy(boolean _busy) { busy = _busy;}
 
-    private boolean dead;
+    private boolean dying = false;
+    public boolean isDying() { return dying; }
+
+    private boolean destroyed = false;
 
     private float energyMax = 50;
 
@@ -68,22 +71,27 @@ public abstract class Player extends VisualPhysObject {
     public int getFspeedMax() { return 300; }
 
     public void kill() {
-        dead = true;
+        dying = true;
+    }
+
+    public void destroy() {
+        destroyed = true;
     }
 
     @Override
-    public boolean alive() { return !dead; }
+    public boolean alive() { return !destroyed; }
 
     @Override
     public boolean stagnant() { return false; }
 
     @Override
-    public boolean visible() { return true; }
+    public boolean visible() { return !destroyed; }
 
     public abstract Sprite getAirborneSprite();
     public abstract Sprite getLeftSwingSprite();
     public abstract Sprite getRightSwingSprite();
     public abstract Sprite getGrappleSprite();
+    public abstract Sprite getDeathSprite();
 
     @Override
     public Vector2 getOriginOffset() {
@@ -99,37 +107,42 @@ public abstract class Player extends VisualPhysObject {
     
     @Override
     public void update(float delta) {
-        updateSpeed(delta);
-        if (grappling && grapple.isGrappled()) {
-            Vector2 trpos = grapple.getPos().sub(getPos());
-            Vector2 rpos = new Vector2(trpos).rotate90(-1);
-            Vector2 nspeed = rpos.scl(getSpeed().dot(new Vector2(rpos.nor())));
+        if (!dying || getPos().y - getHitbox().y * 0.5 > 0) {
+            updateSpeed(delta);
+            if (grappling && grapple.isGrappled()) {
+                Vector2 trpos = grapple.getPos().sub(getPos());
+                Vector2 rpos = new Vector2(trpos).rotate90(-1);
+                Vector2 nspeed = rpos.scl(getSpeed().dot(new Vector2(rpos.nor())));
 
-            if (reel) {
-                nspeed.add(trpos.nor().scl(6000.f * delta));
-            } else {
-                Vector2 nspeed2 = trpos.scl(getSpeed().dot(new Vector2(trpos.nor())));
-                if (nspeed2.x > 0 && nspeed2.y > 0) {
-                    nspeed.y = nspeed.y + nspeed2.y;
-                    nspeed.x = nspeed.x + nspeed2.x;
+                if (reel) {
+                    nspeed.add(trpos.nor().scl(6000.f * delta));
+                } else {
+                    Vector2 nspeed2 = trpos.scl(getSpeed().dot(new Vector2(trpos.nor())));
+                    if (nspeed2.x > 0 && nspeed2.y > 0) {
+                        nspeed.y = nspeed.y + nspeed2.y;
+                        nspeed.x = nspeed.x + nspeed2.x;
+                    }
                 }
+                setSpeed(nspeed);
+                setFspeedAbs(nspeed);
             }
-            setSpeed(nspeed);
+        } else {
+            Vector2 nspeed = new Vector2(0, -1000 * delta);
             setFspeedAbs(nspeed);
+            setSpeed(nspeed);
         }
 
         updatePos(delta);
-        if (getPos().y - getHitbox().y * 0.5 < 0) dead = true;
 
-        facingRight = (getSpeed().x > 0 && !grappling || grappling && grapple.getPos().sub(getPos()).x > 0);
+        if (getPos().y + getHitbox().y * 0.5 < 0) {
+            destroy();
+        }
     }
 
     @Override
     public void render(GFXManager gfx) {
-        currentSprite = getAirborneSprite();
-        if (!busy) { //determine animations as usual if not busy
-            sprite = new Sprite(currentSprite);
-        }
+        facingRight = (getSpeed().x > 0 && !grappling || grappling && grapple.getPos().sub(getPos()).x > 0);
+        sprite = new Sprite(currentSprite);
         if (!facingRight) {
             sprite.flip(true, false);
         }
@@ -137,9 +150,10 @@ public abstract class Player extends VisualPhysObject {
         gfx.drawModel(sprite, getPos(), getModelScale());
     }
 
-    protected void initAnimations() {
+    protected void initAssets() {
         special = getSpecial();
         attack = getAttack();
+        currentSprite = getAirborneSprite();
     }
 
     public void doGrapple(Vector2 target) {

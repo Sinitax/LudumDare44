@@ -43,6 +43,9 @@ public class DefaultPlayer extends com.ludumdare44.game.Characters.Player {
     }
 
     @Override
+    public Sprite getDeathSprite() { return new Sprite(spriteSheetMap[4][4]); }
+
+    @Override
     public com.ludumdare44.game.Characters.Ability getSpecial() { //cloak
         return new com.ludumdare44.game.Characters.Ability(new Animation<>(0.04f, (TextureRegion[]) MiscUtils.concatenate(spriteSheetMap[1], spriteSheetMap[5])), this, 80, 5000, 10000) {
             @Override
@@ -64,6 +67,6 @@ public class DefaultPlayer extends com.ludumdare44.game.Characters.Player {
 
     public DefaultPlayer(Vector2 pos, ObjectAdder objectAdder) {
         super(pos, objectAdder);
-        initAnimations();
+        initAssets();
     }
 }
