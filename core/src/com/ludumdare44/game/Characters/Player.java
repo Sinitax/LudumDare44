@@ -2,6 +2,7 @@ package com.ludumdare44.game.Characters;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.ludumdare44.game.GFX.GFXManager;
 import com.ludumdare44.game.Map.ObjectAdder;
@@ -147,7 +148,24 @@ public abstract class Player extends VisualPhysObject {
             sprite.flip(true, false);
         }
 
-        gfx.drawModel(sprite, getPos(), getModelScale());
+        if (isGrappling() && grapple.isGrappled()) {
+            float rotation = getPos().sub(grapple.getPos()).angle() + 90 - 360;
+            if (rotation > 10) rotation = 10;
+            else if (rotation < -10) rotation = -10;
+
+            Matrix4 originalTransformMatrix = gfx.batch.getTransformMatrix().cpy();
+            Matrix4 transformationMatrix = gfx.batch.getTransformMatrix()
+                    .translate(getPos().x, getPos().y, 0)
+                    .rotate(0, 0, 1, rotation)
+                    .translate(-getPos().x, -getPos().y, 0);
+            gfx.batch.setTransformMatrix(transformationMatrix);
+
+            gfx.drawModel(sprite, getPos(), getModelScale());
+
+            gfx.batch.setTransformMatrix(originalTransformMatrix);
+        } else {
+            gfx.drawModel(sprite, getPos(), getModelScale());
+        }
     }
 
     protected void initAssets() {
