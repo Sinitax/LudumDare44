@@ -2,13 +2,10 @@ package com.ludumdare44.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.ludumdare44.game.Characters.Player;
 import com.ludumdare44.game.Characters.DefaultPlayer;
@@ -17,20 +14,13 @@ import com.ludumdare44.game.Controls.MenuControls;
 import com.ludumdare44.game.Controls.PlayerControls;
 import com.ludumdare44.game.GFX.GFXManager;
 import com.ludumdare44.game.GFX.GifDecoder;
-import com.ludumdare44.game.GFX.IRenderable;
 import com.ludumdare44.game.GFX.IRenderableObject;
 import com.ludumdare44.game.Map.*;
 import com.ludumdare44.game.Physics.PhysicsObject;
 import com.ludumdare44.game.Physics.VisualPhysObject;
 import com.ludumdare44.game.UI.CameraManager;
 import com.ludumdare44.game.UI.HUD;
-import com.ludumdare44.game.UI.Menu.ControlsMenu;
-import com.ludumdare44.game.UI.Menu.Menu;
 import com.ludumdare44.game.UI.Menu.MenuManager;
-import org.w3c.dom.css.Rect;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 
 
 public class LudumDare extends ApplicationAdapter {
@@ -68,6 +58,10 @@ public class LudumDare extends ApplicationAdapter {
     private void addObject(VisualPhysObject obj) {
 		spriteManager.addObject(obj);
     	objectManager.addObject(obj);
+	}
+
+	private TextureRegion[][] patchFromTexure(Texture t) {
+    	return TextureRegion.split(t, t.getWidth()/3, t.getHeight()/3);
 	}
 
 	//Main
@@ -118,34 +112,32 @@ public class LudumDare extends ApplicationAdapter {
 		menuManager = new MenuManager();
 		spriteManager = new SpriteManager(cameraManager);
 		spriteManager.createLayers(3);
+
 		// spriteManager.loadMap("assets/maps/test_map.tmx"); // no map
 		// objectManager.setObstacles(spriteManager.getObstacles()); // no map
+
 		addObject(player);
 
-		Texture spriteSheet = new Texture("assets/textures/textureMap.png");
-		int tileWidth = 16;
-		int tileHeight = 16;
+		TextureRegion[][] textureTiles = TextureRegion.split(new Texture("assets/textures/textureMap.png"), 16, 16);
 
-		TextureRegion[][] tileMap = TextureRegion.split(spriteSheet, tileWidth, tileHeight);
-
-		caveCeiling = new CaveCeiling(cameraManager, objectManager, tileMap[0]);
+		caveCeiling = new CaveCeiling(cameraManager, objectManager, textureTiles[0]);
 
 		hud = new HUD(player);
 		objectManager.addObject(player);
 
 		Texture tempSheet = new Texture("assets/background2.png");
 		TextureRegion[] tempMap = TextureRegion.split(tempSheet, tempSheet.getWidth(), tempSheet.getHeight())[0];
-		background1 = new EndlessBackground(cameraManager, tempMap, true);
+		background1 = new EndlessBackground(cameraManager, tempMap, true, 0.5f);
 
 		tempSheet = new Texture("assets/background3.png");
 		tempMap = TextureRegion.split(tempSheet, tempSheet.getWidth(), tempSheet.getHeight())[0];
-		background2 = new EndlessBackground(cameraManager, tempMap, true);
+		background2 = new EndlessBackground(cameraManager, tempMap, true, 0.8f);
 
 		debugTexture = new Texture("assets/debug.png");
 		debugAnimation = GifDecoder.loadGIFAnimation(Animation.PlayMode.LOOP, Gdx.files.internal("assets/debug.gif").read());
 		debugSprite = new Sprite(new Texture("assets/debug.png"), 20, 20);
 
-		Gdx.gl.glClearColor(0.17f, 0.17f, 0.17f, 1.f);
+		Gdx.gl.glClearColor(0.35f, 0.35f, 0.35f, 1.f);
 	}
 
 	@Override
