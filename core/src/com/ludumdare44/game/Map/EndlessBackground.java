@@ -10,8 +10,8 @@ import java.util.ArrayList;
 
 public class EndlessBackground implements IRenderable {
     private CameraManager cameraManager;
-    int tileWidth, tileHeight;
-    int tileCols, tileRows;
+    private int tileWidth, tileHeight;
+    private int tileCols, tileRows;
     Vector2 msize;
     float[] probabilities = new float[] {0.5f, 0.2f};
     TextureRegion[] tileMap;
@@ -47,6 +47,7 @@ public class EndlessBackground implements IRenderable {
             }
             offset.x += tileWidth;
         }
+        /*
         if (stile.y == 1) {
             for (int i = 0; i < msize.x; i++) {
                 indMap.get(i).remove(0);
@@ -60,12 +61,14 @@ public class EndlessBackground implements IRenderable {
             }
             offset.y -= tileHeight;
         }
+         */
 
         float startX = cameraManager.getPos().x - cameraManager.getScreenSize().x / 2 - tileWidth;
         float startY = cameraManager.getPos().y - cameraManager.getScreenSize().y / 2 - tileWidth;
+
         for (int i = 0; i < tileCols; i++) {
             for (int j = 0; j < tileRows; j++) {
-                gfx.batch.draw(tileMap[indMap.get(i).get(j)], startX - offset.x + i * tileWidth, startY - offset.y + j * tileHeight);
+                gfx.batch.draw(tileMap[indMap.get(i).get(j)], startX - offset.x + i * tileWidth, startY - offset.y + j * tileHeight, tileWidth, tileHeight);
             }
         }
         lastCameraPos = cameraManager.getPos();
@@ -91,11 +94,16 @@ public class EndlessBackground implements IRenderable {
         }
     }
 
-    public EndlessBackground(CameraManager _cameraManager, TextureRegion[] _tiles) {
+    public EndlessBackground(CameraManager _cameraManager, TextureRegion[] _tiles, boolean _fullscreen) {
         cameraManager = _cameraManager;
         tileMap = _tiles;
-        tileWidth = tileMap[0].getRegionWidth();
-        tileHeight = tileMap[0].getRegionHeight();
+        if (!_fullscreen) {
+            tileWidth = tileMap[0].getRegionWidth();
+            tileHeight = tileMap[0].getRegionHeight();
+        } else {
+            tileHeight = (int) cameraManager.getScreenSize().y;
+            tileWidth = (int) cameraManager.getScreenSize().x;
+        }
         tileCols = (int) cameraManager.getScreenSize().x / tileWidth + 2;
         tileRows = (int) cameraManager.getScreenSize().y / tileHeight + 2;
         msize = new Vector2(new Vector2(tileCols, tileRows));

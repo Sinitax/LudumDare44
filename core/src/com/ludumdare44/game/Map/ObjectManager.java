@@ -1,15 +1,12 @@
 package com.ludumdare44.game.Map;
 
 import com.badlogic.gdx.math.*;
-import com.ludumdare44.game.Characters.Player;
-import com.ludumdare44.game.Physics.Grapple;
 import com.ludumdare44.game.Physics.Obstacle;
 import com.ludumdare44.game.Physics.PhysicsObject;
 import com.ludumdare44.game.Physics.VisualPhysObject;
-import com.sun.org.apache.regexp.internal.RE;
-import sun.awt.X11.Visual;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class ObjectManager {
     private ArrayList<PhysicsObject> physobjects;
@@ -17,9 +14,7 @@ public class ObjectManager {
     public ArrayList<PhysicsObject> getObjects() { return physobjects; }
 
     public void setObstacles(Obstacle[] obstacles) {
-        for (Obstacle o : obstacles) {
-            physobjects.add(o);
-        }
+        Collections.addAll(physobjects, obstacles);
     }
 
     public static Rectangle toRectangle(PhysicsObject vpo) {
@@ -30,43 +25,34 @@ public class ObjectManager {
         Rectangle r = ObjectManager.toRectangle(vpo);
         Vector2 speed = vpo.getSpeed();
         Vector2 pos = new Vector2(vpo.getPos());
-        Vector2 ppos = new Vector2(r.getX(), r.getY());
-        ppos.x -= speed.x * delta;
-        ppos.y -= speed.y * delta;
         if (r.overlaps(ro)) {
-            boolean vertical = ppos.y + r.getHeight() < ro.getY() || ppos.y > ro.getY() + ro.getHeight();
-            boolean horizontal = ppos.x + r.getWidth() < ro.getX() || ppos.x > ro.getX() + ro.getWidth();
-            if (vertical && horizontal) {
-                if (speed.x > speed.y) {
-                    vertical = false;
-                } else {
-                    horizontal = false;
-                }
-                if (vpo instanceof Grapple) {
-                    speed.x = 0;
-                }
+            boolean vertical = r.y + r.getHeight() > ro.getY() || r.y < ro.getY() + ro.getHeight();
+            boolean horizontal = r.x + r.getWidth() < ro.getX() || r.x > ro.getX() + ro.getWidth();
+            if (horizontal && vertical) {
             }
             if (horizontal) {
                 if (speed.x > 0) {
-                    pos.x = ro.getX() - r.getWidth()/2 - .1f;
-                } else {
-                    pos.x = ro.getX() + ro.getWidth() + r.getWidth()/2 + .1f;
+                    pos.x = ro.getX() - r.getWidth() / 2 - .1f;
+                } else if (speed.x < 0) {
+                    pos.x = ro.getX() + ro.getWidth() + r.getWidth() / 2 + .1f;
                 }
                 speed.x = 0;
-            } else if (vertical) {
+            }
+            if (vertical) {
                 if (speed.y > 0) {
-                    pos.y = ro.getY() + (vpo.getHitbox().y/2 - r.getHeight()) - .1f;
-                } else {
-                    pos.y = ro.getY() + ro.getHeight() + vpo.getHitbox().y/2 + .1f;
+                    pos.y = ro.getY() - r.getHeight() / 2 - .1f;
+                } else if (speed.y < 0) {
+                    pos.y = ro.getY() + ro.getHeight() + r.getHeight() / 2 + .1f;
                 }
                 speed.y = 0;
             }
             vpo.setSpeed(speed);
+            vpo.setFspeed(new Vector2(0, 0));
             vpo.setPos(pos);
         }
     }
 
-    public void checkCollisions(float delta) {
+    private void checkCollisions(float delta) {
         /*
         for (int j = 0; j < physobjects.size(); j++) {
             for (int i = 0; i < obstacles.length; i++) {
@@ -85,8 +71,9 @@ public class ObjectManager {
                 if (Intersector.overlaps(toRectangle(p1), toRectangle(p2))) {
                     if (p1 instanceof Obstacle && collisionPairs.indexOf(new PhysicsObject[] {p2, p1}) == -1) {
                         collisionPairs.add(new PhysicsObject[] {p1, p2});
+                        p1.onCollision(p2);
+                        p2.onCollision(p1);
                     }
-                    p1.onCollision(p2);
                 }
             }
         }

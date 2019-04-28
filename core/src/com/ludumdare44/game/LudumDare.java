@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.ludumdare44.game.Characters.Player;
 import com.ludumdare44.game.Characters.DefaultPlayer;
@@ -16,10 +17,9 @@ import com.ludumdare44.game.Controls.MenuControls;
 import com.ludumdare44.game.Controls.PlayerControls;
 import com.ludumdare44.game.GFX.GFXManager;
 import com.ludumdare44.game.GFX.GifDecoder;
-import com.ludumdare44.game.Map.CaveCeiling;
-import com.ludumdare44.game.Map.EndlessBackground;
-import com.ludumdare44.game.Map.ObjectManager;
-import com.ludumdare44.game.Map.SpriteManager;
+import com.ludumdare44.game.GFX.IRenderable;
+import com.ludumdare44.game.GFX.IRenderableObject;
+import com.ludumdare44.game.Map.*;
 import com.ludumdare44.game.Physics.PhysicsObject;
 import com.ludumdare44.game.Physics.VisualPhysObject;
 import com.ludumdare44.game.UI.CameraManager;
@@ -27,6 +27,7 @@ import com.ludumdare44.game.UI.HUD;
 import com.ludumdare44.game.UI.Menu.ControlsMenu;
 import com.ludumdare44.game.UI.Menu.Menu;
 import com.ludumdare44.game.UI.Menu.MenuManager;
+import org.w3c.dom.css.Rect;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -41,11 +42,13 @@ public class LudumDare extends ApplicationAdapter {
 	private HUD hud;
 	private SpriteManager spriteManager;
 
+	private ObjectAdder objectAdder;
+
 	private ControlManager controlManager;
 	private PlayerControls playerControls;
 	private MenuControls menuControls;
 
-	private EndlessBackground endlessBackground;
+	private EndlessBackground background1, background2;
 	private CaveCeiling caveCeiling;
 
 	// game settings
@@ -58,6 +61,9 @@ public class LudumDare extends ApplicationAdapter {
     private Texture debugTexture;
     private Animation<TextureRegion> debugAnimation;
     private Sprite debugSprite;
+
+    private float timeSpent = 0;
+    private float cutsceneTime = 2.5f;
 
     private void addObject(VisualPhysObject obj) {
 		spriteManager.addObject(obj);
@@ -75,20 +81,44 @@ public class LudumDare extends ApplicationAdapter {
 
 		fpsLogger = new FPSLogger();
 
-		player = new DefaultPlayer(startPos);
 
-		cameraManager = new CameraManager(screenSize, new Vector2(0, 0), player);
+		objectManager = new ObjectManager();
+
+		objectAdder = new ObjectAdder() {
+			@Override
+			public void addPhysObject(PhysicsObject o) {
+				objectManager.addObject(o);
+			}
+
+			@Override
+			public void addRenderable(IRenderableObject o) {
+				spriteManager.addObject(o);
+			}
+
+
+			@Override
+			public void addVisObject(VisualPhysObject o) {
+			    addPhysObject(o);
+			    addRenderable(o);
+			}
+		};
+
+		player = new DefaultPlayer(startPos, objectAdder);
+
+		cameraManager = new CameraManager(screenSize, new Vector2(-2000, screenSize.y/2), player, new Vector2(1, 0));
+		cameraManager.setShakeDuration(cutsceneTime);
+		cameraManager.setShakeIntensity(15);
+		cameraManager.screenShake();
 
 		controlManager = new ControlManager();
 		Gdx.input.setInputProcessor(controlManager);
-		playerControls = new PlayerControls(controlManager, player);
+		playerControls = new PlayerControls(controlManager, cameraManager, player);
 		menuControls = new MenuControls(controlManager, menuManager);
 
 		menuManager = new MenuManager();
 		spriteManager = new SpriteManager(cameraManager);
 		spriteManager.createLayers(3);
 		// spriteManager.loadMap("assets/maps/test_map.tmx"); // no map
-		objectManager = new ObjectManager();
 		// objectManager.setObstacles(spriteManager.getObstacles()); // no map
 		addObject(player);
 
@@ -98,22 +128,24 @@ public class LudumDare extends ApplicationAdapter {
 
 		TextureRegion[][] tileMap = TextureRegion.split(spriteSheet, tileWidth, tileHeight);
 
-
 		caveCeiling = new CaveCeiling(cameraManager, objectManager, tileMap[0]);
 
 		hud = new HUD(player);
 		objectManager.addObject(player);
 
-		Texture tempSheet = new Texture("assets/textures/crackedWall.png");
-		TextureRegion[] tempMap = TextureRegion.split(tempSheet, tempSheet.getWidth()/2, tempSheet.getHeight())[0];
-		endlessBackground = new EndlessBackground(cameraManager, tempMap);
+		Texture tempSheet = new Texture("assets/background1.png");
+		TextureRegion[] tempMap = TextureRegion.split(tempSheet, tempSheet.getWidth(), tempSheet.getHeight())[0];
+		background1 = new EndlessBackground(cameraManager, tempMap, true);
 
-		cameraManager.setPos(player.getPos());
-		cameraManager.follow(player);
+		tempSheet = new Texture("assets/background2.png");
+		tempMap = TextureRegion.split(tempSheet, tempSheet.getWidth(), tempSheet.getHeight())[0];
+		background2 = new EndlessBackground(cameraManager, tempMap, true);
 
 		debugTexture = new Texture("assets/debug.png");
 		debugAnimation = GifDecoder.loadGIFAnimation(Animation.PlayMode.LOOP, Gdx.files.internal("assets/debug.gif").read());
 		debugSprite = new Sprite(new Texture("assets/debug.png"), 20, 20);
+
+		Gdx.gl.glClearColor(0.17f, 0.17f, 0.17f, 1.f);
 	}
 
 	@Override
@@ -135,12 +167,23 @@ public class LudumDare extends ApplicationAdapter {
 
 		float delta = Gdx.graphics.getDeltaTime();
 
-		playerControls.update();
+		timeSpent += delta;
 
-		objectManager.update(delta);
-		spriteManager.update(delta);
-		cameraManager.update(delta);
-        // AnimatedTiledMapTile.updateAnimationBaseTime();
+		if (timeSpent > cutsceneTime) {
+			if (timeSpent - delta < cutsceneTime) {
+				cameraManager.setShakeIntensity(4);
+				cameraManager.setShakeDuration(-1);
+				cameraManager.screenShake();
+			}
+			playerControls.update(delta);
+
+			objectManager.update(delta);
+			spriteManager.update(delta);
+			cameraManager.update(delta);
+			// AnimatedTiledMapTile.updateAnimationBaseTime();
+		} else {
+			cameraManager.update(delta);
+		}
 
         // render
 
@@ -149,23 +192,27 @@ public class LudumDare extends ApplicationAdapter {
 		gfxManager.batch.begin();
 
 		cameraManager.render(gfxManager);
-		endlessBackground.render(gfxManager);
+
+		background1.render(gfxManager);
+		background2.render(gfxManager);
+
 		caveCeiling.render(gfxManager);
         spriteManager.render(gfxManager);
 
-		/*
+        /*
         gfxManager.batch.end();
         gfxManager.shapeRenderer.setColor(Color.RED);
         gfxManager.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         ArrayList<PhysicsObject> objects = objectManager.getObjects();
         for (int i = 0; i < objects.size(); i++) {
             PhysicsObject pobj = objects.get(i);
-            gfxManager.shapeRenderer.rect(pobj.getPos().x, pobj.getPos().y, pobj.getHitbox().x, pobj.getHitbox().y);
+			Rectangle r = ObjectManager.toRectangle(pobj);
+            gfxManager.shapeRenderer.rect(r.x, r.y, r.width, r.height);
         }
         gfxManager.shapeRenderer.end();
         gfxManager.batch.begin();
         //hud.render(gfxManager);
-        */
+         */
 
         gfxManager.resetProjection();
 		gfxManager.batch.end();

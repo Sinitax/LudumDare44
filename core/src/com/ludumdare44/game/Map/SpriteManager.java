@@ -35,16 +35,6 @@ public class SpriteManager {
         public void update(float delta) {}
 
         @Override
-        public boolean alive() {
-            return true;
-        }
-
-        @Override
-        public boolean stagnant() {
-            return false;
-        }
-
-        @Override
         public boolean visible() {
             return tileLayers[tileLayer].getCell((int)(stile.x + x), (int) (stile.y + y)) != null;
         } //renders only existing tiles
@@ -255,10 +245,18 @@ public class SpriteManager {
     }
 
     public void render(GFXManager gfx) {
+        ArrayList<IRenderableObject> deleteList = new ArrayList<>();
         for (int i = 0; i < layers.size(); i++) {
             for (int j = 0; j < layers.get(i).size(); j++){
-                IRenderable obj = layers.get(i).get(j);
-                obj.render(gfx);
+                IRenderableObject obj = layers.get(i).get(j);
+                if (obj.visible()) obj.render(gfx);
+                else deleteList.add(obj);
+            }
+        }
+
+        for (int i = 0; i < layers.size(); i++) {
+            for (IRenderable obj : deleteList) {
+                if (layers.get(i).indexOf(obj) != -1) layers.get(i).remove(obj);
             }
         }
 

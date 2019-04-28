@@ -3,11 +3,13 @@ package com.ludumdare44.game.Characters;
 import com.badlogic.gdx.math.Vector2;
 import com.ludumdare44.game.GFX.GFXManager;
 import com.ludumdare44.game.GFX.IRenderableObject;
+import com.ludumdare44.game.Physics.PhysicsObject;
+import com.ludumdare44.game.Physics.VisualPhysObject;
 
-public class Shadow implements IRenderableObject {
+public class Shadow extends VisualPhysObject {
     Vector2 pos;
     Vector2 size;
-    IRenderableObject owner;
+    VisualPhysObject owner;
     private int zLevel;
 
     @Override
@@ -28,11 +30,6 @@ public class Shadow implements IRenderableObject {
     @Override
     public Vector2 getOriginOffset() {
         return Vector2.Zero;
-    }
-
-    @Override
-    public Vector2 getPos() {
-        return owner.getPos();
     }
 
     public Vector2 getSize() {
@@ -61,8 +58,40 @@ public class Shadow implements IRenderableObject {
         gfx.drawShadow(pos.x, pos.y - size.y * 0.5f, size.x, 10);
     }
 
-    public Shadow(IRenderableObject _owner, int backgroundZ) {
+    @Override
+    public int getFspeedMax() {
+        return 0;
+    }
+
+    @Override
+    public int getAccelMax() {
+        return 0;
+    }
+
+    @Override
+    public int getDecelMax() {
+        return 0;
+    }
+
+    @Override
+    public Vector2 getHitboxOffset() {
+        return new Vector2(0, 0);
+    }
+
+    @Override
+    public Vector2 getHitbox() {
+        return new Vector2(0, 0);
+    }
+
+    @Override
+    public void onCollision(PhysicsObject other) {
+
+    }
+
+    public Shadow(VisualPhysObject _owner, int backgroundZ) {
+        super(_owner.getPos());
         owner = _owner;
         zLevel = backgroundZ;
+        follow(owner);
     }
 }

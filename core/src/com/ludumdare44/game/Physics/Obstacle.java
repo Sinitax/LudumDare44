@@ -44,4 +44,14 @@ public class Obstacle extends PhysicsObject {
         width = _width;
         height = _height;
     }
+
+    @Override
+    public boolean alive() {
+        return true;
+    }
+
+    @Override
+    public boolean stagnant() {
+        return false;
+    }
 }

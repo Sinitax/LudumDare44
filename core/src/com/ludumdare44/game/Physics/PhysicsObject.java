@@ -3,17 +3,25 @@ package com.ludumdare44.game.Physics;
 import com.badlogic.gdx.math.Vector2;
 
 public abstract class PhysicsObject {
+    public float weight = 0;
+    public static float gravity = 10;
+
+    private Vector2 followdir = new Vector2(1, 1);
+    public void setFollowdir(Vector2 dir) {
+        followdir = dir;
+    }
+
     private PhysicsObject followObject;
     private boolean following = false;
     private Vector2 speed = new Vector2(0,0);
-    public final Vector2 getSpeed() { return speed; }
+    public final Vector2 getSpeed() { return new Vector2(speed); }
     public final void setSpeed(Vector2 _speed) {
         speed.x = _speed.x;
         speed.y = _speed.y;
     }
     
     private Vector2 fspeed = new Vector2(0,0);
-    public final Vector2 getFspeed() { return fspeed; }
+    public final Vector2 getFspeed() { return new Vector2(fspeed); }
     public final void setFspeed(Vector2 _dir) {
         _dir = _dir.nor();
         fspeed.x =  _dir.x * getFspeedMax() * speedscale;
@@ -23,12 +31,12 @@ public abstract class PhysicsObject {
         fspeed = _fspeed;
         if (fspeed.x > getFspeedMax()) {
             fspeed.x = getFspeedMax();
-        } else if (fspeed.x < getFspeedMax()) {
+        } else if (fspeed.x < -getFspeedMax()) {
             fspeed.x = -getFspeedMax();
         }
         if (fspeed.y > getFspeedMax()) {
             fspeed.y = getFspeedMax();
-        } else if (fspeed.y < getFspeedMax()) {
+        } else if (fspeed.y < -getFspeedMax()) {
             fspeed.y = -getFspeedMax();
         }
     }
@@ -65,11 +73,12 @@ public abstract class PhysicsObject {
         }
     }
     
-    public void updatePos(float delta) {
+    public void updateSpeed(float delta) {
         if (following) {
-            approach(followObject.getPos(), approachSpeed);
+            Vector2 followPos = followObject.getPos().sub(getPos()).scl(followdir).add(getPos());
+            approach(followPos, approachSpeed);
         }
-        
+
         // accelerate to speed
         float scale = delta * speedscale;
         accel.x = (float) Math.cos(Math.toRadians(fspeed.angle())) * getAccelMax() * scale;
@@ -92,6 +101,7 @@ public abstract class PhysicsObject {
             }
             if ((((fspeed.x - speed.x > 0) != (nspeed.x > 0)) && accel_b) || (((fspeed.x - speed.x > 0) == (nspeed.x > 0)) && !accel_b)) speed.x = fspeed.x;
         }
+        /*
         if  (speed.y != fspeed.y) {
             accel_b = (fspeed.y - speed.y > 0) == (nspeed.y > 0);
             if (accel_b) {
@@ -103,14 +113,21 @@ public abstract class PhysicsObject {
                 else speed.y -= Math.abs(decel.y) * Math.signum(speed.y);
             }
             if ((((fspeed.y - speed.y > 0) != (nspeed.y > 0)) && accel_b) || (((fspeed.y - speed.y > 0) == (nspeed.y > 0)) && !accel_b)) speed.y = fspeed.y;
-        }
-        
+        }*/
+
+        setSpeed(getSpeed().add(new Vector2(0, -weight * gravity * delta)));
+    }
+
+    public void updatePos(float delta) {
         pos.x += speed.x * delta;
         pos.y += speed.y * delta;
     }
 
     public abstract Vector2 getHitbox();
-    public abstract Vector2 getHitboxOffset();
+    public Vector2 getHitboxOffset() {return new Vector2(0, 0);};
+
+    public abstract boolean alive(); // not alive -> destory object
+    public abstract boolean stagnant(); // out of range -> do not update
 
     public abstract void onCollision(PhysicsObject other);
 

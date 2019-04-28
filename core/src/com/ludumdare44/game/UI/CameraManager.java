@@ -19,16 +19,17 @@ public class CameraManager extends PhysicsObject implements IRenderable {
     private float shakeX = 0;
     private float shakeY = 0;
 
+
     private Random random;
 
     private Vector2 screenSize;
     public Vector2 getScreenSize() {
-        return screenSize;
+        return new Vector2(screenSize);
     }
 
     @Override
     public int getDecelMax() {
-        return 3000;
+        return 10000;
     }
     
     @Override
@@ -55,15 +56,16 @@ public class CameraManager extends PhysicsObject implements IRenderable {
 
     public void update(float delta) {
         //update position
+        updateSpeed(delta);
         updatePos(delta);
 
         // camera shake
-        if(shakeElapsed < shakeDuration) {
+        if (shakeDuration == -1 || shakeElapsed < shakeDuration) {
             float currentPower = shakeIntensity * ((shakeDuration - shakeElapsed) / shakeDuration);
             shakeX = -(random.nextFloat() - 0.5f) * currentPower;
             shakeY = -(random.nextFloat() - 0.5f) * currentPower;
 
-            shakeElapsed += delta;
+            if (shakeDuration != -1) shakeElapsed += delta;
         }
 
     }
@@ -109,11 +111,22 @@ public class CameraManager extends PhysicsObject implements IRenderable {
     public void onCollision(PhysicsObject other) {
     }
 
-    public CameraManager(Vector2 _screenSize, Vector2 _pos, PhysicsObject obj) {
+    @Override
+    public boolean alive() {
+        return true;
+    }
+
+    @Override
+    public boolean stagnant() {
+        return false;
+    }
+
+    public CameraManager(Vector2 _screenSize, Vector2 _pos, PhysicsObject obj, Vector2 followdir) {
         super(new Vector2(_pos));
         random = new Random();
         screenSize = _screenSize;
-        approachSpeed = 4;
+        approachSpeed = 6;
+        setFollowdir(followdir);
         follow(obj);
     }
 }

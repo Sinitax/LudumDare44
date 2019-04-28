@@ -4,12 +4,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.ludumdare44.game.GFX.GFXManager;
 import com.ludumdare44.game.GFX.IRenderable;
 import com.ludumdare44.game.Physics.Obstacle;
-import com.ludumdare44.game.Physics.PhysicsObject;
-import com.ludumdare44.game.Physics.VisualPhysObject;
 import com.ludumdare44.game.UI.CameraManager;
-import sun.awt.X11.Visual;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -23,7 +19,7 @@ public class CaveCeiling implements IRenderable {
     private int tileBufferSize = 3;
     private int tileCols;
     private int tileSize;
-    private int tileRows = 5;
+    private int tileRows = 6;
     private float startX;
     private float lastCameraX = 0;
 
@@ -59,7 +55,7 @@ public class CaveCeiling implements IRenderable {
                 height += random.nextInt(Math.min(2, tileRows - height));
             }
         }
-        if (height < 1) height = 1;
+        if (height < 2) height = 2;
         return height;
     }
 
@@ -85,10 +81,10 @@ public class CaveCeiling implements IRenderable {
         for (int j = tileBufferSize - 1; j < tileCols - tileBufferSize + 1; j++) {
             int sx = (int) (cameraManager.getPos().x - cameraManager.getScreenSize().x / 2 + startX + j * tileSize);
             int sy = (int) (cameraManager.getPos().y + cameraManager.getScreenSize().y / 2);
-            tileObjects[j].update(sx, sy - ceilingHeights.get(j) * tileSize, tileSize, ceilingHeights.get(j) * tileSize);
+            tileObjects[j].update(sx + tileSize/2, sy - ceilingHeights.get(j) * tileSize/2 + tileSize, tileSize, ceilingHeights.get(j) * tileSize);
             for (int i = 0; i < tileRows; i++) {
                 if (i < ceilingHeights.get(j)) {
-                    gfx.batch.draw(tiles[getBitMask(j, i)], sx, sy - (i + 1) * tileSize, tileSize, tileSize);
+                    gfx.batch.draw(tiles[getBitMask(j, i)], sx, sy - i * tileSize, tileSize, tileSize);
                 }
             }
         }

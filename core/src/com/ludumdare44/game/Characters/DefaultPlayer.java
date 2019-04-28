@@ -4,6 +4,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.ludumdare44.game.Controls.ControlManager;
+import com.ludumdare44.game.Map.ObjectAdder;
+import com.ludumdare44.game.Map.ObjectManager;
 import com.ludumdare44.game.MiscUtils;
 
 public class DefaultPlayer extends com.ludumdare44.game.Characters.Player {
@@ -60,8 +63,8 @@ public class DefaultPlayer extends com.ludumdare44.game.Characters.Player {
         };
     }
 
-    public DefaultPlayer(Vector2 pos) {
-        super(pos);
+    public DefaultPlayer(Vector2 pos, ObjectAdder objectAdder) {
+        super(pos, objectAdder);
         initAnimations();
     }
 }

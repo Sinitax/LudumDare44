@@ -12,7 +12,5 @@ public interface IRenderableObject extends IRenderable {
 
     void update(float delta);
 
-    boolean alive(); // not alive -> destory object
-    boolean stagnant(); // out of range -> do not update
     boolean visible(); // not visible -> do not render
 }
