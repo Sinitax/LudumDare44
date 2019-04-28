@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Vector2;
 import com.ludumdare44.game.Cutscenes.CutsceneCharacter;
 import com.ludumdare44.game.Cutscenes.CutsceneCharacterPosition;
 import com.ludumdare44.game.Cutscenes.CutsceneScreen;
@@ -30,6 +31,9 @@ public class LudumDareGame extends Game {
 
         cutscene.addCutsceneEvent(new FadeEvent(new ScreenFader(Color.BLACK, 2).fadeIn()))
                 .addCutsceneEvent(new CharacterEnterEvent(characterPlayer, CutsceneCharacterPosition.RIGHT))
+                //.addCutsceneEvent(new CharacterLerpEvent(characterPlayer, 1).setAlpha(0))
+                //.addCutsceneEvent(new CharacterLerpEvent(characterPlayer, 1).setAlpha(1))
+                //.addCutsceneEvent(new CharacterLerpEvent(characterPlayer, 1).setOffset(new Vector2(4,1)))
                 .addCutsceneEvent(new WaitEvent(1))
                 .addCutsceneEvent(new CharacterEnterEvent(characterDevil, CutsceneCharacterPosition.LEFT))
                 .addCutsceneEvent(new WaitEvent(2))

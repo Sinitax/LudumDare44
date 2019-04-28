@@ -9,6 +9,8 @@ public class CutsceneCharacter {
     protected final Sprite sprite;
     protected final String name;
 
+    protected float alpha = 1;
+    protected Vector2 offset = new Vector2();
     protected CutsceneCharacterPosition position;
 
     public CutsceneCharacter(Sprite sprite, String name) {
@@ -26,9 +28,34 @@ public class CutsceneCharacter {
         float scaleWidth = sprite.getWidth()*pixelRatio;
         float scaledHeight = sprite.getHeight()*pixelRatio;
 
+        if(alpha < 1) {
+            gfxManager.batch.setColor(1, 1, 1, alpha);
+        }
+
         gfxManager.batch.draw(sprite,
-                screenPosition.x - scaleWidth/2, screenPosition.y - scaledHeight/2,
-                scaleWidth, scaledHeight);
+                screenPosition.x - scaleWidth/2 + offset.x*pixelRatio,
+                screenPosition.y - scaledHeight/2 + offset.y*pixelRatio,
+                0, 0, scaleWidth, scaledHeight, 1, 1, 0);
+
+        if(alpha < 1) {
+            gfxManager.batch.setColor(1, 1, 1, 1);
+        }
+    }
+
+    public float getAlpha() {
+        return alpha;
+    }
+
+    public void setAlpha(float alpha) {
+        this.alpha = alpha;
+    }
+
+    public Vector2 getOffset() {
+        return offset;
+    }
+
+    public void setOffset(Vector2 offset) {
+        this.offset = offset;
     }
 
     public void setPosition(CutsceneCharacterPosition position) {

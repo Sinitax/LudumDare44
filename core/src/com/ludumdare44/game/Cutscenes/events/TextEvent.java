@@ -22,7 +22,7 @@ public class TextEvent extends CutsceneEvent {
         this(text, 1);
     }
 
-    // The time that it should take to print the text to screen.
+    // The lerpTime that it should take to print the text to screen.
     protected float calculatePrintTime(String text) {
         return printSpeed*text.length()/30f; // 30 characters per second
     }
