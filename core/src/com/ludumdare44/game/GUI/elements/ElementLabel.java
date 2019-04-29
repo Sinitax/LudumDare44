@@ -2,15 +2,15 @@ package com.ludumdare44.game.GUI.elements;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Align;
 import com.ludumdare44.game.GFX.GFXManager;
+import com.ludumdare44.game.GUI.Fonts;
 import com.ludumdare44.game.GUI.Gui;
 import com.ludumdare44.game.GUI.GuiElement;
 
 public class ElementLabel extends GuiElement {
 
-    protected final BitmapFont font = new BitmapFont();
+    protected final BitmapFont font;
 
     protected int x;
     protected int y;
@@ -19,13 +19,18 @@ public class ElementLabel extends GuiElement {
     protected int hAlign = Align.left;
     protected int vAlign = Align.top;
 
-    public ElementLabel(Gui gui, int x, int y, String text, Color color) {
+    public ElementLabel(Gui gui, int x, int y, String text, Color color, BitmapFont font) {
         super(gui);
         this.x = x;
         this.y = y;
         this.text = text;
         this.color = color;
+        this.font = font;
         font.setColor(color);
+    }
+
+    public ElementLabel(Gui gui, int x, int y, String text, Color color) {
+        this(gui, x, y, text, color, Fonts.createDefaultPixelFont());
     }
 
     public ElementLabel(Gui gui, int x, int y, String text) {

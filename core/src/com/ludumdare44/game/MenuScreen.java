@@ -3,7 +3,9 @@ package com.ludumdare44.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.ludumdare44.game.Cutscenes.ScreenFader;
+import com.ludumdare44.game.GUI.Fonts;
 import com.ludumdare44.game.GUI.GuiScreen;
 import com.ludumdare44.game.GUI.elements.ElementLabel;
 import com.ludumdare44.game.GUI.elements.ElementTextButton;
@@ -27,18 +29,19 @@ public class MenuScreen extends GuiScreen {
 
     @Override
     protected void createGui(int width, int height) {
-        add(new ElementLabel(this, width/2, height*5/6, Constants.GAME_TITLE, Color.WHITE))
+        add(new ElementLabel(this, width/2, height*5/6, Constants.GAME_TITLE, Color.WHITE, Fonts.createHeaderPixelFont()))
                 .alignCenter()
                 .alignMiddle();
 
-        add(new ElementTextButton(this, width/10, height/2+5, width*4/10, 30, "Play Game"))
+        int buttonYPos = height*9/20;
+        add(new ElementTextButton(this, width/10, buttonYPos+5, width*4/10, 30, "Play Game"))
                 .onClick(() -> {
                     Gdx.input.setInputProcessor(null);
                     fader.fadeOut().onComplete(() -> {
                         game.playNormalMode();
                     });
                 });
-        add(new ElementTextButton(this, width/10, height/2-30-5, width*4/10, 30, "Endless Mode"))
+        add(new ElementTextButton(this, width/10, buttonYPos-30-5, width*4/10, 30, "Endless Mode"))
                 .onClick(() -> {
                     Gdx.input.setInputProcessor(null);
                     fader.fadeOut().onComplete(() -> {
@@ -56,7 +59,7 @@ public class MenuScreen extends GuiScreen {
 
         time += delta;
         float devilYOffset = (float)Math.sin(time * 2f) * 4;
-        gfxManager.batch.draw(devilTexture, width*3/4 - devilTexture.getWidth()/2, height/2 - devilTexture.getHeight()/2 + devilYOffset);
+        gfxManager.batch.draw(devilTexture, width*3/4 - devilTexture.getWidth()/2, height*9/20 - devilTexture.getHeight()/2 + devilYOffset);
 
         gfxManager.batch.end();
         gfxManager.batch.getTransformMatrix().idt();

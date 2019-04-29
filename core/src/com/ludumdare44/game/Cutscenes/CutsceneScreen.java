@@ -10,9 +10,11 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
+import com.ludumdare44.game.Constants;
 import com.ludumdare44.game.Controls.ControlManager;
 import com.ludumdare44.game.Cutscenes.callbacks.ICutsceneCompleteListener;
 import com.ludumdare44.game.GFX.GFXManager;
+import com.ludumdare44.game.GUI.Fonts;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -24,6 +26,7 @@ public class CutsceneScreen implements Screen {
     protected ControlManager controlManager;
     protected GFXManager gfxManager;
     protected final ShapeRenderer shapeRenderer = new ShapeRenderer();
+    protected final BitmapFont font = Fonts.createDefaultPixelFont();
 
     protected final Color backgroundColor;
     protected final boolean cinematicBars;
@@ -111,10 +114,10 @@ public class CutsceneScreen implements Screen {
 
         // Render skip label
         if(skipLabelAlpha > 0) {
-            BitmapFont font = new BitmapFont();
             font.setColor(1, 1, 1, MathUtils.clamp(skipLabelAlpha, 0, 1));
+            font.getData().setScale(Constants.PIXEL_SCALE);
             gfxManager.batch.begin();
-            font.draw(gfxManager.batch, "Press ESC to skip", gfxManager.screenSize.x - gfxManager.screenSize.y*0.1f, gfxManager.screenSize.y*0.1f, 0, Align.right, false);
+            font.draw(gfxManager.batch, "Press ESC to skip", gfxManager.screenSize.y*0.08f, gfxManager.screenSize.y*0.9f + font.getLineHeight()/2, 0, Align.left, false);
             gfxManager.batch.end();
             gfxManager.batch.setColor(1, 1, 1, 1);
         }

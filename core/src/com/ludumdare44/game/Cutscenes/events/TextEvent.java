@@ -2,11 +2,15 @@ package com.ludumdare44.game.Cutscenes.events;
 
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.utils.Align;
+import com.ludumdare44.game.Constants;
 import com.ludumdare44.game.Cutscenes.CutsceneEvent;
 import com.ludumdare44.game.Cutscenes.CutsceneScreen;
 import com.ludumdare44.game.GFX.GFXManager;
+import com.ludumdare44.game.GUI.Fonts;
 
 public class TextEvent extends CutsceneEvent {
+
+    protected final BitmapFont font = Fonts.createDefaultPixelFont();
 
     protected final String text;
     protected final float printSpeed = 1;
@@ -61,12 +65,10 @@ public class TextEvent extends CutsceneEvent {
     @Override
     public void postRender(float delta, CutsceneScreen screen, GFXManager gfxManager) {
         super.postRender(delta, screen, gfxManager);
-        BitmapFont font = new BitmapFont();
 
         gfxManager.batch.begin();
-
-        font.draw(gfxManager.batch, printedText, gfxManager.screenSize.x/2f, gfxManager.screenSize.y*0.1f, 0, Align.center, false);
-
+        font.getData().setScale(Constants.PIXEL_SCALE);
+        font.draw(gfxManager.batch, printedText, gfxManager.screenSize.x/2f, gfxManager.screenSize.y*0.1f + font.getLineHeight()/2, 0, Align.center, false);
         gfxManager.batch.end();
     }
 }

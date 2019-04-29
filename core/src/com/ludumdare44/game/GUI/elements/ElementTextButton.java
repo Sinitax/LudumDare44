@@ -42,8 +42,8 @@ public class ElementTextButton extends GuiElement {
         this.label.alignCenter().alignMiddle();
 
         Texture buttonTexture = new Texture("assets/gui/button.png");
-        yOffset = -2;
-        pressedYOffset = -3;
+        yOffset = 0;
+        pressedYOffset = -1;
 
         TextureRegion[][] buttonTextures = new TextureRegion(buttonTexture).split(buttonTexture.getWidth()/3, buttonTexture.getHeight());
         textureNormal = buttonTextures[0][0];
