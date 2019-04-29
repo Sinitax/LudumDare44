@@ -2,6 +2,7 @@ package com.ludumdare44.game.GUI;
 
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.ludumdare44.game.GFX.GFXManager;
 
 import java.util.ArrayList;
@@ -9,37 +10,46 @@ import java.util.List;
 
 public abstract class Gui extends InputAdapter {
 
-    protected boolean setup = false;
+    protected boolean ready = false;
     protected int width;
     protected int height;
     protected int scale;
     private final List<GuiElement> elements = new ArrayList<>();
+    protected GFXManager gfx;
 
     protected int mouseX;
     protected int mouseY;
 
-    public void resizeGui(int width, int height, int scale) {
-        this.setup = true;
+    public final void resizeGui(int width, int height, int scale) {
+        this.ready = true;
         this.width = width / scale;
         this.height = height / scale;
         this.scale = scale;
 
         elements.clear();
+        gfx = new GFXManager(new Vector2(width, height));
         createGui(this.width, this.height);
     }
 
     protected abstract void createGui(int width, int height);
+    protected abstract void update(float delta);
+    protected void preRender(float delta) {}
+    protected void postRender(float delta) {}
 
-    public void render(float delta, GFXManager gfx) {
-        if(!setup)
+    public final void render(float delta) {
+        if(!ready)
             throw new RuntimeException("Gui is not ready. Call resizeGui() before rendering.");
 
+        update(delta);
+
         gfx.batch.getTransformMatrix().scale(scale, scale, scale);
+        preRender(delta);
         gfx.batch.begin();
         for(GuiElement element : elements) {
             element.render(delta, gfx);
         }
         gfx.batch.end();
+        postRender(delta);
         gfx.batch.getTransformMatrix().idt();
     }
 

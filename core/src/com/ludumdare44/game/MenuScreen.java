@@ -3,7 +3,6 @@ package com.ludumdare44.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.ludumdare44.game.Cutscenes.ScreenFader;
 import com.ludumdare44.game.GUI.Fonts;
 import com.ludumdare44.game.GUI.GuiScreen;
@@ -51,19 +50,18 @@ public class MenuScreen extends GuiScreen {
     }
 
     @Override
-    public void render(float delta) {
-        super.render(delta);
-
-        gfxManager.batch.getTransformMatrix().scale(scale, scale, scale);
-        gfxManager.batch.begin();
-
+    protected void update(float delta) {
         time += delta;
+    }
+
+    @Override
+    public void postRender(float delta) {
         float devilYOffset = (float)Math.sin(time * 2f) * 4;
-        gfxManager.batch.draw(devilTexture, width*3/4 - devilTexture.getWidth()/2, height*9/20 - devilTexture.getHeight()/2 + devilYOffset);
+        
+        gfx.batch.begin();
+        gfx.batch.draw(devilTexture, width*3/4 - devilTexture.getWidth()/2, height*9/20 - devilTexture.getHeight()/2 + devilYOffset);
+        gfx.batch.end();
 
-        gfxManager.batch.end();
-        gfxManager.batch.getTransformMatrix().idt();
-
-        fader.render(gfxManager, delta);
+        fader.render(gfx, delta);
     }
 }
