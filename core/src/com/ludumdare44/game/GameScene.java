@@ -43,6 +43,7 @@ public class GameScene implements Screen {
 	private boolean lavaDeath = false;
 	private boolean demonDeath = false;
 	private boolean gameStarted = false;
+	private boolean gameReady = false;
 
 	private ObjectAdder objectAdder;
 
@@ -126,7 +127,7 @@ public class GameScene implements Screen {
 		fader = new ScreenFader();
 		fader.setFadeTime(1).fadeIn();
 
-		hud = new GameHud(player);
+		hud = new GameHud(this, player);
 
 		Texture spriteSheet = new Texture("assets/tiles.png");
 		int tileWidth = 16;
@@ -179,6 +180,8 @@ public class GameScene implements Screen {
 				cameraManager.setShakeDuration(-1);
 				cameraManager.screenShake();
 			}
+
+			gameReady = true;
 
 			if (gameStarted) {
 				if (!player.getSpeed().isZero()) gameStarted = true;
@@ -278,5 +281,21 @@ public class GameScene implements Screen {
 	@Override
 	public void dispose () {
 		gfxManager.dispose();
+	}
+
+	public boolean isLavaDeath() {
+		return lavaDeath;
+	}
+
+	public boolean isDemonDeath() {
+		return demonDeath;
+	}
+
+	public boolean isGameStarted() {
+		return gameStarted;
+	}
+
+	public boolean isGameReady() {
+		return gameReady;
 	}
 }
