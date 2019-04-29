@@ -32,18 +32,18 @@ public class Grapple extends VisualPhysObject {
     }
 
     @Override
-    public boolean destroyed() {
+    public boolean isDestroyed() {
         return destroyed;
     }
 
     @Override
-    public boolean stagnant() {
+    public boolean isStagnant() {
         return false;
     }
 
     @Override
-    public boolean visible() {
-        return !this.destroyed();
+    public boolean isVisible() {
+        return !this.isDestroyed();
     }
 
     @Override
@@ -52,7 +52,7 @@ public class Grapple extends VisualPhysObject {
     }
 
     @Override
-    public void onCollision(PhysicsObject other) {
+    public void onCollision(PhysicsObject other, float delta) {
         if (other instanceof Obstacle) {
             setSpeed(new Vector2(0, 0));
             setFspeed(new Vector2(0, 0));

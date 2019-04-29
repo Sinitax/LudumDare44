@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.ludumdare44.game.GFX.GFXManager;
 import com.ludumdare44.game.Map.ObjectAdder;
+import com.ludumdare44.game.Map.ObjectManager;
 import com.ludumdare44.game.Physics.Grapple;
 import com.ludumdare44.game.Physics.Obstacle;
 import com.ludumdare44.game.Physics.PhysicsObject;
@@ -48,7 +49,7 @@ public abstract class Player extends VisualPhysObject {
         destroyed = true;
     }
     @Override
-    public boolean destroyed() { return destroyed; }
+    public boolean isDestroyed() { return destroyed; }
 
     private float energyMax = 50;
 
@@ -75,13 +76,17 @@ public abstract class Player extends VisualPhysObject {
     @Override
     public int getDecelMax() { return 1700; }
     @Override
-    public int getFspeedMax() { return 300; }
+    public int getFspeedMax() { return 800; }
+
+
+    private boolean stagnant = false;
+    @Override
+    public boolean isStagnant() { return stagnant; }
+
+    public void setStagnant(boolean v) { stagnant = v; }
 
     @Override
-    public boolean stagnant() { return false; }
-
-    @Override
-    public boolean visible() { return !destroyed; }
+    public boolean isVisible() { return !destroyed; }
 
     public abstract Sprite getAirborneSprite();
     public abstract Sprite getLeftSwingSprite();
@@ -95,8 +100,9 @@ public abstract class Player extends VisualPhysObject {
     }
 
     @Override
-    public void onCollision(PhysicsObject other) {
+    public void onCollision(PhysicsObject other, float delta) {
         if (other instanceof Obstacle) {
+            ObjectManager.rectangleCollision(this, ObjectManager.toRectangle(other), delta);
             stopGrapple();
         }
     }
@@ -184,6 +190,19 @@ public abstract class Player extends VisualPhysObject {
         }
     }
 
+    public void doJump() {
+        Vector2 jumpVec = new Vector2(200, 450);
+        stopGrapple();
+        int sign = 0;
+        if (getSpeed().x >= 0) {
+            sign = 1;
+        } else {
+            sign = -1;
+        }
+        Vector2 nspeed = getFspeed().add(jumpVec.scl(sign, 1));
+        setFspeed(nspeed);
+    }
+
     public void doReel() {
         reel = true;
     }
@@ -199,6 +218,6 @@ public abstract class Player extends VisualPhysObject {
     public Player(Vector2 _pos, ObjectAdder _objectAdder) {
         super(_pos);
         objectAdder = _objectAdder;
-        this.weight = 30;
+        this.weight = 85;
     }
 }

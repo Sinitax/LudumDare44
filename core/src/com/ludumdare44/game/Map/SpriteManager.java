@@ -35,12 +35,12 @@ public class SpriteManager {
         public void update(float delta) {}
 
         @Override
-        public boolean destroyed() {
+        public boolean isDestroyed() {
             return false;
         }
 
         @Override
-        public boolean visible() {
+        public boolean isVisible() {
             return tileLayers[tileLayer].getCell((int)(stile.x + x), (int) (stile.y + y)) != null;
         } //renders only existing tiles
 
@@ -254,8 +254,8 @@ public class SpriteManager {
         for (int i = 0; i < layers.size(); i++) {
             for (int j = 0; j < layers.get(i).size(); j++){
                 IRenderableObject obj = layers.get(i).get(j);
-                if (obj.visible()) obj.render(gfx);
-                if (obj.destroyed()) deleteList.add(obj);
+                if (obj.isVisible()) obj.render(gfx);
+                if (obj.isDestroyed()) deleteList.add(obj);
             }
         }
 

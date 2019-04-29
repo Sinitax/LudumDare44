@@ -23,14 +23,14 @@ public class CaveCeiling implements IRenderable {
     private float startX;
     private float lastCameraX = 0;
 
+    private Random random;
+
     private int[][] around = new int[][] {
             {0, -1},
             {-1, 0},
             {1, 0},
             {0, 1}
     };
-
-    private Random random;
 
     private int getBitMask(int x, int y) {
         int bitmask = 0;

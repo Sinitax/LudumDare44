@@ -12,18 +12,18 @@ public class Shadow extends VisualPhysObject {
     private int zLevel;
 
     @Override
-    public boolean destroyed() {
-        return owner != null && owner.destroyed();
+    public boolean isDestroyed() {
+        return owner != null && owner.isDestroyed();
     }
 
     @Override
-    public boolean stagnant() {
-        return owner != null && owner.stagnant();
+    public boolean isStagnant() {
+        return owner != null && owner.isStagnant();
     }
 
     @Override
-    public boolean visible() {
-        return owner != null && owner.visible();
+    public boolean isVisible() {
+        return owner != null && owner.isVisible();
     }
 
     @Override
@@ -83,7 +83,7 @@ public class Shadow extends VisualPhysObject {
     }
 
     @Override
-    public void onCollision(PhysicsObject other) {
+    public void onCollision(PhysicsObject other, float delta) {
 
     }
 

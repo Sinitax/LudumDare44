@@ -51,6 +51,7 @@ public class GameScene implements Screen {
 	private EndlessBackground background1, background2;
 	private LavaFloor lavaFloor;
 	private CaveCeiling caveCeiling;
+	private FakePlatform platform;
 
 	// game settings
 	private MenuManager menuManager;
@@ -64,14 +65,14 @@ public class GameScene implements Screen {
     private Sprite debugSprite;
 
     private float timeSpent = 0;
-    private float cutsceneTime = 2.5f;
+    private float cutsceneTime = 2.8f;
 
 	//Main
 	@Override
 	public void show () {
 		// display settings
 		Vector2 screenSize = new Vector2(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		Vector2 startPos = new Vector2(screenSize.x/2, screenSize.y/2);
+		Vector2 startPos = new Vector2(screenSize.x / 2, screenSize.y / 4 * 3);
 
 		gfxManager = new GFXManager(screenSize);
 
@@ -100,7 +101,7 @@ public class GameScene implements Screen {
 		};
 
 		player = new DefaultPlayer(startPos, objectAdder);
-		demon = new Demon(new Vector2(-1700, screenSize.y/2), player);
+		demon = new Demon(new Vector2(-1700, screenSize.y / 2), player);
 
 		cameraManager = new CameraManager(screenSize, new Vector2(-2000, screenSize.y/2), player, new Vector2(1, 0));
 		cameraManager.setShakeDuration(cutsceneTime);
@@ -121,6 +122,9 @@ public class GameScene implements Screen {
 		objectAdder.addVisObject(demon);
 		objectAdder.addVisObject(player);
 
+		demon.setStagnant(true);
+		player.setStagnant(true);
+
 		fader = new ScreenFader();
 		fader.setFadeTime(1).fadeIn();
 
@@ -131,6 +135,9 @@ public class GameScene implements Screen {
 		TextureRegion[][] tileMap = TextureRegion.split(spriteSheet, tileWidth, tileHeight);
 
 		caveCeiling = new CaveCeiling(cameraManager, objectManager, tileMap[0]);
+		platform = new FakePlatform(new Vector2(screenSize.x / 2 - 16 * 3, screenSize.y / 4 * 3 - player.getModelSize().y / 2 - 32), 8, 2, tileMap[0]);
+
+		objectAdder.addRenderable(platform);
 
 		hud = new HUD(player);
 
@@ -166,7 +173,6 @@ public class GameScene implements Screen {
 			gfxManager.batch.end();
 			return;
 		}
-
 		 */
 
 		fpsLogger.log();
@@ -175,8 +181,16 @@ public class GameScene implements Screen {
 
 		lavaFloor.update(delta);
 
+		objectManager.update(delta);
+
 		if (timeSpent > cutsceneTime) {
 			if (timeSpent - delta < cutsceneTime) {
+			    demon.setStagnant(false);
+
+				player.setStagnant(false);
+				player.doJump();
+				player.setSpeed(player.getFspeed().scl(.18f));
+
 				cameraManager.setShakeIntensity(4);
 				cameraManager.setShakeDuration(-1);
 				cameraManager.screenShake();
@@ -186,7 +200,6 @@ public class GameScene implements Screen {
 				playerControls.update(delta);
 			}
 
-			objectManager.update(delta);
 			spriteManager.update(delta);
 			cameraManager.update(delta);
 
@@ -200,7 +213,7 @@ public class GameScene implements Screen {
 				player.stopGrapple();
 			}
 
-			if (!player.destroyed()) {
+			if (!player.isDestroyed()) {
 				// TODO: switch to death cutscene
 			}
 
@@ -219,13 +232,14 @@ public class GameScene implements Screen {
 
 		background1.render(gfxManager);
 		background2.render(gfxManager);
-
 		caveCeiling.render(gfxManager);
+		if (platform.getPos().x + platform.getModelSize().x / 2.f > cameraManager.getPos().x - cameraManager.getScreenSize().x / 2) {
+			platform.render(gfxManager);
+		}
         spriteManager.render(gfxManager);
 
         lavaFloor.render(gfxManager);
 
-        /*
         gfxManager.batch.end();
         gfxManager.shapeRenderer.setColor(Color.RED);
         gfxManager.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
@@ -238,7 +252,6 @@ public class GameScene implements Screen {
         gfxManager.shapeRenderer.end();
         gfxManager.batch.begin();
         //hud.render(gfxManager);
-        */
 
         gfxManager.resetProjection();
 		gfxManager.batch.end();

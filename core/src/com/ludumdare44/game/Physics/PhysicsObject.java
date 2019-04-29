@@ -129,10 +129,11 @@ public abstract class PhysicsObject {
     public abstract Vector2 getHitbox();
     public Vector2 getHitboxOffset() {return new Vector2(0, 0);};
 
-    public abstract boolean destroyed(); // not destroyed -> destory object
-    public abstract boolean stagnant(); // out of range -> do not update
+    public abstract boolean isDestroyed(); // not isDestroyed -> destory object
 
-    public abstract void onCollision(PhysicsObject other);
+    public abstract boolean isStagnant(); // out of range -> do not update
+
+    public abstract void onCollision(PhysicsObject other, float delta);
 
     public PhysicsObject(Vector2 _pos) {
         pos = _pos;

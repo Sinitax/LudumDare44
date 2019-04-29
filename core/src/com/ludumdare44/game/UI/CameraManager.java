@@ -108,16 +108,16 @@ public class CameraManager extends PhysicsObject implements IRenderable {
     }
 
     @Override
-    public void onCollision(PhysicsObject other) {
+    public void onCollision(PhysicsObject other, float delta) {
     }
 
     @Override
-    public boolean destroyed() {
+    public boolean isDestroyed() {
         return true;
     }
 
     @Override
-    public boolean stagnant() {
+    public boolean isStagnant() {
         return false;
     }
 

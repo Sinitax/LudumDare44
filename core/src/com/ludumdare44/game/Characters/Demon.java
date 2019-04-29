@@ -6,7 +6,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.ludumdare44.game.GFX.GFXManager;
 import com.ludumdare44.game.Physics.PhysicsObject;
 import com.ludumdare44.game.Physics.VisualPhysObject;
-import com.ludumdare44.game.UI.CameraManager;
 
 public class Demon extends VisualPhysObject {
     private Sprite sprite = new Sprite(new Texture("assets/devil.png"));
@@ -30,7 +29,7 @@ public class Demon extends VisualPhysObject {
     }
 
     @Override
-    public void onCollision(PhysicsObject other) {
+    public void onCollision(PhysicsObject other, float delta) {
     }
 
     @Override
@@ -54,17 +53,18 @@ public class Demon extends VisualPhysObject {
     }
 
     @Override
-    public boolean destroyed() {
+    public boolean isDestroyed() {
         return false;
     }
 
+    private boolean stagnant = false;
     @Override
-    public boolean stagnant() {
-        return false;
-    }
+    public boolean isStagnant() { return stagnant; }
+
+    public void setStagnant(boolean v) { stagnant = v; }
 
     @Override
-    public boolean visible() {
+    public boolean isVisible() {
         return true;
     }
 
@@ -79,7 +79,7 @@ public class Demon extends VisualPhysObject {
 
         float followDist = getFollowObject().getPos().x - getPos().x;
 
-        approachSpeed = Math.min(1, Math.max(0.2f, followDist / (maxFollowDist / 2)));
+        approachSpeed = Math.min(1, Math.max(0.5f, followDist / (maxFollowDist / 2)));
 
         updateSpeed(delta);
 

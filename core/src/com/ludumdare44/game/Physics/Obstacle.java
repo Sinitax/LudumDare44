@@ -31,7 +31,7 @@ public class Obstacle extends PhysicsObject {
     }
 
     @Override
-    public void onCollision(PhysicsObject other) {}
+    public void onCollision(PhysicsObject other, float delta) {}
 
     public void update(int x, int y, int _width, int _height) {
         width = _width;
@@ -46,12 +46,12 @@ public class Obstacle extends PhysicsObject {
     }
 
     @Override
-    public boolean destroyed() {
+    public boolean isDestroyed() {
         return true;
     }
 
     @Override
-    public boolean stagnant() {
+    public boolean isStagnant() {
         return false;
     }
 }

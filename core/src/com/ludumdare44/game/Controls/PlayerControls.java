@@ -11,7 +11,6 @@ public class PlayerControls {
     private ControlManager controlManager;
     private CameraManager cameraManager;
 
-    private Vector2 jumpVec = new Vector2(700, 2000);
 
     public void update(float delta) {
         if (!player.isBusy()) {
@@ -22,15 +21,7 @@ public class PlayerControls {
             } else if (controlManager.justPressed(Input.Keys.R)) {
                 player.doAbility();
             } else if (controlManager.justPressed(Input.Keys.SPACE) && player.isGrappling()) {
-                player.stopGrapple();
-                int sign = 0;
-                if (player.getSpeed().x >= 0) {
-                    sign = 1;
-                } else if (player.getSpeed().x < 0) {
-                    sign = -1;
-                }
-                Vector2 nspeed = player.getSpeed().add(new Vector2(jumpVec).scl(delta).scl(sign, 1));
-                player.setFspeed(nspeed);
+                player.doJump();
             }
             if (controlManager.justPressed(Input.Keys.W)) {
                 player.doReel();
