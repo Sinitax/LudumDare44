@@ -18,6 +18,7 @@ import com.ludumdare44.game.Cutscenes.ScreenFader;
 import com.ludumdare44.game.GFX.GFXManager;
 import com.ludumdare44.game.GFX.GifDecoder;
 import com.ludumdare44.game.GFX.IRenderableObject;
+import com.ludumdare44.game.GUI.huds.GameHud;
 import com.ludumdare44.game.Map.*;
 import com.ludumdare44.game.Physics.PhysicsObject;
 import com.ludumdare44.game.Physics.VisualPhysObject;
@@ -33,6 +34,7 @@ public class GameScene implements Screen {
 	private GFXManager gfxManager;
 	private SpriteManager spriteManager;
 	private ScreenFader fader;
+	private GameHud hud;
 
 	private Player player;
 	private Demon demon;
@@ -123,6 +125,8 @@ public class GameScene implements Screen {
 
 		fader = new ScreenFader();
 		fader.setFadeTime(1).fadeIn();
+
+		hud = new GameHud(player);
 
 		Texture spriteSheet = new Texture("assets/tiles.png");
 		int tileWidth = 16;
@@ -252,11 +256,15 @@ public class GameScene implements Screen {
         gfxManager.resetProjection();
 		gfxManager.batch.end();
 
+		hud.render(delta);
+
 		fader.render(gfxManager, delta);
 	}
 
 	@Override
-	public void resize(int width, int height) {}
+	public void resize(int width, int height) {
+		hud.resizeGui(width, height);
+	}
 
 	@Override
 	public void pause() {}

@@ -34,7 +34,7 @@ public abstract class GuiScreen extends Gui implements Screen {
     @Override
     public void resize(int width, int height) {
         gfx = new GFXManager(new Vector2(width, height));
-        resizeGui(width, height, Constants.PIXEL_SCALE);
+        resizeGui(width, height);
         Gdx.input.setInputProcessor(this);
     }
 

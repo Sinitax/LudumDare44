@@ -57,7 +57,7 @@ public class MenuScreen extends GuiScreen {
     @Override
     public void postRender(float delta) {
         float devilYOffset = (float)Math.sin(time * 2f) * 4;
-        
+
         gfx.batch.begin();
         gfx.batch.draw(devilTexture, width*3/4 - devilTexture.getWidth()/2, height*9/20 - devilTexture.getHeight()/2 + devilYOffset);
         gfx.batch.end();

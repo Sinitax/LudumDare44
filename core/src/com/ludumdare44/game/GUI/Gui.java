@@ -3,6 +3,7 @@ package com.ludumdare44.game.GUI;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.ludumdare44.game.Constants;
 import com.ludumdare44.game.GFX.GFXManager;
 
 import java.util.ArrayList;
@@ -29,6 +30,10 @@ public abstract class Gui extends InputAdapter {
         elements.clear();
         gfx = new GFXManager(new Vector2(width, height));
         createGui(this.width, this.height);
+    }
+
+    public final void resizeGui(int width, int height) {
+        resizeGui(width, height, Constants.PIXEL_SCALE);
     }
 
     protected abstract void createGui(int width, int height);
