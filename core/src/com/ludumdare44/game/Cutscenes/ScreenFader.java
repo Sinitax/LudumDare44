@@ -55,18 +55,21 @@ public class ScreenFader {
     public ScreenFader fadeIn() {
         fadeType = FadeType.FADE_IN;
         fadeProgress = 0;
+        completed = false;
         return this;
     }
 
     public ScreenFader fadeOut() {
         fadeType = FadeType.FADE_OUT;
         fadeProgress = 0;
+        completed = false;
         return this;
     }
 
     public ScreenFader flash() {
         fadeType = FadeType.FLASH;
         fadeProgress = 0;
+        completed = false;
         return this;
     }
 
