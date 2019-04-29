@@ -12,7 +12,7 @@ public class PlayerControls {
     private CameraManager cameraManager;
 
     private float grappleTimer = 0;
-    private float reelCooldown = 200;
+    private float reelCooldown = 0.2f; // 200millis
 
     public void update(float delta) {
         if (!player.isBusy()) {
