@@ -2,6 +2,7 @@ package com.ludumdare44.game.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+import com.ludumdare44.game.Constants;
 import com.ludumdare44.game.LudumDareGame;
 
 public class DesktopLauncher {
@@ -9,6 +10,7 @@ public class DesktopLauncher {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.height = 600;
 		config.width = 800;
+		config.title = Constants.GAME_TITLE;
 		new LwjglApplication(new LudumDareGame(), config);
 	}
 }

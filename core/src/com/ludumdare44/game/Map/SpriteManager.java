@@ -9,6 +9,7 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.*;
 import com.badlogic.gdx.maps.tiled.tiles.AnimatedTiledMapTile;
 import com.badlogic.gdx.math.*;
+import com.ludumdare44.game.Constants;
 import com.ludumdare44.game.GFX.GFXManager;
 import com.ludumdare44.game.GFX.IRenderable;
 import com.ludumdare44.game.GFX.IRenderableObject;
@@ -263,22 +264,6 @@ public class SpriteManager {
             for (IRenderable obj : deleteList) {
                 if (layers.get(i).indexOf(obj) != -1) layers.get(i).remove(obj);
             }
-        }
-
-        if (gfx.DEBUG) {
-            gfx.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-            gfx.shapeRenderer.setProjectionMatrix(gfx.camera.combined);
-            Color c = Color.WHITE;
-
-            for (int i = 0; i < obstacles.size(); i++) {
-                gfx.shapeRenderer.setColor(c);
-                Vector2 pos = obstacles.get(i).getPos();
-                Vector2 size = obstacles.get(i).getHitbox();
-                gfx.shapeRenderer.rect(pos.x, pos.y, size.x, size.y);
-            }
-
-            gfx.shapeRenderer.end();
-            gfx.batch.begin();
         }
     }
 

@@ -13,7 +13,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 
 public class GFXManager {
-    public boolean DEBUG = false;
 
 	public Matrix4 uiMatrix;
 	public ExtendViewport viewport;

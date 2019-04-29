@@ -246,17 +246,19 @@ public class GameScene implements Screen {
 
         lavaFloor.render(gfxManager);
 
-        gfxManager.batch.end();
-        gfxManager.shapeRenderer.setColor(Color.RED);
-        gfxManager.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        ArrayList<PhysicsObject> objects = objectManager.getObjects();
-        for (int i = 0; i < objects.size(); i++) {
-            PhysicsObject pobj = objects.get(i);
-			Rectangle r = ObjectManager.toRectangle(pobj);
-            gfxManager.shapeRenderer.rect(r.x, r.y, r.width, r.height);
-        }
-        gfxManager.shapeRenderer.end();
-        gfxManager.batch.begin();
+        if(Constants.DEBUG_MODE) {
+			gfxManager.batch.end();
+			gfxManager.shapeRenderer.setColor(Color.RED);
+			gfxManager.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+			ArrayList<PhysicsObject> objects = objectManager.getObjects();
+			for (int i = 0; i < objects.size(); i++) {
+				PhysicsObject pobj = objects.get(i);
+				Rectangle r = ObjectManager.toRectangle(pobj);
+				gfxManager.shapeRenderer.rect(r.x, r.y, r.width, r.height);
+			}
+			gfxManager.shapeRenderer.end();
+			gfxManager.batch.begin();
+		}
         //hud.render(gfxManager);
 
         gfxManager.resetProjection();
