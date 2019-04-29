@@ -88,7 +88,7 @@ public class Particle extends VisualPhysObject {
         super(spos);
         hflip = (Math.random() > 0.5);
         animation = _animation;
-        weight = -10;
+        weight = 0;
         frameWidth = animation.getKeyFrames()[0].getRegionWidth();
         frameHeight = animation.getKeyFrames()[0].getRegionHeight();
         setFspeedAbs(speed);

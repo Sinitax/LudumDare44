@@ -17,9 +17,9 @@ public class ParticleGenerator {
     private float particleVelocityMax = 270.f;
 
     private float timeSpent = 0.f;
-    private float spawnTime = 0.03f;
+    private float spawnTime = 0.003f;
 
-    private int maxParticles = 300;
+    private int maxParticles = 800;
 
     public void update(float delta) {
         timeSpent += delta;
@@ -52,7 +52,7 @@ public class ParticleGenerator {
     public ParticleGenerator(PhysicsObject _owner, String filename) {
         owner = _owner;
         Texture t = new Texture(filename);
-        animation = new Animation<>(0.3f, TextureRegion.split(t, t.getWidth() / 8, t.getHeight())[0]);
+        animation = new Animation<>(0.06f, TextureRegion.split(t, t.getWidth() / 8, t.getHeight())[0]);
         particleList = new ArrayList<>();
     }
 }
