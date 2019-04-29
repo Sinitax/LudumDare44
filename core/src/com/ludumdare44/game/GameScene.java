@@ -124,7 +124,7 @@ public class GameScene implements Screen {
 		fader = new ScreenFader();
 		fader.setFadeTime(1).fadeIn();
 
-		Texture spriteSheet = new Texture("assets/textures/tiles.png");
+		Texture spriteSheet = new Texture("assets/tiles.png");
 		int tileWidth = 16;
 		int tileHeight = 16;
 

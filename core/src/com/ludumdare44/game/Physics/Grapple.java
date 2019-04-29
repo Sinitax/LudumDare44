@@ -10,8 +10,8 @@ import com.ludumdare44.game.GFX.GFXManager;
 
 public class Grapple extends VisualPhysObject {
 
-    Texture spriteHook = new Texture("assets/models/weapons/grapple/grapple_hook.png");
-    Texture spriteChain = new Texture("assets/models/weapons/grapple/grapple_chain.png");
+    Texture spriteHook = new Texture("assets/grapple_hook.png");
+    Texture spriteChain = new Texture("assets/grapple_chain.png");
 
     private static float grappleSpeed = 1400.f;
 
