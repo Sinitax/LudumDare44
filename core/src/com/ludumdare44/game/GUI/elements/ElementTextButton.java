@@ -1,5 +1,6 @@
 package com.ludumdare44.game.GUI.elements;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.ludumdare44.game.GFX.GFXManager;
@@ -15,7 +16,7 @@ public class ElementTextButton extends GuiElement {
     protected int y;
     protected int width;
     protected int height;
-    protected String text;
+    protected ElementLabel label;
 
     protected TextureRegion textureNormal;
     protected TextureRegion textureHover;
@@ -27,7 +28,8 @@ public class ElementTextButton extends GuiElement {
         this.y = y;
         this.width = width;
         this.height = height;
-        this.text = text;
+        this.label = new ElementLabel(gui, x+width/2, y+height/2 - 3, text, Color.WHITE);
+        this.label.alignCenter().alignMiddle();
 
         Texture buttonTexture = new Texture("assets/gui/button.png");
         TextureRegion[][] buttonTextures = new TextureRegion(buttonTexture).split(buttonTexture.getWidth()/3, buttonTexture.getHeight());
@@ -39,6 +41,7 @@ public class ElementTextButton extends GuiElement {
     @Override
     public void render(float delta, GFXManager gfx) {
         gui.renderTexturedRect(gfx, textureNormal, x, y, width, height);
+        label.render(delta, gfx);
     }
 
     public interface IClickListener {
