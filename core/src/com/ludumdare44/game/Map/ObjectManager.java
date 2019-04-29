@@ -22,37 +22,21 @@ public class ObjectManager {
     }
 
     public static void rectangleCollision(PhysicsObject vpo, Rectangle ro, float delta) {
-        Rectangle r = ObjectManager.toRectangle(vpo);
-        Vector2 ppos = vpo.getPos().sub(vpo.getSpeed().scl(delta));
-        Rectangle pr = new Rectangle(ppos.x + vpo.getHitboxOffset().x - vpo.getHitbox().x / 2, ppos.y + vpo.getHitboxOffset().y - vpo.getHitbox().y / 2, vpo.getHitbox().x, vpo.getHitbox().y);
-        Vector2 npos = vpo.getPos();
-        Vector2 nspeed = vpo.getSpeed();
-        if (r.overlaps(ro)) {
-            boolean vertical = r.y + r.getHeight() > ro.getY() && r.y < ro.getY() + ro.getHeight();
-            boolean horizontal = r.x + r.getWidth() < ro.getX() && r.x > ro.getX() + ro.getWidth();
+        Vector2 nSpeed = vpo.getSpeed();
+        Vector2 hitboxPos = vpo.getPos().add(vpo.getHitboxOffset());
+        boolean vertOverlap = hitboxPos.y - vpo.getHitbox().y / 2 < ro.getY() + ro.getHeight() && hitboxPos.y + vpo.getHitbox().y / 2 > ro.getY();
+        boolean horzOverlap = hitboxPos.x - vpo.getHitbox().x / 2 < ro.getX() + ro.getWidth() && hitboxPos.x + vpo.getHitbox().x / 2 > ro.getX();
 
-            if (vertical && horizontal) System.out.println("h");
-            if (vertical) {
-                if (pr.y + pr.getHeight() < ro.getY()) {
-                    npos.y = ro.getY() - r.getHeight() / 2 - .1f - vpo.getHitboxOffset().y;
-                } else if (pr.y > ro.getY() + ro.getHeight()) {
-                    npos.y = ro.getY() + ro.getHeight() + r.getHeight() / 2 + .1f + vpo.getHitboxOffset().y;
-                }
-                nspeed.y = 0;
-            }
-            if (horizontal) {
-                if (pr.x + pr.getWidth() < ro.getX()) {
-                    npos.x = ro.getX() - r.getWidth() / 2 - .1f - vpo.getHitboxOffset().x;
-                } else if (pr.x > ro.getX() + ro.getWidth()) {
-                    npos.x = ro.getX() + ro.getWidth() + r.getWidth() / 2 + .1f + vpo.getHitboxOffset().x;
-                }
-                nspeed.x = 0;
-            }
+        if (vertOverlap) nSpeed.y = 0;
+        if (horzOverlap) nSpeed.x = 0;
 
-            vpo.setSpeed(nspeed);
-            vpo.setFspeed(new Vector2(0, 0));
-            vpo.setPos(npos);
+        Vector2 vel = vpo.getSpeed().nor().scl(-1);
+        for (int i = 0; i < 100 && ro.overlaps(toRectangle(vpo)); i++) {
+            vpo.setPos(vpo.getPos().add(vel.cpy().scl(3f)));
         }
+
+        vpo.setSpeed(nSpeed);
+        vpo.setFspeed(nSpeed);
     }
 
     private void checkCollisions(float delta) {
@@ -70,7 +54,7 @@ public class ObjectManager {
     }
 
     public void update(float delta) {
-        //check physics collisions
+        // check physics collisions
         ArrayList<PhysicsObject> deleteList = new ArrayList<>();
         for (PhysicsObject obj : physobjects) {
             if (obj instanceof VisualPhysObject) {

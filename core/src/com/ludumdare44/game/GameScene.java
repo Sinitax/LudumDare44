@@ -15,13 +15,10 @@ import com.ludumdare44.game.Characters.*;
 import com.ludumdare44.game.Controls.ControlManager;
 import com.ludumdare44.game.Controls.PlayerControls;
 import com.ludumdare44.game.Cutscenes.ScreenFader;
-import com.ludumdare44.game.GFX.GFXManager;
-import com.ludumdare44.game.GFX.GifDecoder;
-import com.ludumdare44.game.GFX.IRenderableObject;
+import com.ludumdare44.game.GFX.*;
 import com.ludumdare44.game.Map.*;
 import com.ludumdare44.game.Physics.PhysicsObject;
 import com.ludumdare44.game.Physics.VisualPhysObject;
-import com.ludumdare44.game.GFX.CameraManager;
 
 import java.util.ArrayList;
 
@@ -37,6 +34,7 @@ public class GameScene implements Screen {
 	private Player player;
 	private Demon demon;
 	private BatSpawner batSpawner;
+	private ParticleGenerator particleGenerator;
 
 	private boolean lavaDeath = false;
 	private boolean demonDeath = false;
@@ -98,6 +96,8 @@ public class GameScene implements Screen {
 
 		player = new DefaultPlayer(startPos, objectAdder);
 		demon = new Demon(new Vector2(-1700, screenSize.y / 2), player);
+
+		particleGenerator = new ParticleGenerator(demon, "assets/particle_flames.png");
 
 		cameraManager = new CameraManager(screenSize, new Vector2(-2000, screenSize.y/2), player, new Vector2(1, 0));
 		cameraManager.setShakeDuration(cutsceneTime);
@@ -168,6 +168,7 @@ public class GameScene implements Screen {
 		lavaFloor.update(delta);
 
 		objectManager.update(delta);
+		particleGenerator.update(delta);
 
 		if (timeSpent > cutsceneTime) {
 			if (timeSpent - delta < cutsceneTime) {
@@ -230,7 +231,10 @@ public class GameScene implements Screen {
 		if (platform.getPos().x + platform.getModelSize().x / 2.f > cameraManager.getPos().x - cameraManager.getScreenSize().x / 2) {
 			platform.render(gfxManager);
 		}
+
+		particleGenerator.render(gfxManager);
         spriteManager.render(gfxManager);
+
 
         lavaFloor.render(gfxManager);
 
