@@ -18,7 +18,7 @@ public class DefaultPlayer extends Player {
 
     @Override
     public Vector2 getHitboxOffset() {
-        return new Vector2(0, -15);
+        return new Vector2(0, -20);
     }
 
     @Override

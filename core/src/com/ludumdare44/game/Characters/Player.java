@@ -35,7 +35,7 @@ public abstract class Player extends VisualPhysObject {
         currentAnimation = animation;
     }
 
-    private boolean facingRight;
+    private boolean facingRight = true;
     public int facingDirection() {
         if (facingRight) return 1;
         else return -1;
@@ -160,7 +160,7 @@ public abstract class Player extends VisualPhysObject {
                     setSpeed(nspeed);
                     setFspeedAbs(nspeed);
                 }
-            } else {
+            } else if (!dying) {
                 if (getSpeed().y >= 0) setSprite(getIdleSprite());
                 else if (!useAnimation || currentAnimation != getAirborneAnimation()) setAnimation(getAirborneAnimation());
             }
@@ -187,7 +187,12 @@ public abstract class Player extends VisualPhysObject {
         if (useAnimation) sprite = new Sprite(currentAnimation.getKeyFrame(animationTime));
         else sprite = new Sprite(currentSprite);
 
-        if (!dying) facingRight = (getSpeed().x >= 0 && !grappling || grappling && grapple.getPos().sub(getPos()).x > 0);
+        if (!dying) {
+            if (grappling) {
+                facingRight = grapple.getPos().sub(getPos()).x > 0;
+            } else if (!getSpeed().isZero()) facingRight = getSpeed().x > 0;
+        }
+
         if (!facingRight) {
             sprite.flip(true, false);
         }

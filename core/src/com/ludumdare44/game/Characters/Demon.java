@@ -85,17 +85,20 @@ public class Demon extends VisualPhysObject {
 
     @Override
     public void update(float delta) {
-        timePassed += delta;
+        if (!Constants.DEBUG_MODE) {
+            timePassed += delta;
 
-        float followDist = getFollowObject().getPos().x - getPos().x;
+            float followDist = getFollowObject().getPos().x - getPos().x;
 
-        approachSpeed = Math.min(1, Math.max(0.5f, followDist / (maxFollowDist / 2)));
+            approachSpeed = Math.min(1, Math.max(0.5f, followDist / (maxFollowDist / 2)));
 
-        updateSpeed(delta);
+            updateSpeed(delta);
 
-        setPos(new Vector2(getPos().x, (float) (bobHeight + Math.sin(timePassed * bobSpeed) * bobAmount)));
-        if (followDist > maxFollowDist) setPos(new Vector2(getFollowObject().getPos().x - maxFollowDist, getPos().y));
-        updatePos(delta);
+            setPos(new Vector2(getPos().x, (float) (bobHeight + Math.sin(timePassed * bobSpeed) * bobAmount)));
+            if (followDist > maxFollowDist)
+                setPos(new Vector2(getFollowObject().getPos().x - maxFollowDist, getPos().y));
+            updatePos(delta);
+        }
     }
 
     @Override

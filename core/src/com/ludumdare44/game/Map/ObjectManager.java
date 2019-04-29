@@ -18,34 +18,37 @@ public class ObjectManager {
     }
 
     public static Rectangle toRectangle(PhysicsObject vpo) {
-        return new Rectangle(vpo.getPos().x + vpo.getHitboxOffset().x - vpo.getHitbox().x/2, vpo.getPos().y + vpo.getHitboxOffset().y - vpo.getHitbox().y/2, vpo.getHitbox().x, vpo.getHitbox().y);
+        return new Rectangle(vpo.getPos().x + vpo.getHitboxOffset().x - vpo.getHitbox().x / 2, vpo.getPos().y + vpo.getHitboxOffset().y - vpo.getHitbox().y / 2, vpo.getHitbox().x, vpo.getHitbox().y);
     }
 
     public static void rectangleCollision(PhysicsObject vpo, Rectangle ro, float delta) {
         Rectangle r = ObjectManager.toRectangle(vpo);
-        Vector2 ppos = vpo.getPos().sub(vpo.getSpeed());
-        Rectangle pr = new Rectangle(ppos.x, ppos.y, vpo.getHitbox().x, vpo.getHitbox().y);
+        Vector2 ppos = vpo.getPos().sub(vpo.getSpeed().scl(delta));
+        Rectangle pr = new Rectangle(ppos.x + vpo.getHitboxOffset().x - vpo.getHitbox().x / 2, ppos.y + vpo.getHitboxOffset().y - vpo.getHitbox().y / 2, vpo.getHitbox().x, vpo.getHitbox().y);
         Vector2 npos = vpo.getPos();
         Vector2 nspeed = vpo.getSpeed();
         if (r.overlaps(ro)) {
-            boolean vertical = r.y + r.getHeight() > ro.getY() || r.y < ro.getY() + ro.getHeight();
-            boolean horizontal = r.x + r.getWidth() < ro.getX() || r.x > ro.getX() + ro.getWidth();
-            if (horizontal) {
-                if (pr.x + pr.getWidth() < ro.getX()) {
-                    npos.x = ro.getX() - r.getWidth() / 2 - .1f;
-                } else if (pr.x > ro.getX() + ro.getWidth()) {
-                    npos.x = ro.getX() + ro.getWidth() + r.getWidth() / 2 + .1f;
-                }
-                nspeed.x = 0;
-            }
+            boolean vertical = r.y + r.getHeight() > ro.getY() && r.y < ro.getY() + ro.getHeight();
+            boolean horizontal = r.x + r.getWidth() < ro.getX() && r.x > ro.getX() + ro.getWidth();
+
+            if (vertical && horizontal) System.out.println("h");
             if (vertical) {
                 if (pr.y + pr.getHeight() < ro.getY()) {
-                    npos.y = ro.getY() - r.getHeight() / 2 - .1f;
+                    npos.y = ro.getY() - r.getHeight() / 2 - .1f - vpo.getHitboxOffset().y;
                 } else if (pr.y > ro.getY() + ro.getHeight()) {
-                    npos.y = ro.getY() + ro.getHeight() + r.getHeight() / 2 + .1f;
+                    npos.y = ro.getY() + ro.getHeight() + r.getHeight() / 2 + .1f + vpo.getHitboxOffset().y;
                 }
                 nspeed.y = 0;
             }
+            if (horizontal) {
+                if (pr.x + pr.getWidth() < ro.getX()) {
+                    npos.x = ro.getX() - r.getWidth() / 2 - .1f - vpo.getHitboxOffset().x;
+                } else if (pr.x > ro.getX() + ro.getWidth()) {
+                    npos.x = ro.getX() + ro.getWidth() + r.getWidth() / 2 + .1f + vpo.getHitboxOffset().x;
+                }
+                nspeed.x = 0;
+            }
+
             vpo.setSpeed(nspeed);
             vpo.setFspeed(new Vector2(0, 0));
             vpo.setPos(npos);
