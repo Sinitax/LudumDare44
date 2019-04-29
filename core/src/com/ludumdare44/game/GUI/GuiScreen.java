@@ -5,6 +5,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Vector2;
+import com.ludumdare44.game.Constants;
 import com.ludumdare44.game.GFX.GFXManager;
 
 public abstract class GuiScreen extends Gui implements Screen {
@@ -35,7 +36,7 @@ public abstract class GuiScreen extends Gui implements Screen {
     @Override
     public void resize(int width, int height) {
         gfxManager = new GFXManager(new Vector2(width, height));
-        resizeGui(width, height, 3);
+        resizeGui(width, height, Constants.PIXEL_SCALE);
         Gdx.input.setInputProcessor(this);
     }
 

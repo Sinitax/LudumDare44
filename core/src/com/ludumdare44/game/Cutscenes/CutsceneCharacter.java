@@ -2,6 +2,7 @@ package com.ludumdare44.game.Cutscenes;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
+import com.ludumdare44.game.Constants;
 import com.ludumdare44.game.GFX.GFXManager;
 
 public class CutsceneCharacter {
@@ -19,7 +20,7 @@ public class CutsceneCharacter {
     }
 
     public void render(float delta, GFXManager gfxManager) {
-        final int pixelRatio = 3;
+        final int pixelRatio = Constants.PIXEL_SCALE;
 
         Vector2 screenPosition = new Vector2(
                 gfxManager.screenSize.x*this.position.relativeScreenPosition.x,

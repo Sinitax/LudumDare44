@@ -3,8 +3,7 @@ package com.ludumdare44.game;
 import java.lang.reflect.Array;
 
 public class MiscUtils {
-
-
+    
     public static <T> T[] concatenate(T[] a, T[] b) {
         int aLen = a.length;
         int bLen = b.length;
