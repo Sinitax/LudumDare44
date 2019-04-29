@@ -16,6 +16,7 @@ import com.ludumdare44.game.Controls.ControlManager;
 import com.ludumdare44.game.Controls.PlayerControls;
 import com.ludumdare44.game.Cutscenes.ScreenFader;
 import com.ludumdare44.game.GFX.*;
+import com.ludumdare44.game.GUI.huds.GameHud;
 import com.ludumdare44.game.Map.*;
 import com.ludumdare44.game.Physics.PhysicsObject;
 import com.ludumdare44.game.Physics.VisualPhysObject;
