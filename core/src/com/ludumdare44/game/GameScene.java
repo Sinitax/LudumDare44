@@ -1,6 +1,7 @@
 package com.ludumdare44.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.FPSLogger;
@@ -39,6 +40,7 @@ public class GameScene implements Screen {
 
 	private boolean lavaDeath = false;
 	private boolean demonDeath = false;
+	private boolean gameStarted = false;
 
 	private ObjectAdder objectAdder;
 
@@ -169,48 +171,45 @@ public class GameScene implements Screen {
 
 		if (timeSpent > cutsceneTime) {
 			if (timeSpent - delta < cutsceneTime) {
-			    demon.setStagnant(false);
-
-				player.setStagnant(false);
-				player.doJump();
-				player.setSpeed(player.getFspeed().scl(.18f));
-
 				cameraManager.setShakeIntensity(4);
 				cameraManager.setShakeDuration(-1);
 				cameraManager.screenShake();
 			}
 
-			if (!player.isDying()) {
-				playerControls.update(delta);
+			if (gameStarted) {
+				if (!player.getSpeed().isZero()) gameStarted = true;
+
+				if (!player.isDying()) {
+					playerControls.update(delta);
+				}
+
+				batSpawner.update(delta);
+				spriteManager.update(delta);
+				cameraManager.update(delta);
+
+				if (player.inLava()) { // death by lava
+					if (!lavaDeath) player.setAnimation(player.getDeathAnimation());
+					player.kill();
+					lavaDeath = true;
+				}
+
+				if (player.getPos().x < demon.getPos().x + demon.getHitbox().x / 2) { // death by demon
+					if (!demonDeath) player.setSprite(new Sprite(player.getDeathAnimation().getKeyFrames()[0]));
+					player.kill();
+					demonDeath = true;
+				}
+
+				if (!player.isDestroyed()) {
+					// TODO: switch to death cutscene
+				}
+			} else if (controlManager.justPressed(Input.Keys.SPACE)) {
+				player.setStagnant(false);
+				demon.setStagnant(false);
+
+				player.doJump();
+				player.setSpeed(player.getFspeed().scl(.4f));
+				gameStarted = true;
 			}
-
-			batSpawner.update(delta);
-			spriteManager.update(delta);
-			cameraManager.update(delta);
-
-			if (player.inLava()) { // death by lava
-			    if (!lavaDeath) player.setAnimation(player.getDeathAnimation());
-				player.kill();
-				lavaDeath = true;
-			}
-
-			if (player.getPos().x < demon.getPos().x + demon.getHitbox().x / 2) { // death by demon
-				if (!demonDeath) player.setSprite(new Sprite(player.getDeathAnimation().getKeyFrames()[0]));
-				player.kill();
-				demonDeath = true;
-			}
-
-			if (player.isDying()) {
-				player.setAnimation(player.getDeathAnimation());
-				player.setFspeedAbs(new Vector2(0, 0));
-				player.stopGrapple();
-			}
-
-			if (!player.isDestroyed()) {
-				// TODO: switch to death cutscene
-			}
-
-			// AnimatedTiledMapTile.updateAnimationBaseTime();
 		} else {
 			cameraManager.update(delta);
 		}

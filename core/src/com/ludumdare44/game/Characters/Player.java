@@ -18,6 +18,7 @@ public abstract class Player extends VisualPhysObject {
 
     private Sprite sprite; // temp sprite
 
+    private float timeSpent = 0.f;
     private float animationTime = 0.f;
 
     private Sprite currentSprite;
@@ -53,7 +54,10 @@ public abstract class Player extends VisualPhysObject {
 
     private boolean dying = false;
     public boolean isDying() { return dying; }
-    public void kill() { dying = true; }
+    public void kill() {
+        stopGrapple();
+        dying = true;
+    }
 
     private boolean destroyed = false;
     public void destroy() {
@@ -62,9 +66,8 @@ public abstract class Player extends VisualPhysObject {
     @Override
     public boolean isDestroyed() { return destroyed; }
 
-    private float energyMax = 50;
-
     private float energy = 0;
+    private float energyMax = 50;
     public final float getEnergyMax() { return energyMax; }
     public final float getEnergy() { return energy; }
     public final void setEnergy(float _energy) {
@@ -72,6 +75,10 @@ public abstract class Player extends VisualPhysObject {
         if (energy < 0) energy = 0;
         if (energy > energyMax) energy = energyMax;
     }
+
+    private int souls = 0;
+    public final int getSouls() { return souls; }
+    public final void setSouls(int _souls) { souls = _souls; }
 
     public final Vector2 getModelSize() {
         return getHitbox();
@@ -114,7 +121,7 @@ public abstract class Player extends VisualPhysObject {
             ObjectManager.rectangleCollision(this, ObjectManager.toRectangle(other), delta);
             stopGrapple();
         } else if (other instanceof Bat) {
-            setEnergy(getEnergy() + 1);
+            setSouls(getSouls() + 1);
             Bat b = (Bat) other;
             b.destroy();
         }
@@ -130,6 +137,8 @@ public abstract class Player extends VisualPhysObject {
     
     @Override
     public void update(float delta) {
+        timeSpent += delta;
+
         if (!inLava()) {
             updateSpeed(delta);
             if (grappling) {
@@ -156,19 +165,19 @@ public abstract class Player extends VisualPhysObject {
                 else if (!useAnimation || currentAnimation != getAirborneAnimation()) setAnimation(getAirborneAnimation());
             }
         } else {
-            Vector2 nspeed = new Vector2(0, -1400 * delta);
+            Vector2 nspeed = new Vector2(0, -1000 * delta);
             setFspeedAbs(nspeed);
             setSpeed(nspeed);
         }
 
         if (useAnimation) {
             animationTime += delta;
-            animationTime = animationTime % currentAnimation.getAnimationDuration();
+            if (!dying) animationTime = animationTime % currentAnimation.getAnimationDuration();
         }
 
         updatePos(delta);
 
-        if (getPos().y + getHitbox().y * 0.5 < 0) {
+        if (dying && animationTime > currentAnimation.getAnimationDuration()) {
             destroy();
         }
     }

@@ -23,31 +23,32 @@ public class ObjectManager {
 
     public static void rectangleCollision(PhysicsObject vpo, Rectangle ro, float delta) {
         Rectangle r = ObjectManager.toRectangle(vpo);
-        Vector2 speed = vpo.getSpeed();
-        Vector2 pos = vpo.getPos();
-        Vector2 ppos = pos.cpy().sub(vpo.getSpeed());
+        Vector2 ppos = vpo.getPos().sub(vpo.getSpeed());
+        Rectangle pr = new Rectangle(ppos.x, ppos.y, vpo.getHitbox().x, vpo.getHitbox().y);
+        Vector2 npos = vpo.getPos();
+        Vector2 nspeed = vpo.getSpeed();
         if (r.overlaps(ro)) {
             boolean vertical = r.y + r.getHeight() > ro.getY() || r.y < ro.getY() + ro.getHeight();
             boolean horizontal = r.x + r.getWidth() < ro.getX() || r.x > ro.getX() + ro.getWidth();
             if (horizontal) {
-                if (ppos.x + r.getWidth()/2 < ro.getX()) {
-                    pos.x = ro.getX() - r.getWidth() / 2 - .1f;
-                } else if (ppos.x - r.getWidth()/2 > ro.getX() + ro.getWidth()) {
-                    pos.x = ro.getX() + ro.getWidth() + r.getWidth() / 2 + .1f;
+                if (pr.x + pr.getWidth() < ro.getX()) {
+                    npos.x = ro.getX() - r.getWidth() / 2 - .1f;
+                } else if (pr.x > ro.getX() + ro.getWidth()) {
+                    npos.x = ro.getX() + ro.getWidth() + r.getWidth() / 2 + .1f;
                 }
-                speed.x = 0;
+                nspeed.x = 0;
             }
             if (vertical) {
-                if (ppos.y + r.getHeight()/2 < ro.getY()) {
-                    pos.y = ro.getY() - r.getHeight() / 2 - .1f;
-                } else if (ppos.y - r.getWidth()/2 > ro.getY() + ro.getHeight()) {
-                    pos.y = ro.getY() + ro.getHeight() + r.getHeight() / 2 + .1f;
+                if (pr.y + pr.getHeight() < ro.getY()) {
+                    npos.y = ro.getY() - r.getHeight() / 2 - .1f;
+                } else if (pr.y > ro.getY() + ro.getHeight()) {
+                    npos.y = ro.getY() + ro.getHeight() + r.getHeight() / 2 + .1f;
                 }
-                speed.y = 0;
+                nspeed.y = 0;
             }
-            vpo.setSpeed(speed);
+            vpo.setSpeed(nspeed);
             vpo.setFspeed(new Vector2(0, 0));
-            vpo.setPos(pos);
+            vpo.setPos(npos);
         }
     }
 
