@@ -69,22 +69,22 @@ public abstract class Gui extends InputAdapter {
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
         this.mouseX = screenX/scale;
-        this.mouseY = screenY/scale;
+        this.mouseY = height - screenY/scale;
         return false;
     }
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
         this.mouseX = screenX/scale;
-        this.mouseY = screenY/scale;
+        this.mouseY = height - screenY/scale;
         return false;
     }
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         for(GuiElement element : elements) {
-            element.onMouseDown(screenX/scale, screenY/scale, button);
-            if(element.blocksMouse(screenX/scale, screenY/scale))
+            element.onMouseDown(screenX/scale, height - screenY/scale, button);
+            if(element.blocksMouse(screenX/scale, height - screenY/scale))
                 return false;
         }
         return false;
@@ -93,8 +93,8 @@ public abstract class Gui extends InputAdapter {
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         for(GuiElement element : elements) {
-            element.onMouseUp(screenX/scale, screenY/scale, button);
-            if(element.blocksMouse(screenX/scale, screenY/scale))
+            element.onMouseUp(screenX/scale, height - screenY/scale, button);
+            if(element.blocksMouse(screenX/scale, height - screenY/scale))
                 return false;
         }
         return false;
