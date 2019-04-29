@@ -3,8 +3,10 @@ package com.ludumdare44.game.GFX;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.ludumdare44.game.Physics.PhysicsObject;
 
+import javax.swing.*;
 import java.util.ArrayList;
 
 public class ParticleGenerator {
@@ -12,6 +14,7 @@ public class ParticleGenerator {
     private Animation<TextureRegion> animation;
 
     private PhysicsObject owner;
+    private float particleVelocityMax = 270.f;
 
     private float timeSpent = 0.f;
     private float spawnTime = 0.03f;
@@ -33,7 +36,8 @@ public class ParticleGenerator {
         int newParticles = (int) (timeSpent / spawnTime);
         if (timeSpent > spawnTime && particleList.size() < maxParticles) {
             for (int i = 0; i < newParticles; i++) {
-                particleList.add(new Particle(owner.getPos(), animation));
+                Vector2 speed = new Vector2((float) (Math.random() - 0.5f), (float) (Math.random() - 0.5f)).nor().scl((float) Math.random() * particleVelocityMax);
+                particleList.add(new Particle(owner.getPos(), animation, speed));
             }
             timeSpent = timeSpent % spawnTime;
         }

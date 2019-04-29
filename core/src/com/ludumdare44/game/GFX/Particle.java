@@ -12,7 +12,6 @@ public class Particle extends VisualPhysObject {
     private Animation<TextureRegion> animation;
     private float timeSpent = 0.f;
     private float animationTimer = 0.f;
-    private float particleVelocityMax = 270.f;
     private Vector2 posOffset = new Vector2(0, -60);
 
     private boolean hflip;
@@ -85,14 +84,13 @@ public class Particle extends VisualPhysObject {
         gfx.batch.draw(s, getPos().x + posOffset.x - getModelSize().x / 2, getPos().y + posOffset.y - getModelSize().y /2 , getModelSize().x, getModelSize().y);
     }
 
-    public Particle(Vector2 spos, Animation<TextureRegion> _animation) {
+    public Particle(Vector2 spos, Animation<TextureRegion> _animation, Vector2 speed) {
         super(spos);
         hflip = (Math.random() > 0.5);
         animation = _animation;
         weight = -10;
         frameWidth = animation.getKeyFrames()[0].getRegionWidth();
         frameHeight = animation.getKeyFrames()[0].getRegionHeight();
-        Vector2 speed = new Vector2((float) (Math.random() - 0.5f), (float) (Math.random() - 0.5f)).nor().scl((float) Math.random() * particleVelocityMax);
         setFspeedAbs(speed);
         setSpeed(speed);
     }
