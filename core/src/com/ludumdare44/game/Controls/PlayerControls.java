@@ -11,13 +11,9 @@ public class PlayerControls {
     private ControlManager controlManager;
     private CameraManager cameraManager;
 
-    private float grappleTimer = 0;
-    private float reelCooldown = 0.2f; // 200millis
-
     public void update(float delta) {
         if (!player.isBusy()) {
             if (controlManager.justPressed(Input.Keys.SPACE)) {
-                grappleTimer = 0;
                 player.stopGrapple();
                 Vector2 mouseVec = new Vector2(Gdx.input.getX(), cameraManager.getScreenSize().y - Gdx.input.getY()).add(cameraManager.getPos()).sub(cameraManager.getScreenSize().scl(0.5f));
                 player.doGrapple(mouseVec);
@@ -32,9 +28,8 @@ public class PlayerControls {
             } else if (controlManager.justReleased(Input.Keys.SPACE)) {
                 player.stopReel();
             }
-            if (controlManager.isPressed(Input.Keys.SPACE)) {
-                grappleTimer += delta;
-                if (grappleTimer > reelCooldown) player.doReel();
+            if (controlManager.isPressed(Input.Keys.E)) {
+                player.doReel();
             }
 
         }
