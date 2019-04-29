@@ -63,6 +63,9 @@ public class CutsceneScreen implements Screen {
     public void render(float delta) {
         // Input handling
         controlManager.update();
+        if(controlManager.justPressed(Input.Keys.SPACE) || controlManager.justPressed(Input.Keys.ENTER)) {
+            skipLabelAlpha = 2;
+        }
         if(controlManager.justPressed(Input.Keys.ESCAPE)) {
             if(skipLabelAlpha <= 0) {
                 skipLabelAlpha = 2;
