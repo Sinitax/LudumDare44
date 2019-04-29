@@ -10,7 +10,7 @@ import com.ludumdare44.game.GUI.Fonts;
 
 public class TextEvent extends CutsceneEvent {
 
-    protected final BitmapFont font = Fonts.createSmallPixelFont();
+    protected final BitmapFont font = Fonts.createDefaultPixelFont();
 
     protected final String text;
     protected final float printSpeed = 1;
@@ -19,7 +19,7 @@ public class TextEvent extends CutsceneEvent {
     protected String printedText = "";
 
     public TextEvent(String text, float printSpeed) {
-        this.text = text;
+        this.text = text + " "; // The extra space fixes a bug where the last character does not render.
     }
 
     public TextEvent(String text) {
@@ -67,8 +67,9 @@ public class TextEvent extends CutsceneEvent {
         super.postRender(delta, screen, gfxManager);
 
         gfxManager.batch.begin();
-        font.getData().setScale(Constants.PIXEL_SCALE);
-        font.draw(gfxManager.batch, printedText, gfxManager.screenSize.x/2f, gfxManager.screenSize.y*0.1f + font.getLineHeight()/2, 0, Align.center, false);
+        font.getData().setScale(Math.max(Constants.PIXEL_SCALE-1, 1));
+        font.draw(gfxManager.batch, printedText, gfxManager.screenSize.x*0.1f, gfxManager.screenSize.y*0.1f + font.getLineHeight()/2,
+                gfxManager.screenSize.x*0.8f, Align.center, true);
         gfxManager.batch.end();
     }
 }

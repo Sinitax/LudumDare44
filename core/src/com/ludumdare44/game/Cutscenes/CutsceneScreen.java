@@ -26,7 +26,7 @@ public class CutsceneScreen implements Screen {
     protected ControlManager controlManager;
     protected GFXManager gfxManager;
     protected final ShapeRenderer shapeRenderer = new ShapeRenderer();
-    protected final BitmapFont font = Fonts.createSmallPixelFont();
+    protected final BitmapFont font = Fonts.createDefaultPixelFont();
 
     protected final Color backgroundColor;
     protected final boolean cinematicBars;
@@ -115,7 +115,7 @@ public class CutsceneScreen implements Screen {
         // Render skip label
         if(skipLabelAlpha > 0) {
             font.setColor(1, 1, 1, MathUtils.clamp(skipLabelAlpha, 0, 1));
-            font.getData().setScale(Constants.PIXEL_SCALE);
+            font.getData().setScale(Math.max(Constants.PIXEL_SCALE-1, 1));
             gfxManager.batch.begin();
             font.draw(gfxManager.batch, "Press ESC to skip", gfxManager.screenSize.y*0.08f, gfxManager.screenSize.y*0.9f + font.getLineHeight()/2, 0, Align.left, false);
             gfxManager.batch.end();
