@@ -55,6 +55,8 @@ public class ElementTextButton extends GuiElement {
     public void render(float delta, GFXManager gfx) {
         TextureRegion tex = textureNormal;
         boolean hover = blocksMouse(gui.getMouseX(), gui.getMouseY());
+        if(!hover)
+            pressed = false;
         if(pressed)
             tex = texturePress;
         else if(hover)
