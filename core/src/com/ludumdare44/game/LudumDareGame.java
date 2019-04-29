@@ -15,7 +15,8 @@ public class LudumDareGame extends Game {
 
     @Override
     public void create() {
-        setScreen(createIntroCutscene().onComplete(() -> setScreen(new GameScene())));
+        setScreen(new MenuScreen());
+        //setScreen(createIntroCutscene().onComplete(() -> setScreen(new GameScene())));
         //setScreen(new GameScene());
     }
 
