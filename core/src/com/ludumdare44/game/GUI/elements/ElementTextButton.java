@@ -79,11 +79,11 @@ public class ElementTextButton extends GuiElement {
 
     @Override
     public void onMouseUp(int x, int y, int mouseButton) {
-        pressed = false;
-
-        if(blocksMouse(x, y))
+        if(blocksMouse(x, y) && pressed)
             for(IClickListener listener : clickListeners)
                 listener.onClick();
+        pressed = false;
+
     }
 
     public void onClick(IClickListener clickListener) {

@@ -20,7 +20,10 @@ public class MenuScreen extends GuiScreen {
 
     @Override
     protected void createGui(int width, int height) {
-        add(new ElementTextButton(this, width/2-100, height/2-20, 200, 40, "Play"));
+        add(new ElementTextButton(this, width/2-100, height/2-20, 200, 40, "Play"))
+            .onClick(() -> {
+                System.out.println("Click");
+            });
     }
 
     @Override

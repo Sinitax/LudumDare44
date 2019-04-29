@@ -43,7 +43,7 @@ public abstract class Gui extends InputAdapter {
         gfx.batch.getTransformMatrix().idt();
     }
 
-    protected GuiElement add(GuiElement element) {
+    protected <T extends GuiElement> T add(T element) {
         elements.add(element);
         return element;
     }
@@ -68,6 +68,13 @@ public abstract class Gui extends InputAdapter {
 
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
+        this.mouseX = screenX/scale;
+        this.mouseY = screenY/scale;
+        return false;
+    }
+
+    @Override
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
         this.mouseX = screenX/scale;
         this.mouseY = screenY/scale;
         return false;
