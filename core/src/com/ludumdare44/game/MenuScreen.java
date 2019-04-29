@@ -27,7 +27,7 @@ public class MenuScreen extends GuiScreen {
 
     @Override
     protected void createGui(int width, int height) {
-        add(new ElementLabel(this, width/2, height*5/6, "Title", Color.WHITE))
+        add(new ElementLabel(this, width/2, height*5/6, Constants.GAME_TITLE, Color.WHITE))
                 .alignCenter()
                 .alignMiddle();
 
