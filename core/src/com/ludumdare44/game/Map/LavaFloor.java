@@ -11,8 +11,8 @@ import com.ludumdare44.game.GFX.CameraManager;
 import java.util.ArrayList;
 
 public class LavaFloor implements IRenderable {
-    private Texture lavaTexture = new Texture("assets/lavafloor.png");
-    private Animation<TextureRegion> lavaAnimation = new Animation<TextureRegion>(0.5f, TextureRegion.split(lavaTexture, lavaTexture.getWidth()/3, lavaTexture.getHeight())[0]);
+    private Texture lavaTexture = new Texture("assets/lava.png");
+    private Animation<TextureRegion> lavaAnimation = new Animation<TextureRegion>(0.5f, TextureRegion.split(lavaTexture, lavaTexture.getWidth()/4, lavaTexture.getHeight())[0]);
     private int tileCols;
     private CameraManager cameraManager;
     private Vector2 lastCameraPos;
@@ -70,6 +70,8 @@ public class LavaFloor implements IRenderable {
         tileWidth = temptile.getRegionWidth();
         tileHeight = temptile.getRegionHeight();
         tileCols = (int) (cameraManager.getScreenSize().x / tileWidth) + 2;
+        tileWidth *= 3;
+        tileHeight *= 3;
         animationIndexes = new ArrayList<>(tileCols);
         for (int i = 0; i < tileCols; i++) {
             animationIndexes.add(randomFrameTime());
