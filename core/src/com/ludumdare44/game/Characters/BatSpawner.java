@@ -14,7 +14,7 @@ public class BatSpawner {
     public void update(float delta) {
         if (lastCameraPos == null) lastCameraPos = cameraManager.getPos();
         offset.add(cameraManager.getPos().sub(lastCameraPos));
-        if (offset.x > Bat.getSize().x * 3) {
+        if (offset.x > Bat.getSize().x * 4) {
             float nx = cameraManager.getPos().x + cameraManager.getScreenSize().x / 2 + 50 + Bat.getSize().x * (int) (Math.random() * 3);
             float ny = yStart + Bat.getSize().y * (int) (Math.random() * rows);
             objectAdder.addVisObject(new Bat(new Vector2(nx, ny)));

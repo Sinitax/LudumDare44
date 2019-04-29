@@ -117,7 +117,6 @@ public abstract class Player extends VisualPhysObject {
             setEnergy(getEnergy() + 1);
             Bat b = (Bat) other;
             b.destroy();
-            System.out.println("h");
         }
     }
 

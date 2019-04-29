@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.ludumdare44.game.Constants;
 import com.ludumdare44.game.GFX.GFXManager;
 import com.ludumdare44.game.Physics.PhysicsObject;
 import com.ludumdare44.game.Physics.VisualPhysObject;
@@ -24,8 +25,6 @@ public class Bat extends VisualPhysObject {
     private float bobAmount = 10;
     private float bobSpeed = 250f;
     private float bobHeight;
-
-    private static float spriteScale = 2;
 
     @Override
     public Vector2 getHitbox() {
@@ -85,7 +84,7 @@ public class Bat extends VisualPhysObject {
     }
 
     public static Vector2 getSize() {
-        return new Vector2(width * spriteScale, height * spriteScale);
+        return new Vector2(width * Constants.PIXEL_SCALE, height * Constants.PIXEL_SCALE);
     }
 
     @Override

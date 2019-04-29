@@ -124,12 +124,6 @@ public class Grapple extends VisualPhysObject {
         grapplePos.x -= chainWidth * pixelRatio / 2.f;
         float rotation = grapplePos.cpy().sub(new Vector2(getPos().x - hookWidth * pixelRatio / 2.f, getPos().y)).angle() + 90;
 
-        gfx.batch.end();
-        gfx.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        gfx.shapeRenderer.line(getPos(), player.getPos().add(player.getGrappleOffset()));
-        gfx.shapeRenderer.end();
-        gfx.batch.begin();
-
         Matrix4 originalMatrix = gfx.batch.getTransformMatrix().cpy();
         Matrix4 transformationMatrix = gfx.batch.getTransformMatrix().cpy()
                 .translate(grapplePos.x + chainWidth * pixelRatio / 2.f, grapplePos.y, 0)
