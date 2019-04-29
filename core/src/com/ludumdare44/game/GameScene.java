@@ -10,9 +10,7 @@ import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.ludumdare44.game.Characters.Demon;
-import com.ludumdare44.game.Characters.Player;
-import com.ludumdare44.game.Characters.DefaultPlayer;
+import com.ludumdare44.game.Characters.*;
 import com.ludumdare44.game.Controls.ControlManager;
 import com.ludumdare44.game.Controls.PlayerControls;
 import com.ludumdare44.game.Cutscenes.ScreenFader;
@@ -37,6 +35,10 @@ public class GameScene implements Screen {
 
 	private Player player;
 	private Demon demon;
+	private BatSpawner batSpawner;
+
+	private boolean lavaDeath = false;
+	private boolean demonDeath = false;
 
 	private ObjectAdder objectAdder;
 
@@ -109,6 +111,8 @@ public class GameScene implements Screen {
 		// spriteManager.loadMap("assets/maps/test_map.tmx"); // no map
 		// objectManager.setObstacles(spriteManager.getObstacles()); // no map
 
+		batSpawner = new BatSpawner(cameraManager, objectAdder);
+
 		objectAdder.addVisObject(demon);
 		objectAdder.addVisObject(player);
 
@@ -180,15 +184,24 @@ public class GameScene implements Screen {
 				playerControls.update(delta);
 			}
 
+			batSpawner.update(delta);
 			spriteManager.update(delta);
 			cameraManager.update(delta);
 
-			if (player.getPos().y - player.getHitbox().y * 0.5 < 0 || player.getPos().x < demon.getPos().x + demon.getHitbox().x/2 ) { // death by lava or demon
+			if (player.inLava()) {
+			    if (!demonDeath) player.setSprite(new Sprite(player.getDeathAnimation().getKeyFrames()[0]));
 				player.kill();
+				demonDeath = true;
+			}
+
+			if (player.getPos().x < demon.getPos().x + demon.getHitbox().x/2) { // death by lava or demon
+				if (!lavaDeath) player.setAnimation(player.getDeathAnimation());
+				player.kill();
+				lavaDeath = true;
 			}
 
 			if (player.isDying()) {
-				player.setSprite(player.getDeathSprite());
+				player.setAnimation(player.getDeathAnimation());
 				player.setFspeedAbs(new Vector2(0, 0));
 				player.stopGrapple();
 			}

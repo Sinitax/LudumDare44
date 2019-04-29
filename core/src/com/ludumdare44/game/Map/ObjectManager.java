@@ -1,7 +1,6 @@
 package com.ludumdare44.game.Map;
 
 import com.badlogic.gdx.math.*;
-import com.ludumdare44.game.Characters.Player;
 import com.ludumdare44.game.Physics.Obstacle;
 import com.ludumdare44.game.Physics.PhysicsObject;
 import com.ludumdare44.game.Physics.VisualPhysObject;
@@ -53,7 +52,6 @@ public class ObjectManager {
     }
 
     private void checkCollisions(float delta) {
-        ArrayList<PhysicsObject[]> collisionPairs = new ArrayList<>();
         //With other objects
         for (int i = 0; i < physobjects.size(); i++) {
             for (int j = 0; j < physobjects.size(); j++) {
@@ -61,27 +59,16 @@ public class ObjectManager {
                 PhysicsObject p1 = physobjects.get(i);
                 PhysicsObject p2 = physobjects.get(j);
                 if (Intersector.overlaps(toRectangle(p1), toRectangle(p2))) {
-                    if (p1 instanceof Obstacle && collisionPairs.indexOf(new PhysicsObject[] {p2, p1}) == -1) {
-                        collisionPairs.add(new PhysicsObject[] {p1, p2});
-                        p1.onCollision(p2, delta);
-                        p2.onCollision(p1, delta);
-                    }
+                    p1.onCollision(p2, delta);
                 }
             }
         }
-        /*
-        for (PhysicsObject[] pair : collisionPairs) {
-            rectangleCollision(pair[1], toRectangle(pair[0]), delta);
-        }
-
-         */
     }
 
     public void update(float delta) {
         //check physics collisions
         ArrayList<PhysicsObject> deleteList = new ArrayList<>();
-        for (int i = 0; i < physobjects.size(); i++) {
-            PhysicsObject obj = physobjects.get(i);
+        for (PhysicsObject obj : physobjects) {
             if (obj instanceof VisualPhysObject) {
                 VisualPhysObject vobj = (VisualPhysObject) obj;
                 if (!vobj.isStagnant()) vobj.update(delta);

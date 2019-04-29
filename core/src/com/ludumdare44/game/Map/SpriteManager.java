@@ -9,10 +9,14 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.*;
 import com.badlogic.gdx.maps.tiled.tiles.AnimatedTiledMapTile;
 import com.badlogic.gdx.math.*;
+import com.ludumdare44.game.Characters.Bat;
+import com.ludumdare44.game.Characters.Demon;
+import com.ludumdare44.game.Characters.Player;
 import com.ludumdare44.game.Constants;
 import com.ludumdare44.game.GFX.GFXManager;
 import com.ludumdare44.game.GFX.IRenderable;
 import com.ludumdare44.game.GFX.IRenderableObject;
+import com.ludumdare44.game.Physics.Grapple;
 import com.ludumdare44.game.Physics.Obstacle;
 import com.ludumdare44.game.Physics.PhysicsObject;
 import com.ludumdare44.game.Physics.VisualPhysObject;
@@ -99,7 +103,7 @@ public class SpriteManager {
                 originOffset.y = cell.getTile().getProperties().get("originy", Integer.class);
             } catch (NullPointerException e) {
                 originOffset.x = 0;
-                originOffset.y = -textureRegion.getRegionHeight() * mapScale/2;
+                originOffset.y = -textureRegion.getRegionHeight() * mapScale / 2;
             }
 
             gfx.batch.draw(
@@ -147,8 +151,12 @@ public class SpriteManager {
 
     private TiledMapTileLayer[] tileLayers;
 
-    public static Rectangle toRectangle(VisualPhysObject vpo) {
-        return new Rectangle(vpo.getPos().x + vpo.getHitboxOffset().x - vpo.getHitbox().x/2, vpo.getPos().y + vpo.getHitboxOffset().y - vpo.getHitbox().y/2, vpo.getHitbox().x, vpo.getHitbox().y);
+    public static Rectangle toRectangle(PhysicsObject vpo) {
+        return new Rectangle(vpo.getPos().x + vpo.getHitboxOffset().x - vpo.getHitbox().x / 2, vpo.getPos().y + vpo.getHitboxOffset().y - vpo.getHitbox().y / 2, vpo.getHitbox().x, vpo.getHitbox().y);
+    }
+
+    public static Rectangle toRectangle(IRenderableObject vpo) {
+        return new Rectangle(vpo.getPos().x - vpo.getModelSize().x / 2, vpo.getPos().y - vpo.getModelSize().y / 2, vpo.getModelSize().x, vpo.getModelSize().y);
     }
 
     public void loadMap(String name) {
@@ -216,20 +224,6 @@ public class SpriteManager {
         msize = new Vector2((int) ((sv.x - pos.x) / mapTileSize.x) + 1, (int) ((sv.y - pos.y) / mapTileSize.y) + 1);
     }
 
-    private boolean overlapsModel(IRenderableObject i1, IRenderableObject i2) {
-        float i1Right = i1.getPos().x + i1.getModelSize().x/2;
-        float i1Left = i1.getPos().x - i1.getModelSize().x/2;
-        float i1Top = i1.getPos().y + i1.getModelSize().y/2;
-        float i1Bottom = i1.getPos().y - i1.getModelSize().y/2;
-
-        float i2Right = i2.getPos().x + i2.getModelSize().x/2;
-        float i2Left = i2.getPos().x - i2.getModelSize().x/2;
-        float i2Top = i2.getPos().y + i2.getModelSize().y/2;
-        float i2Bottom = i2.getPos().y - i2.getModelSize().y/2;
-        if (i1Left < i2Right && i1Right > i2Left && i1Top > i2Bottom && i1Bottom < i2Top) return true;
-        return false;
-    }
-
     private boolean isModelHigher(IRenderableObject i1, IRenderableObject i2) {
         if (i1.getOriginOffset().y + i1.getPos().y > i2.getOriginOffset().y + i2.getPos().y) return true;
         else return false;
@@ -250,13 +244,31 @@ public class SpriteManager {
         }
     }
 
+    private boolean inFrame(IRenderableObject o) {
+        if (o instanceof  Grapple) return true;
+        Rectangle screen = new Rectangle(cameraManager.getPos().x - cameraManager.getScreenSize().x / 2, cameraManager.getPos().y - cameraManager.getScreenSize().y /2, cameraManager.getScreenSize().x, cameraManager.getScreenSize().y);
+        return Intersector.overlaps(toRectangle(o), screen);
+    }
+
+    private boolean outOfScope(IRenderableObject o) {
+        if (o instanceof Demon || o instanceof Player || o instanceof Grapple) return false;
+        return o.getPos().x < cameraManager.getPos().x - cameraManager.getScreenSize().x / 2 - 200;
+        // Rectangle scope = new Rectangle(cameraManager.getPos().x - cameraManager.getScreenSize().x, cameraManager.getPos().y - cameraManager.getScreenSize().y, cameraManager.getScreenSize().x * 2, cameraManager.getScreenSize().y * 2);
+        // return Intersector.overlaps(toRectangle(o), scope);
+    }
+
     public void render(GFXManager gfx) {
         ArrayList<IRenderableObject> deleteList = new ArrayList<>();
         for (int i = 0; i < layers.size(); i++) {
             for (int j = 0; j < layers.get(i).size(); j++){
                 IRenderableObject obj = layers.get(i).get(j);
-                if (obj.isVisible()) obj.render(gfx);
-                if (obj.isDestroyed()) deleteList.add(obj);
+                if (!obj.isDestroyed() && obj.isVisible() && inFrame(obj)) obj.render(gfx);
+                if (obj.isDestroyed() || outOfScope(obj)){
+                    if (!obj.isDestroyed() && obj instanceof VisualPhysObject) {
+                        ((VisualPhysObject) obj).destroy();
+                    }
+                    deleteList.add(obj);
+                }
             }
         }
 

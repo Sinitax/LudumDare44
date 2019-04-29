@@ -1,10 +1,12 @@
 package com.ludumdare44.game.Physics;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.ludumdare44.game.Characters.Player;
 import com.ludumdare44.game.GFX.GFXManager;
 
@@ -14,8 +16,6 @@ public class Grapple extends VisualPhysObject {
     Texture spriteChain = new Texture("assets/grapple_chain.png");
 
     private static float grappleSpeed = 1400.f;
-
-    private Vector2 grappleOffset = new Vector2(0, 0);
 
     private boolean destroyed = false;
 
@@ -102,7 +102,8 @@ public class Grapple extends VisualPhysObject {
         }
     }
 
-    public void kill() {
+    @Override
+    public void destroy() {
         destroyed = true;
     }
     
@@ -115,30 +116,38 @@ public class Grapple extends VisualPhysObject {
         int hookWidth = spriteHook.getWidth();
         int hookHeight = spriteHook.getHeight();
         float chainLength = player.getPos().sub(getPos()).len();
-        float rotation = player.getPos().sub(getPos()).angle()+90;
+        float playerRotation = player.getPos().sub(getPos()).angle() + 90 - 360;
+        if (playerRotation > 10) playerRotation = 10;
+        else if (playerRotation < -10) playerRotation = -10;
+
+        Vector2 grapplePos = player.getPos().add(player.getGrappleOffset().scl(player.facingDirection(), 1).rotate(playerRotation));
+        grapplePos.x -= chainWidth * pixelRatio / 2.f;
+        float rotation = grapplePos.cpy().sub(new Vector2(getPos().x - hookWidth * pixelRatio / 2.f, getPos().y)).angle() + 90;
 
         gfx.batch.end();
         gfx.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        gfx.shapeRenderer.line(getPos(), player.getPos());
+        gfx.shapeRenderer.line(getPos(), player.getPos().add(player.getGrappleOffset()));
         gfx.shapeRenderer.end();
         gfx.batch.begin();
 
-        spriteChain.setWrap(Texture.TextureWrap.ClampToEdge, Texture.TextureWrap.Repeat);
-        Matrix4 originalTransformMatrix = gfx.batch.getTransformMatrix().cpy();
-        Matrix4 transformationMatrix = gfx.batch.getTransformMatrix()
-                .translate(player.getPos().x, player.getPos().y, 0)
+        Matrix4 originalMatrix = gfx.batch.getTransformMatrix().cpy();
+        Matrix4 transformationMatrix = gfx.batch.getTransformMatrix().cpy()
+                .translate(grapplePos.x + chainWidth * pixelRatio / 2.f, grapplePos.y, 0)
                 .rotate(0, 0, 1, rotation)
-                .translate(-player.getPos().x, -player.getPos().y, 0);
+                .translate(-grapplePos.x - chainWidth * pixelRatio / 2.f, -grapplePos.y, 0);
         gfx.batch.setTransformMatrix(transformationMatrix);
 
-        gfx.batch.draw(spriteChain, player.getPos().x - chainWidth * pixelRatio / 2.f + grappleOffset.x, player.getPos().y + grappleOffset.y,
-                chainWidth*pixelRatio, chainLength, 0, 0, 1, chainLength/chainHeight/pixelRatio);
+        spriteChain.setWrap(Texture.TextureWrap.ClampToEdge, Texture.TextureWrap.Repeat);
 
-        gfx.batch.draw(new TextureRegion(spriteHook), player.getPos().x - hookWidth * pixelRatio / 2.f, player.getPos().y + chainLength - hookHeight * pixelRatio / 2.f, hookWidth*pixelRatio, hookHeight*pixelRatio);
+        gfx.batch.draw(spriteChain, grapplePos.x, grapplePos.y, chainWidth * pixelRatio, chainLength - player.getGrappleOffset().y - hookHeight / 2.f, 0, 0, 1, chainLength / chainHeight / pixelRatio);
+        //gfx.batch.draw(spriteChain, grapplePos.x - chainWidth * pixelRatio / 2.f, grapplePos.y, chainWidth * pixelRatio / 2, 0,
+        //        spriteChain.getWidth(), spriteChain.getHeight(), );
+        //gfx.batch.draw(new Sprite(spriteChain), grapplePos.x - chainWidth * pixelRatio / 2.f, grapplePos.y ,
+         //       chainWidth * pixelRatio / 2, 0, chainWidth * pixelRatio, 3.f * (chainLength - player.getGrappleOffset().y - hookHeight * pixelRatio / 2.f), 1, 1/3.f, rotation);
 
-        gfx.batch.setTransformMatrix(originalTransformMatrix);
+        gfx.batch.setTransformMatrix(originalMatrix);
 
-        //gfx.batch.draw(new TextureRegion(spriteHook), getPos().x - hookWidth * pixelRatio / 2.f, getPos().y - hookHeight * pixelRatio / 2.f , 0, 0, hookWidth*pixelRatio, hookHeight*pixelRatio, 1, 1, rotation);
+        gfx.batch.draw(new TextureRegion(spriteHook), getPos().x - hookWidth * pixelRatio / 2.f, getPos().y - hookHeight * pixelRatio / 2.f , hookWidth * pixelRatio / 2, hookHeight * pixelRatio / 2, hookWidth*pixelRatio, hookHeight*pixelRatio, 1, 1, rotation);
     }
     
     public Grapple(Player p, Vector2 rpos) {

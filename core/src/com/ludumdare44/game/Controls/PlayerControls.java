@@ -25,11 +25,11 @@ public class PlayerControls {
             */
             if (controlManager.justPressed(Input.Keys.SHIFT_LEFT) && player.isGrappling()) {
                 player.doJump();
-            } else if (controlManager.justReleased(Input.Keys.SPACE)) {
-                player.stopReel();
             }
-            if (controlManager.isPressed(Input.Keys.E)) {
+            if (controlManager.isPressed(Input.Keys.W)) {
                 player.doReel();
+            } else if (controlManager.justReleased(Input.Keys.W)) {
+                player.stopReel();
             }
 
         }

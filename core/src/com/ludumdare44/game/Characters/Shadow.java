@@ -53,6 +53,11 @@ public class Shadow extends VisualPhysObject {
     public void update(float delta) {
     }
 
+    @Override
+    public void destroy() {
+
+    }
+
     public void render(GFXManager gfx) {
         gfx.drawShadow(pos.x, pos.y - size.y * 0.5f, size.x, 10);
     }

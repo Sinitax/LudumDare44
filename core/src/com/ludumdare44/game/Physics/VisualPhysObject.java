@@ -19,4 +19,6 @@ public abstract class VisualPhysObject extends PhysicsObject implements IRendera
     public VisualPhysObject(Vector2 pos) {
         super(pos);
     }
+
+    public abstract void destroy();
 }
