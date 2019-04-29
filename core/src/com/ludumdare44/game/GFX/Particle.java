@@ -13,7 +13,7 @@ public class Particle extends VisualPhysObject {
     private float timeSpent = 0.f;
     private float animationTimer = 0.f;
     private float particleVelocityMax = 270.f;
-    private Vector2 posOffset = new Vector2(0, -60);
+    private Vector2 posOffset = new Vector2(0, 0);
 
     private boolean hflip;
 
@@ -89,10 +89,11 @@ public class Particle extends VisualPhysObject {
         super(spos);
         hflip = (Math.random() > 0.5);
         animation = _animation;
-        weight = -10;
+        weight = 0;
         frameWidth = animation.getKeyFrames()[0].getRegionWidth();
         frameHeight = animation.getKeyFrames()[0].getRegionHeight();
         Vector2 speed = new Vector2((float) (Math.random() - 0.5f), (float) (Math.random() - 0.5f)).nor().scl((float) Math.random() * particleVelocityMax);
+        spos.add(speed.cpy().nor().scl(70));
         setFspeedAbs(speed);
         setSpeed(speed);
     }
