@@ -14,7 +14,6 @@ import com.ludumdare44.game.Characters.Demon;
 import com.ludumdare44.game.Characters.Player;
 import com.ludumdare44.game.Characters.DefaultPlayer;
 import com.ludumdare44.game.Controls.ControlManager;
-import com.ludumdare44.game.Controls.MenuControls;
 import com.ludumdare44.game.Controls.PlayerControls;
 import com.ludumdare44.game.Cutscenes.ScreenFader;
 import com.ludumdare44.game.GFX.GFXManager;
@@ -23,9 +22,7 @@ import com.ludumdare44.game.GFX.IRenderableObject;
 import com.ludumdare44.game.Map.*;
 import com.ludumdare44.game.Physics.PhysicsObject;
 import com.ludumdare44.game.Physics.VisualPhysObject;
-import com.ludumdare44.game.UI.CameraManager;
-import com.ludumdare44.game.UI.HUD;
-import com.ludumdare44.game.UI.Menu.MenuManager;
+import com.ludumdare44.game.GFX.CameraManager;
 
 import java.util.ArrayList;
 
@@ -35,7 +32,6 @@ public class GameScene implements Screen {
 	private ObjectManager objectManager;
 	private CameraManager cameraManager;
 	private GFXManager gfxManager;
-	private HUD hud;
 	private SpriteManager spriteManager;
 	private ScreenFader fader;
 
@@ -46,15 +42,11 @@ public class GameScene implements Screen {
 
 	private ControlManager controlManager;
 	private PlayerControls playerControls;
-	private MenuControls menuControls;
 
 	private EndlessBackground background1, background2, background3;
 	private LavaFloor lavaFloor;
 	private CaveCeiling caveCeiling;
 	private FakePlatform platform;
-
-	// game settings
-	private MenuManager menuManager;
 
 	//other
 	private FPSLogger fpsLogger;
@@ -111,9 +103,7 @@ public class GameScene implements Screen {
 		controlManager = new ControlManager();
 		Gdx.input.setInputProcessor(controlManager);
 		playerControls = new PlayerControls(controlManager, cameraManager, player);
-		menuControls = new MenuControls(controlManager, menuManager);
 
-		menuManager = new MenuManager();
 		spriteManager = new SpriteManager(cameraManager);
 		spriteManager.createLayers(3);
 		// spriteManager.loadMap("assets/maps/test_map.tmx"); // no map
@@ -138,8 +128,6 @@ public class GameScene implements Screen {
 		platform = new FakePlatform(new Vector2(screenSize.x / 2 - 16 * 3, screenSize.y / 5 * 3 - player.getModelSize().y / 2 - 32), 8, 2, tileMap[0]);
 
 		objectAdder.addRenderable(platform);
-
-		hud = new HUD(player);
 
 		lavaFloor = new LavaFloor(cameraManager);
 
@@ -166,18 +154,6 @@ public class GameScene implements Screen {
 	public void render (float delta) {
         // update
 		controlManager.update();
-
-		/* // TODO: move to another scene
-		menuControls.update();
-
-		if (menuManager.enabled()) {
-			// menu controls
-			gfxManager.batch.begin();
-			menuManager.render(gfxManager);
-			gfxManager.batch.end();
-			return;
-		}
-		 */
 
 		fpsLogger.log();
 
