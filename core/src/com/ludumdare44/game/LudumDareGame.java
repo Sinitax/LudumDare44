@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.ludumdare44.game.Cutscenes.CutsceneCharacter;
 import com.ludumdare44.game.Cutscenes.CutsceneCharacterPosition;
@@ -28,12 +29,13 @@ public class LudumDareGame extends Game {
     }
 
     protected CutsceneScreen createIntroCutscene() {
-        Sprite playerSprite = new Sprite(new Texture("assets/player.png"));
-        Sprite devilSprite = new Sprite(new Texture("assets/devil.png"));
-        playerSprite.flip(true, false);
+        Texture playerTexture = new Texture("assets/player.png");
+        TextureRegion playerTextureRegion = TextureRegion.split(playerTexture, playerTexture.getWidth()/7, playerTexture.getHeight())[0][0];
+        Texture devilTexture = new Texture("assets/devil.png");
+        playerTextureRegion.flip(true, false);
 
-        CutsceneCharacter characterPlayer = new CutsceneCharacter(playerSprite, "Player");
-        CutsceneCharacter characterDevil = new CutsceneCharacter(devilSprite, "Devil");
+        CutsceneCharacter characterPlayer = new CutsceneCharacter(playerTextureRegion, "Player");
+        CutsceneCharacter characterDevil = new CutsceneCharacter(devilTexture, "Devil");
         CutsceneScreen cutscene = new CutsceneScreen(new Color(0.26f, 0.26f, 0.31f, 1f), true);
 
         cutscene.addCutsceneEvent(new FadeEvent(new ScreenFader(Color.BLACK, 2).fadeIn()))
