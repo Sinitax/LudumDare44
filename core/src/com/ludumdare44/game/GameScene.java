@@ -72,7 +72,7 @@ public class GameScene implements Screen {
 	public void show () {
 		// display settings
 		Vector2 screenSize = new Vector2(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		Vector2 startPos = new Vector2(screenSize.x / 2, screenSize.y / 4 * 3);
+		Vector2 startPos = new Vector2(screenSize.x / 2, screenSize.y / 5 * 3);
 
 		gfxManager = new GFXManager(screenSize);
 
@@ -135,7 +135,7 @@ public class GameScene implements Screen {
 		TextureRegion[][] tileMap = TextureRegion.split(spriteSheet, tileWidth, tileHeight);
 
 		caveCeiling = new CaveCeiling(cameraManager, objectManager, tileMap[0]);
-		platform = new FakePlatform(new Vector2(screenSize.x / 2 - 16 * 3, screenSize.y / 4 * 3 - player.getModelSize().y / 2 - 32), 8, 2, tileMap[0]);
+		platform = new FakePlatform(new Vector2(screenSize.x / 2 - 16 * 3, screenSize.y / 5 * 3 - player.getModelSize().y / 2 - 32), 8, 2, tileMap[0]);
 
 		objectAdder.addRenderable(platform);
 

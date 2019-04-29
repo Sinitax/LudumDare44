@@ -25,24 +25,23 @@ public class ObjectManager {
     public static void rectangleCollision(PhysicsObject vpo, Rectangle ro, float delta) {
         Rectangle r = ObjectManager.toRectangle(vpo);
         Vector2 speed = vpo.getSpeed();
-        Vector2 pos = new Vector2(vpo.getPos());
+        Vector2 pos = vpo.getPos();
+        Vector2 ppos = pos.cpy().sub(vpo.getSpeed());
         if (r.overlaps(ro)) {
             boolean vertical = r.y + r.getHeight() > ro.getY() || r.y < ro.getY() + ro.getHeight();
             boolean horizontal = r.x + r.getWidth() < ro.getX() || r.x > ro.getX() + ro.getWidth();
-            if (horizontal && vertical) {
-            }
             if (horizontal) {
-                if (speed.x > 0) {
+                if (ppos.x + r.getWidth()/2 < ro.getX()) {
                     pos.x = ro.getX() - r.getWidth() / 2 - .1f;
-                } else if (speed.x < 0) {
+                } else if (ppos.x - r.getWidth()/2 > ro.getX() + ro.getWidth()) {
                     pos.x = ro.getX() + ro.getWidth() + r.getWidth() / 2 + .1f;
                 }
                 speed.x = 0;
             }
             if (vertical) {
-                if (speed.y > 0) {
+                if (ppos.y + r.getHeight()/2 < ro.getY()) {
                     pos.y = ro.getY() - r.getHeight() / 2 - .1f;
-                } else if (speed.y < 0) {
+                } else if (ppos.y - r.getWidth()/2 > ro.getY() + ro.getHeight()) {
                     pos.y = ro.getY() + ro.getHeight() + r.getHeight() / 2 + .1f;
                 }
                 speed.y = 0;
