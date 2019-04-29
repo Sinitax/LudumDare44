@@ -9,11 +9,11 @@ import com.ludumdare44.game.GFX.GFXManager;
 import com.ludumdare44.game.GFX.IRenderable;
 
 public class HUD implements IRenderable {
-    private static Texture statusBarSprite = new Texture("assets/hud/status_bar.png");
+    //private static Texture statusBarSprite = new Texture("assets/hud/status_bar.png");
     private Player p;
 
     public void render(GFXManager gfx) {
-        //Player Stat Bar
+        /*//Player Stat Bar
         Sprite sprite = new Sprite(statusBarSprite);
         sprite.setSize(sprite.getWidth() * 2, sprite.getHeight() * 2);
         sprite.setPosition(30,gfx.screenSize.y - 100);
@@ -30,7 +30,7 @@ public class HUD implements IRenderable {
         sprite = new Sprite(this.p.getIcon());
         sprite.setSize(65, 65);
         sprite.setPosition(39, gfx.screenSize.y - 94);
-        sprite.draw(gfx.batch);
+        sprite.draw(gfx.batch);*/
     }
     
     public HUD(Player _p) {

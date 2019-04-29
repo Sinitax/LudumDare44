@@ -9,12 +9,12 @@ import com.ludumdare44.game.Map.ObjectAdder;
 import com.ludumdare44.game.MiscUtils;
 
 public class DefaultPlayer extends com.ludumdare44.game.Characters.Player {
-    Texture spriteSheet = new Texture("assets/models/characters/rogue/sprites.png");
-    TextureRegion[][] spriteSheetMap = TextureRegion.split(spriteSheet, spriteSheet.getWidth() / 10, spriteSheet.getHeight() / 10);
+    Texture spriteSheet = new Texture("assets/player.png");
+    TextureRegion[][] spriteSheetMap = TextureRegion.split(spriteSheet, spriteSheet.getWidth() / 1, spriteSheet.getHeight() / 1);
     
     @Override
     public Vector2 getModelScale() {
-        return new Vector2(2, 3);
+        return new Vector2(3, 3);
     }
     
     @Override
@@ -43,11 +43,11 @@ public class DefaultPlayer extends com.ludumdare44.game.Characters.Player {
     }
 
     @Override
-    public Sprite getDeathSprite() { return new Sprite(spriteSheetMap[4][4]); }
+    public Sprite getDeathSprite() { return new Sprite(spriteSheetMap[0][0]); }
 
     @Override
     public com.ludumdare44.game.Characters.Ability getSpecial() { //cloak
-        return new com.ludumdare44.game.Characters.Ability(new Animation<>(0.04f, (TextureRegion[]) MiscUtils.concatenate(spriteSheetMap[1], spriteSheetMap[5])), this, 80, 5000, 10000) {
+        return new com.ludumdare44.game.Characters.Ability(new Animation<>(0.04f, (TextureRegion[]) MiscUtils.concatenate(spriteSheetMap[0], spriteSheetMap[0])), this, 80, 5000, 10000) {
             @Override
             public void perform() {
 
@@ -57,7 +57,7 @@ public class DefaultPlayer extends com.ludumdare44.game.Characters.Player {
 
     @Override
     public com.ludumdare44.game.Characters.Ability getAttack() { //stab
-        return new com.ludumdare44.game.Characters.Ability(new Animation<>(0.02f, spriteSheetMap[3]), this, 10,0, 200) {
+        return new com.ludumdare44.game.Characters.Ability(new Animation<>(0.02f, spriteSheetMap[0]), this, 10,0, 200) {
             @Override
             public void perform() {
 
