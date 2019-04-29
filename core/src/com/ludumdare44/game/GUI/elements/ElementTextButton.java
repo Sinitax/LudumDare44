@@ -12,6 +12,12 @@ import java.util.List;
 
 public class ElementTextButton extends GuiElement {
 
+    public interface IClickListener {
+        void onClick();
+    }
+
+    protected final List<IClickListener> clickListeners = new ArrayList<>();
+
     protected int x;
     protected int y;
     protected int width;
@@ -21,6 +27,8 @@ public class ElementTextButton extends GuiElement {
     protected TextureRegion textureNormal;
     protected TextureRegion textureHover;
     protected TextureRegion texturePress;
+
+    protected boolean pressed = false;
 
     public ElementTextButton(Gui gui, int x, int y, int width, int height, String text) {
         super(gui);
@@ -40,15 +48,35 @@ public class ElementTextButton extends GuiElement {
 
     @Override
     public void render(float delta, GFXManager gfx) {
-        gui.renderTexturedRect(gfx, textureNormal, x, y, width, height);
+        TextureRegion tex = textureNormal;
+        boolean hover = blocksMouse(gui.getMouseX(), gui.getMouseY());
+        if(pressed)
+            tex = texturePress;
+        else if(hover)
+            tex = textureHover;
+        gui.renderTexturedRect(gfx, tex, x, y, width, height);
         label.render(delta, gfx);
     }
 
-    public interface IClickListener {
-        void onClick();
+    @Override
+    public boolean blocksMouse(int x, int y) {
+        return x >= this.x && y >= this.y && x <= (this.x + width) && y <= (this.y + height);
     }
 
-    protected final List<IClickListener> clickListeners = new ArrayList<>();
+    @Override
+    public void onMouseDown(int x, int y, int mouseButton) {
+        if(blocksMouse(x, y))
+            pressed = true;
+    }
+
+    @Override
+    public void onMouseUp(int x, int y, int mouseButton) {
+        pressed = false;
+
+        if(blocksMouse(x, y))
+            for(IClickListener listener : clickListeners)
+                listener.onClick();
+    }
 
     public void onClick(IClickListener clickListener) {
         clickListeners.add(clickListener);

@@ -70,4 +70,9 @@ public class ElementLabel extends GuiElement {
         }
         font.draw(gfx.batch, text, x, y+yOffset, 0, hAlign, false);
     }
+
+    @Override
+    public boolean blocksMouse(int x, int y) {
+        return false;
+    }
 }

@@ -12,4 +12,10 @@ public abstract class GuiElement {
 
     public abstract void render(float delta, GFXManager gfx);
 
+    public abstract boolean blocksMouse(int x, int y);
+
+    public void onMouseDown(int x, int y, int mouseButton) {}
+
+    public void onMouseUp(int x, int y, int mouseButton) {}
+
 }

@@ -16,6 +16,9 @@ public abstract class Gui extends InputAdapter {
     protected final int scale;
     private final List<GuiElement> elements = new ArrayList<>();
 
+    protected int mouseX;
+    protected int mouseY;
+
     public Gui(int width, int height, int scale) {
         this.width = width / scale;
         this.height = height / scale;
@@ -56,6 +59,40 @@ public abstract class Gui extends InputAdapter {
         gfx.batch.draw(patches[1][0], x, y+patchHeight, patchWidth, height-2*patchHeight);
         gfx.batch.draw(patches[1][2], x+width-patchWidth, y+patchHeight, patchWidth, height-2*patchHeight);
         gfx.batch.draw(patches[1][1], x+patchWidth, y+patchHeight, width-2*patchWidth, height-2*patchHeight);
+    }
 
+    @Override
+    public boolean mouseMoved(int screenX, int screenY) {
+        this.mouseX = screenX/scale;
+        this.mouseY = screenY/scale;
+        return false;
+    }
+
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        for(GuiElement element : elements) {
+            element.onMouseDown(screenX/scale, screenY/scale, button);
+            if(element.blocksMouse(screenX/scale, screenY/scale))
+                return false;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        for(GuiElement element : elements) {
+            element.onMouseUp(screenX/scale, screenY/scale, button);
+            if(element.blocksMouse(screenX/scale, screenY/scale))
+                return false;
+        }
+        return false;
+    }
+
+    public int getMouseX() {
+        return mouseX;
+    }
+
+    public int getMouseY() {
+        return mouseY;
     }
 }
