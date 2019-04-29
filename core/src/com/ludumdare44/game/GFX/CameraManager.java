@@ -1,4 +1,4 @@
-package com.ludumdare44.game.UI;
+package com.ludumdare44.game.GFX;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Matrix4;

@@ -2,12 +2,11 @@ package com.ludumdare44.game.Map;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.ludumdare44.game.GFX.GFXManager;
 import com.ludumdare44.game.GFX.IRenderable;
-import com.ludumdare44.game.UI.CameraManager;
+import com.ludumdare44.game.GFX.CameraManager;
 
 import java.util.ArrayList;
 

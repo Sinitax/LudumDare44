@@ -15,7 +15,7 @@ import com.ludumdare44.game.GFX.IRenderableObject;
 import com.ludumdare44.game.Physics.Obstacle;
 import com.ludumdare44.game.Physics.PhysicsObject;
 import com.ludumdare44.game.Physics.VisualPhysObject;
-import com.ludumdare44.game.UI.CameraManager;
+import com.ludumdare44.game.GFX.CameraManager;
 
 import java.util.ArrayList;
 import java.util.Collections;

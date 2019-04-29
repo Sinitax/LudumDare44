@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import com.ludumdare44.game.Characters.Player;
-import com.ludumdare44.game.UI.CameraManager;
+import com.ludumdare44.game.GFX.CameraManager;
 
 public class PlayerControls {
     private Player player;

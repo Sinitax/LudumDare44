@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.ludumdare44.game.GFX.GFXManager;
 import com.ludumdare44.game.GFX.IRenderable;
 import com.ludumdare44.game.Physics.Obstacle;
-import com.ludumdare44.game.UI.CameraManager;
+import com.ludumdare44.game.GFX.CameraManager;
 
 import java.util.ArrayList;
 import java.util.Random;
