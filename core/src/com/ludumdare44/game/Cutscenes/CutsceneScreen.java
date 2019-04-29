@@ -26,7 +26,7 @@ public class CutsceneScreen implements Screen {
     protected ControlManager controlManager;
     protected GFXManager gfxManager;
     protected final ShapeRenderer shapeRenderer = new ShapeRenderer();
-    protected final BitmapFont font = Fonts.createDefaultPixelFont();
+    protected final BitmapFont font = Fonts.createSmallPixelFont();
 
     protected final Color backgroundColor;
     protected final boolean cinematicBars;

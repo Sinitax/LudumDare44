@@ -10,7 +10,7 @@ import com.ludumdare44.game.GUI.Fonts;
 
 public class TextEvent extends CutsceneEvent {
 
-    protected final BitmapFont font = Fonts.createDefaultPixelFont();
+    protected final BitmapFont font = Fonts.createSmallPixelFont();
 
     protected final String text;
     protected final float printSpeed = 1;
