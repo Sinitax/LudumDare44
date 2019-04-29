@@ -48,7 +48,7 @@ public class GameScene implements Screen {
 	private PlayerControls playerControls;
 	private MenuControls menuControls;
 
-	private EndlessBackground background1, background2;
+	private EndlessBackground background1, background2, background3;
 	private LavaFloor lavaFloor;
 	private CaveCeiling caveCeiling;
 	private FakePlatform platform;
@@ -128,7 +128,7 @@ public class GameScene implements Screen {
 		fader = new ScreenFader();
 		fader.setFadeTime(1).fadeIn();
 
-		Texture spriteSheet = new Texture("assets/textures/tiles.png");
+		Texture spriteSheet = new Texture("assets/tiles.png");
 		int tileWidth = 16;
 		int tileHeight = 16;
 
@@ -143,13 +143,17 @@ public class GameScene implements Screen {
 
 		lavaFloor = new LavaFloor(cameraManager);
 
-		Texture tempSheet = new Texture("assets/background2.png");
+		Texture tempSheet = new Texture("assets/background1.png");
 		TextureRegion[] tempMap = TextureRegion.split(tempSheet, tempSheet.getWidth(), tempSheet.getHeight())[0];
-		background1 = new EndlessBackground(cameraManager, tempMap, true, 0.5f);
+		background1 = new EndlessBackground(cameraManager, tempMap, true, 0.1f);
+
+		tempSheet = new Texture("assets/background2.png");
+		tempMap = TextureRegion.split(tempSheet, tempSheet.getWidth(), tempSheet.getHeight())[0];
+		background2 = new EndlessBackground(cameraManager, tempMap, true, 0.5f);
 
 		tempSheet = new Texture("assets/background3.png");
 		tempMap = TextureRegion.split(tempSheet, tempSheet.getWidth(), tempSheet.getHeight())[0];
-		background2 = new EndlessBackground(cameraManager, tempMap, true, 0.8f);
+		background3 = new EndlessBackground(cameraManager, tempMap, true, 0.8f);
 
 		debugTexture = new Texture("assets/debug.png");
 		debugAnimation = GifDecoder.loadGIFAnimation(Animation.PlayMode.LOOP, Gdx.files.internal("assets/debug.gif").read());
@@ -232,6 +236,8 @@ public class GameScene implements Screen {
 
 		background1.render(gfxManager);
 		background2.render(gfxManager);
+		background3.render(gfxManager);
+
 		caveCeiling.render(gfxManager);
 		if (platform.getPos().x + platform.getModelSize().x / 2.f > cameraManager.getPos().x - cameraManager.getScreenSize().x / 2) {
 			platform.render(gfxManager);
