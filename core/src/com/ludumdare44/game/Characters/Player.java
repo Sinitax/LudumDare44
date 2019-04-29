@@ -121,7 +121,7 @@ public abstract class Player extends VisualPhysObject {
     }
 
     public boolean inLava() {
-        return (getPos().y - getHitbox().y * 0.5 < 20);
+        return (getPos().y - getHitbox().y * 0.5 < 60);
     }
 
     public Vector2 getGrappleOffset() {
@@ -153,10 +153,10 @@ public abstract class Player extends VisualPhysObject {
                 }
             } else {
                 if (getSpeed().y >= 0) setSprite(getIdleSprite());
-                else if (!useAnimation || useAnimation && currentAnimation != getAirborneAnimation()) setAnimation(getAirborneAnimation());
+                else if (!useAnimation || currentAnimation != getAirborneAnimation()) setAnimation(getAirborneAnimation());
             }
         } else {
-            Vector2 nspeed = new Vector2(0, -1000 * delta);
+            Vector2 nspeed = new Vector2(0, -1400 * delta);
             setFspeedAbs(nspeed);
             setSpeed(nspeed);
         }

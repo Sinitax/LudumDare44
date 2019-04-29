@@ -37,7 +37,7 @@ public class DefaultPlayer extends Player {
     }
 
     @Override
-    public Animation<TextureRegion> getDeathAnimation() { return new Animation<>(1f, spriteSheetMap[4], spriteSheetMap[5], spriteSheetMap[6]); }
+    public Animation<TextureRegion> getDeathAnimation() { return new Animation<>(0.6f, spriteSheetMap[4], spriteSheetMap[5], spriteSheetMap[6]); }
 
     public DefaultPlayer(Vector2 pos, ObjectAdder objectAdder) {
         super(pos, objectAdder);

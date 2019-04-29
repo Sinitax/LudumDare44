@@ -3,6 +3,7 @@ package com.ludumdare44.game.Characters;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
+import com.ludumdare44.game.Constants;
 import com.ludumdare44.game.GFX.GFXManager;
 import com.ludumdare44.game.Physics.PhysicsObject;
 import com.ludumdare44.game.Physics.VisualPhysObject;
@@ -58,13 +59,19 @@ public class Demon extends VisualPhysObject {
     }
 
     @Override
-    public void destroy() {}
+    public void destroy() {
+    }
 
     private boolean stagnant = false;
-    @Override
-    public boolean isStagnant() { return stagnant; }
 
-    public void setStagnant(boolean v) { stagnant = v; }
+    @Override
+    public boolean isStagnant() {
+        return stagnant;
+    }
+
+    public void setStagnant(boolean v) {
+        stagnant = v;
+    }
 
     @Override
     public boolean isVisible() {
@@ -73,7 +80,7 @@ public class Demon extends VisualPhysObject {
 
     @Override
     public Vector2 getModelSize() {
-        return new Vector2(sprite.getWidth(), sprite.getHeight());
+        return new Vector2(sprite.getWidth() * Constants.PIXEL_SCALE, sprite.getHeight() * Constants.PIXEL_SCALE);
     }
 
     @Override
@@ -93,7 +100,7 @@ public class Demon extends VisualPhysObject {
 
     @Override
     public void render(GFXManager gfx) {
-        gfx.batch.draw(sprite, getPos().x - sprite.getWidth()/2, getPos().y - sprite.getHeight()/2, sprite.getWidth(), sprite.getHeight());
+        gfx.batch.draw(sprite, getPos().x - getModelSize().x / 2, getPos().y - getModelSize().y / 2, getModelSize().x, getModelSize().y);
     }
 
     public Demon(Vector2 spos, PhysicsObject followObject) {
@@ -101,6 +108,5 @@ public class Demon extends VisualPhysObject {
         bobHeight = spos.y;
         approachSpeed = 1;
         follow(followObject);
-        sprite.setSize(sprite.getWidth() * 2, sprite.getHeight() * 2);
     }
 }

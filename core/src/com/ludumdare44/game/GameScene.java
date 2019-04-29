@@ -188,16 +188,16 @@ public class GameScene implements Screen {
 			spriteManager.update(delta);
 			cameraManager.update(delta);
 
-			if (player.inLava()) {
-			    if (!demonDeath) player.setSprite(new Sprite(player.getDeathAnimation().getKeyFrames()[0]));
-				player.kill();
-				demonDeath = true;
-			}
-
-			if (player.getPos().x < demon.getPos().x + demon.getHitbox().x/2) { // death by lava or demon
-				if (!lavaDeath) player.setAnimation(player.getDeathAnimation());
+			if (player.inLava()) { // death by lava
+			    if (!lavaDeath) player.setAnimation(player.getDeathAnimation());
 				player.kill();
 				lavaDeath = true;
+			}
+
+			if (player.getPos().x < demon.getPos().x + demon.getHitbox().x / 2) { // death by demon
+				if (!demonDeath) player.setSprite(new Sprite(player.getDeathAnimation().getKeyFrames()[0]));
+				player.kill();
+				demonDeath = true;
 			}
 
 			if (player.isDying()) {
