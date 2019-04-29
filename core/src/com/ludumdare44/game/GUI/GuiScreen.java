@@ -10,7 +10,6 @@ import com.ludumdare44.game.GFX.GFXManager;
 
 public abstract class GuiScreen extends Gui implements Screen {
 
-    protected GFXManager gfxManager;
     protected Color backgroundColor;
 
     public GuiScreen(Color backgroundColor) {
@@ -27,16 +26,15 @@ public abstract class GuiScreen extends Gui implements Screen {
     }
 
     @Override
-    public void render(float delta) {
+    public void preRender(float delta) {
         Gdx.gl.glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        render(delta, gfxManager);
     }
 
     @Override
     public void resize(int width, int height) {
-        gfxManager = new GFXManager(new Vector2(width, height));
-        resizeGui(width, height, Constants.PIXEL_SCALE);
+        gfx = new GFXManager(new Vector2(width, height));
+        resizeGui(width, height);
         Gdx.input.setInputProcessor(this);
     }
 
