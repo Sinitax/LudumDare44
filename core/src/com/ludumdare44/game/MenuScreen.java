@@ -1,54 +1,21 @@
 package com.ludumdare44.game;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.math.Vector2;
-import com.ludumdare44.game.GFX.GFXManager;
-import com.ludumdare44.game.GUI.MenuGui;
+import com.badlogic.gdx.graphics.Color;
+import com.ludumdare44.game.Cutscenes.ScreenFader;
+import com.ludumdare44.game.GUI.GuiScreen;
+import com.ludumdare44.game.GUI.elements.ElementTextButton;
 
-public class MenuScreen implements Screen {
+public class MenuScreen extends GuiScreen {
 
-    protected GFXManager gfxManager;
-    protected MenuGui menuGui;
+    protected ScreenFader fader = new ScreenFader(Color.BLACK, 1);
 
     @Override
     public void show() {
-
+        fader.fadeIn();
     }
 
     @Override
-    public void render(float delta) {
-        Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        menuGui.render(delta, gfxManager);
-    }
-
-    @Override
-    public void resize(int width, int height) {
-        gfxManager = new GFXManager(new Vector2(width, height));
-        menuGui = new MenuGui(width, height,3);
-        Gdx.input.setInputProcessor(menuGui);
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void hide() {
-
-    }
-
-    @Override
-    public void dispose() {
-
+    protected void createGui(int width, int height) {
+        add(new ElementTextButton(this, width/2-100, height/2-20, 200, 40, "Play"));
     }
 }

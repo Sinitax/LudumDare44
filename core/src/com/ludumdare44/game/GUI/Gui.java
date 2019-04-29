@@ -1,34 +1,39 @@
 package com.ludumdare44.game.GUI;
 
 import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.ludumdare44.game.GFX.GFXManager;
-import com.ludumdare44.game.GFX.IRenderable;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Gui extends InputAdapter {
 
-    protected final int width;
-    protected final int height;
-    protected final int scale;
+    protected boolean setup = false;
+    protected int width;
+    protected int height;
+    protected int scale;
     private final List<GuiElement> elements = new ArrayList<>();
 
     protected int mouseX;
     protected int mouseY;
 
-    public Gui(int width, int height, int scale) {
+    public void resizeGui(int width, int height, int scale) {
+        this.setup = true;
         this.width = width / scale;
         this.height = height / scale;
         this.scale = scale;
-        setupGui();
+
+        elements.clear();
+        createGui(this.width, this.height);
     }
 
-    protected abstract void setupGui();
+    protected abstract void createGui(int width, int height);
 
     public void render(float delta, GFXManager gfx) {
+        if(!setup)
+            throw new RuntimeException("Gui is not ready. Call resizeGui() before rendering.");
+
         gfx.batch.getTransformMatrix().scale(scale, scale, scale);
         gfx.batch.begin();
         for(GuiElement element : elements) {
