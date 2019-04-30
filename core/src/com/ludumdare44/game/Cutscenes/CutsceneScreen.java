@@ -61,6 +61,7 @@ public class CutsceneScreen implements Screen {
 
         soundtrack = Gdx.audio.newMusic(Gdx.files.internal("assets/cutscene.ogg"));
         soundtrack.setLooping(true);
+        soundtrack.setVolume(Constants.VOLUME_MULTIPLIER);
         soundtrack.play();
 
     }

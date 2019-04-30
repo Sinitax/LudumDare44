@@ -140,6 +140,7 @@ public class GameScene implements Screen {
 
 		theme = Gdx.audio.newMusic(Gdx.files.internal("assets/theme.wav"));
 		theme.setLooping(true);
+		theme.setVolume(Constants.VOLUME_MULTIPLIER);
 		theme.play();
 
 		demon.setStagnant(true);
