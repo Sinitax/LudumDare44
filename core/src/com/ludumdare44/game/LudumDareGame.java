@@ -78,7 +78,7 @@ public class LudumDareGame extends Game {
         cutscene.addCutsceneEvent(new TextEvent("Now, let's see how you did..."))
                 .addCutsceneEvent(new TextEvent("You collected " + soulsCollected + " souls."));
 
-        if(soulsCollected > 50) {
+        if(soulsCollected > 20) {
             cutscene.addCutsceneEvent(new TextEvent("I am impressed."))
                     .addCutsceneEvent(new TextEvent("I'll gladly accept these in exchange for your life."))
                     .addCutsceneEvent(new CharacterExitEvent(characterDevil, 2))
