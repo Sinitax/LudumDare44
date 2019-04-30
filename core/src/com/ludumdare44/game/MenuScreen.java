@@ -47,6 +47,10 @@ public class MenuScreen extends GuiScreen {
                         game.playEndlessMode();
                     });
                 });
+
+        add(new ElementLabel(this, width-2, 10, "by Sinitax and\nalexander0153", Color.BLACK))
+                .alignRight()
+                .alignBottom();
     }
 
     @Override
