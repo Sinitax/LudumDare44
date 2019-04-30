@@ -3,6 +3,7 @@ package com.ludumdare44.game.Cutscenes;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -22,6 +23,7 @@ import java.util.List;
 import java.util.Queue;
 
 public class CutsceneScreen implements Screen {
+    protected Music soundtrack;
 
     protected ControlManager controlManager;
     protected GFXManager gfxManager;
@@ -56,6 +58,10 @@ public class CutsceneScreen implements Screen {
 
     @Override
     public void show() {
+
+        soundtrack = Gdx.audio.newMusic(Gdx.files.internal("assets/cutscene.ogg"));
+        soundtrack.setLooping(true);
+        soundtrack.play();
 
     }
 
@@ -151,7 +157,7 @@ public class CutsceneScreen implements Screen {
 
     @Override
     public void hide() {
-
+        soundtrack.stop();
     }
 
     @Override

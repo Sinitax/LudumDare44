@@ -3,6 +3,7 @@ package com.ludumdare44.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
@@ -61,6 +62,8 @@ public class GameScene implements Screen {
 	private LavaFloor lavaFloor;
 	private CaveCeiling caveCeiling;
 	private FakePlatform platform;
+
+	private Music theme;
 
 	//other
 	private FPSLogger fpsLogger;
@@ -134,6 +137,10 @@ public class GameScene implements Screen {
 
 		objectAdder.addVisObject(demon);
 		objectAdder.addVisObject(player);
+
+		theme = Gdx.audio.newMusic(Gdx.files.internal("assets/theme.wav"));
+		theme.setLooping(true);
+		theme.play();
 
 		demon.setStagnant(true);
 		player.setStagnant(true);
@@ -302,7 +309,9 @@ public class GameScene implements Screen {
 	public void resume() {}
 
 	@Override
-	public void hide() {}
+	public void hide() {
+		theme.stop();
+	}
 
 	@Override
 	public void dispose () {
