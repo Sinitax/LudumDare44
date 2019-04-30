@@ -47,6 +47,7 @@ public class GameScene implements Screen {
 	private Demon demon;
 	private BatSpawner batSpawner;
 	private ParticleGenerator particleGenerator;
+	private final Texture crosshairTexture = new Texture("assets/crosshair.png");
 
 	private boolean lavaDeath = false;
 	private boolean demonDeath = false;
@@ -291,6 +292,10 @@ public class GameScene implements Screen {
         //hud.render(gfxManager);
 
         gfxManager.resetProjection();
+
+        Gdx.input.setCursorCatched(true);
+		gfxManager.batch.draw(crosshairTexture, Gdx.input.getX() - crosshairTexture.getWidth()*Constants.PIXEL_SCALE/2f, gfxManager.screenSize.y-Gdx.input.getY() - crosshairTexture.getHeight()*Constants.PIXEL_SCALE/2f, crosshairTexture.getWidth()*Constants.PIXEL_SCALE, crosshairTexture.getHeight()*Constants.PIXEL_SCALE);
+
 		gfxManager.batch.end();
 
 		hud.render(delta);
@@ -312,6 +317,7 @@ public class GameScene implements Screen {
 	@Override
 	public void hide() {
 		theme.stop();
+		Gdx.input.setCursorCatched(false);
 	}
 
 	@Override
