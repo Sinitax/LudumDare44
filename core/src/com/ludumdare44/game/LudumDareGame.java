@@ -24,8 +24,9 @@ public class LudumDareGame extends Game {
     }
 
     public void playEndlessMode() {
-        // TODO
-        setScreen(new GameScene());
+        setScreen(new GameScene().onGameOver((soulsCollected, deathBy) -> {
+            playEndlessMode();
+        }));
     }
 
     protected CutsceneScreen createIntroCutscene() {

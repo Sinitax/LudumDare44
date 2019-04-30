@@ -22,8 +22,17 @@ import com.ludumdare44.game.Physics.PhysicsObject;
 import com.ludumdare44.game.Physics.VisualPhysObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class GameScene implements Screen {
+
+	public enum DeathType {
+		DEVIL, LAVA;
+	}
+
+	public interface IGameOverListener {
+		void onGameOver(int soulsCollected, DeathType deathBy);
+	}
 
 	// custom controller classes
 	private ObjectManager objectManager;
@@ -61,8 +70,13 @@ public class GameScene implements Screen {
     private Animation<TextureRegion> debugAnimation;
     private Sprite debugSprite;
 
-    private float timeSpent = 0;
-    private float cutsceneTime = 2.8f;
+	private float timeSpent = 0;
+	private float cutsceneTime = 2.8f;
+
+	private float timeSpentGameOver = 0;
+	private float gameOverTime = 1f;
+
+    private List<IGameOverListener> gameOverListeners = new ArrayList<>();
 
 	//Main
 	@Override
@@ -207,8 +221,16 @@ public class GameScene implements Screen {
 					demonDeath = true;
 				}
 
-				if (!player.isDestroyed()) {
-					// TODO: switch to death cutscene
+				if (player.isDestroyed()) {
+					timeSpentGameOver += delta;
+					if(timeSpentGameOver >= gameOverTime && timeSpentGameOver-delta < gameOverTime) {
+						fader.fadeOut().onComplete(() -> {
+							DeathType deathBy = lavaDeath ? DeathType.LAVA : DeathType.DEVIL;
+							for (IGameOverListener listener : gameOverListeners)
+								listener.onGameOver(player.getSouls(), deathBy);
+							gameOverListeners.clear();
+						});
+					}
 				}
 			} else if (controlManager.justPressed(Input.Keys.SPACE)) {
 				player.setStagnant(false);
@@ -285,6 +307,11 @@ public class GameScene implements Screen {
 	@Override
 	public void dispose () {
 		gfxManager.dispose();
+	}
+
+	public GameScene onGameOver(IGameOverListener gameOverListener) {
+		gameOverListeners.add(gameOverListener);
+		return this;
 	}
 
 	public boolean isLavaDeath() {
