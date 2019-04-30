@@ -49,7 +49,7 @@ public class LudumDareGame extends Game {
                 .addCutsceneEvent(new TextEvent("You refuse?"))
                 .addCutsceneEvent(new TextEvent("I guess there is something else you could do for me as payment..."))
                 .addCutsceneEvent(new TextEvent("There are some stray souls that need to be collected in the underground."))
-                .addCutsceneEvent(new TextEvent("I'll be watching your progress closely. There will a punishment if you're lacking."))
+                .addCutsceneEvent(new TextEvent("I'll be watching your progress closely. There will be punishment if I see you slacking."))
                 .addCutsceneEvent(new TextEvent("Now, go! Before I change my mind..."))
                 .addCutsceneEvent(new WaitEvent(0.5f))
                 .addCutsceneEvent(new CharacterExitEvent(characterPlayer, 1f))
@@ -70,9 +70,9 @@ public class LudumDareGame extends Game {
                 .addCutsceneEvent(new CharacterEnterEvent(characterPlayer, CutsceneCharacterPosition.RIGHT, 1))
                 .addCutsceneEvent(new WaitEvent(2));
 
-        if(deathBy == GameScene.DeathType.DEVIL)
+        if (deathBy == GameScene.DeathType.DEVIL)
             cutscene.addCutsceneEvent(new TextEvent("I told you I'd be watching closely."));
-        else if(deathBy == GameScene.DeathType.LAVA)
+        else if (deathBy == GameScene.DeathType.LAVA)
             cutscene.addCutsceneEvent(new TextEvent("It looks like the lava made it hard to stay afloat."));
 
         cutscene.addCutsceneEvent(new TextEvent("Now, let's see how you did..."))
