@@ -12,7 +12,7 @@ public class Particle extends VisualPhysObject {
     private Animation<TextureRegion> animation;
     private float timeSpent = 0.f;
     private float animationTimer = 0.f;
-    private Vector2 posOffset = new Vector2(0, -60);
+    private Vector2 posOffset = new Vector2(0, 0);
 
     private boolean hflip;
 
@@ -91,6 +91,7 @@ public class Particle extends VisualPhysObject {
         weight = 0;
         frameWidth = animation.getKeyFrames()[0].getRegionWidth();
         frameHeight = animation.getKeyFrames()[0].getRegionHeight();
+        spos.add(speed.cpy().nor().scl(70));
         setFspeedAbs(speed);
         setSpeed(speed);
     }
