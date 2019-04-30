@@ -36,7 +36,7 @@ public class CharacterLerpEvent extends CutsceneEvent {
     public boolean processEvent(float delta, CutsceneScreen screen) {
         if(elapsedTime == 0) {
             originalAlpha = character.getAlpha();
-            originalOffset = character.getOffset();
+            originalOffset = character.getOffset().cpy();
         }
 
         if(elapsedTime >= lerpTime) {
