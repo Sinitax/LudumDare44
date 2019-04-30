@@ -222,7 +222,7 @@ public class GameScene implements Screen {
 					lavaDeath = true;
 				}
 
-				if (player.getPos().x < demon.getPos().x + demon.getHitbox().x / 2) { // death by demon
+				if (!lavaDeath && player.getPos().x < demon.getPos().x + demon.getHitbox().x / 2) { // death by demon
 					if (!demonDeath) player.setSprite(new Sprite(player.getDeathAnimation().getKeyFrames()[0]));
 					player.kill();
 					demonDeath = true;
@@ -232,7 +232,7 @@ public class GameScene implements Screen {
 					timeSpentGameOver += delta;
 					if(timeSpentGameOver >= gameOverTime && timeSpentGameOver-delta < gameOverTime) {
 						fader.fadeOut().onComplete(() -> {
-							DeathType deathBy = lavaDeath ? DeathType.LAVA : DeathType.DEVIL;
+							DeathType deathBy = demonDeath ? DeathType.DEVIL : DeathType.LAVA;
 							for (IGameOverListener listener : gameOverListeners)
 								listener.onGameOver(player.getSouls(), deathBy);
 							gameOverListeners.clear();
