@@ -230,7 +230,10 @@ public class GameScene implements Screen {
 				}
 
 				if (!lavaDeath && player.getPos().x < demon.getPos().x + demon.getHitbox().x / 2) { // death by demon
-					if (!demonDeath) player.setSprite(new Sprite(player.getDeathAnimation().getKeyFrames()[0]));
+					if (!demonDeath) {
+						player.setSprite(new Sprite(player.getDeathAnimation().getKeyFrames()[0]));
+						player.setAnimation(player.getDeathAnimation());
+					}
 					player.kill();
 					demonDeath = true;
 				}
