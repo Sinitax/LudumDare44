@@ -1,13 +1,11 @@
 package com.ludumdare44.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.FPSLogger;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
@@ -128,6 +126,13 @@ public class GameScene implements Screen {
 		controlManager = new ControlManager();
 		Gdx.input.setInputProcessor(controlManager);
 		playerControls = new PlayerControls(controlManager, cameraManager, player);
+
+		// Hide cursor
+		Pixmap cursorPixmap = new Pixmap(16, 16, Pixmap.Format.RGBA8888);
+		cursorPixmap.setColor(0, 0, 0, 0);
+		cursorPixmap.fill();
+		Gdx.graphics.setCursor(Gdx.graphics.newCursor(cursorPixmap, 0, 0));
+		cursorPixmap.dispose();
 
 		spriteManager = new SpriteManager(cameraManager);
 		spriteManager.createLayers(3);
@@ -293,7 +298,6 @@ public class GameScene implements Screen {
 
         gfxManager.resetProjection();
 
-        Gdx.input.setCursorCatched(true);
 		gfxManager.batch.draw(crosshairTexture, Gdx.input.getX() - crosshairTexture.getWidth()*Constants.PIXEL_SCALE/2f, gfxManager.screenSize.y-Gdx.input.getY() - crosshairTexture.getHeight()*Constants.PIXEL_SCALE/2f, crosshairTexture.getWidth()*Constants.PIXEL_SCALE, crosshairTexture.getHeight()*Constants.PIXEL_SCALE);
 
 		gfxManager.batch.end();
@@ -317,7 +321,7 @@ public class GameScene implements Screen {
 	@Override
 	public void hide() {
 		theme.stop();
-		Gdx.input.setCursorCatched(false);
+		Gdx.graphics.setSystemCursor(Cursor.SystemCursor.Arrow);
 	}
 
 	@Override
